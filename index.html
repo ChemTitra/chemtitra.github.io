@@ -19,7 +19,7 @@
       style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://cdn.tailwindcss.com;
       font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;
       img-src 'self' data: https:;
-      connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://unpkg.com https://cdnjs.cloudflare.com https://www.gstatic.com data: blob:;
+      connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://generativelanguage.googleapis.com;
       frame-src https://drive.google.com https://accounts.google.com https://*.firebaseapp.com;
       base-uri 'self';
       object-src 'none';
@@ -590,7 +590,7 @@
         function App() {
             const [theme, setTheme] = useState('eyecare');
             const [selectedForm, setSelectedForm] = useState('Form 4');
-            const [selectedCategory, setSelectedCategory] = useState('Notes'); // 'Notes', 'Exercises', or 'Quiz'
+            const [selectedCategory, setSelectedCategory] = useState('Notes'); // Can be 'Notes', 'Exercises', or 'Quiz'
             const [searchQuery, setSearchQuery] = useState('');
             const [sortBy, setSortBy] = useState('newest');
             const [filterLanguage, setFilterLanguage] = useState('ALL');
@@ -894,11 +894,13 @@
                         }
                     }
 
+                    // Native browser alert requirement implemented here
                     window.alert(editingItem ? "🎉 Success! Material has been updated successfully!" : "🎉 Success! Material has been published successfully!");
 
                     showToast(editingItem ? '🎉 Success! Material updated successfully!' : '🎉 Success! Material published successfully!', 'success');
                     setShowMaterialModal(false);
                     
+                    // Immediately reset text inputs to clear state completely and prevent duplicate submissions
                     setFormData({
                         form: formData.form,
                         subject: getSubjectForForm(formData.form),
@@ -919,11 +921,13 @@
                         setMaterials(prev => [{ id, ...newItemData }, ...prev]);
                     }
 
+                    // Native browser alert requirement implemented here for fallback scenarios
                     window.alert(editingItem ? "🎉 Success! Material has been updated successfully (Saved Offline)!" : "🎉 Success! Material has been published successfully (Saved Offline)!");
 
                     showToast('🎉 Success! Saved to local storage.', 'success');
                     setShowMaterialModal(false);
                     
+                    // Immediately reset text inputs
                     setFormData({
                         form: formData.form,
                         subject: getSubjectForForm(formData.form),
@@ -938,30 +942,31 @@
                 }
             };
 
-            const confirmDeleteMaterial = async () => {
-                if (!itemToDelete) return;
-                const material = itemToDelete;
-
-                if (!material.id) { 
-                    console.error("Missing document ID"); 
-                    setMaterials(prev => prev.filter(m => m !== material));
-                    setItemToDelete(null);
-                    return; 
-                }
-                
-                setMaterials(prev => prev.filter(m => m.id !== material.id));
-
-                try {
-                    if (db && window.FirebaseModule) {
-                        const { doc, deleteDoc } = window.FirebaseModule;
-                        await deleteDoc(doc(db, "chemtitra_materials", material.id));
+            const handleDeleteClick = async (material) => {
+                if (window.confirm(`Are you sure you want to delete "${material.title}"?`)) {
+                    
+                    // Strict ID validation filter check
+                    if (!material.id) { 
+                        console.error("Missing document ID"); 
+                        // Force UI removal of ghost item instantly
+                        setMaterials(prev => prev.filter(m => m !== material));
+                        return; 
                     }
-                    showToast('🗑️ Material deleted successfully.', 'info');
-                } catch (err) {
-                    console.error("Delete error:", err);
-                    showToast('Removed from screen (DB error: ' + err.message + ')', 'error');
+                    
+                    // Optimistic Delete: Force the specific item to disappear from the local React UI array instantly
+                    setMaterials(prev => prev.filter(m => m.id !== material.id));
+
+                    try {
+                        if (db && window.FirebaseModule) {
+                            const { doc, deleteDoc } = window.FirebaseModule;
+                            await deleteDoc(doc(db, "chemtitra_materials", material.id));
+                        }
+                        showToast('🗑️ Material deleted successfully.', 'info');
+                    } catch (err) {
+                        console.error("Delete error:", err);
+                        showToast('Removed from screen (DB error: ' + err.message + ')', 'error');
+                    }
                 }
-                setItemToDelete(null);
             };
 
             const alternateLanguageCount = useMemo(() => {
@@ -1479,7 +1484,202 @@
                         </div>
                     )}
 
-                    {/* OWNER ACCESS MODAL (Google Only & PIN) */}
+                    {/* Universal Material Add / Edit Modal */}
+                    {showMaterialModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/75 backdrop-blur-md overflow-y-auto">
+                            <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-xl shadow-2xl text-slate-900 border border-slate-200 space-y-4 my-6">
+                                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                                    <div className="flex items-center space-x-2.5">
+                                        <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-lg font-bold ${formData.category === 'Quiz' ? 'bg-amber-100 text-amber-700' : 'bg-teal-100 text-teal-700'}`}>
+                                            <i className={`fa-solid ${editingItem ? 'fa-pen-to-square' : formData.category === 'Quiz' ? 'fa-bolt' : 'fa-plus'}`}></i>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                                                {editingItem 
+                                                    ? `Edit ${formData.category} Title & Details` 
+                                                    : formData.category === 'Quiz' ? 'Publish External Quiz Link' : 'Add New Learning Material'
+                                                }
+                                            </h3>
+                                            <p className="text-[10px] sm:text-[11px] text-slate-500">Targeting {formData.form} • {getSubjectForForm(formData.form)}</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" onClick={() => setShowMaterialModal(false)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm"><i className="fa-solid fa-xmark"></i></button>
+                                </div>
+
+                                <form onSubmit={handleSaveMaterial} className="space-y-3 sm:space-y-4">
+                                    <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Target Form</label>
+                                            <select value={formData.form} onChange={(e) => setFormData(prev => ({ ...prev, form: e.target.value, subject: getSubjectForForm(e.target.value) }))} className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-slate-50 focus:outline-none focus:border-teal-600">
+                                                <option value="Form 1">Form 1 (Science)</option>
+                                                <option value="Form 2">Form 2 (Science)</option>
+                                                <option value="Form 3">Form 3 (Science)</option>
+                                                <option value="Form 4">Form 4 (Chemistry)</option>
+                                                <option value="Form 5">Form 5 (Chemistry)</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Category</label>
+                                            <select value={formData.category} onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))} className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-slate-50 focus:outline-none focus:border-teal-600">
+                                                <option value="Notes">Notes</option>
+                                                <option value="Exercises">Exercises</option>
+                                                <option value="Quiz">Quiz</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Language Track</label>
+                                            <select value={formData.language} onChange={(e) => setFormData(prev => ({ ...prev, language: e.target.value }))} className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-slate-50 focus:outline-none focus:border-teal-600">
+                                                <option value="DLP">DLP (English)</option>
+                                                <option value="BM">Bahasa Melayu</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2 sm:space-y-3">
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Chapter / Topic Title *</label>
+                                            <input type="text" required value={formData.chapter} onChange={(e) => setFormData(prev => ({ ...prev, chapter: e.target.value }))} placeholder="e.g., Chapter 1: Redox Equilibrium" className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:outline-none focus:border-teal-600" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">
+                                                {formData.category === 'Quiz' ? 'Quiz Title *' : 'Material Title *'}
+                                            </label>
+                                            <input type="text" required value={formData.title} onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} placeholder={formData.category === 'Quiz' ? "e.g., Redox Objective Test Module 1" : "e.g., SPM Formula Sheet & Summary Notes"} className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:outline-none focus:border-teal-600 font-semibold text-slate-900" />
+                                        </div>
+                                    </div>
+
+                                    <div className={`p-3 rounded-xl border space-y-2 ${formData.category === 'Quiz' ? 'bg-amber-50/50 border-amber-200' : 'bg-slate-50 border-slate-200'}`}>
+                                        <div className="flex items-center justify-between">
+                                            <label className="block text-xs font-bold text-slate-800">
+                                                {formData.category === 'Quiz' ? 'External Quiz Link URL *' : 'Google Drive Document Link *'}
+                                            </label>
+                                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${formData.category === 'Quiz' ? 'text-amber-800 bg-amber-100 border-amber-300' : 'text-teal-700 bg-teal-50 border-teal-200'}`}>
+                                                {formData.category === 'Quiz' ? 'Quizizz, Google Forms, etc.' : 'Auto-converts to /preview'}
+                                            </span>
+                                        </div>
+                                        <input type="url" required value={formData.fileUrl} onChange={(e) => setFormData(prev => ({ ...prev, fileUrl: e.target.value }))} placeholder={formData.category === 'Quiz' ? "https://quizizz.com/..." : "https://drive.google.com/file/d/..."} className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:outline-none focus:border-teal-600" />
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Short Description</label>
+                                            <textarea rows="2" value={formData.description} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} placeholder="Brief instructions or summary..." className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:outline-none focus:border-teal-600"></textarea>
+                                        </div>
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Tags (Comma separated)</label>
+                                            <input type="text" value={formData.tags} onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))} placeholder="e.g., SPM, PastYear, Trial" className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:outline-none focus:border-teal-600" />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-end space-x-2 pt-2 border-t border-slate-200">
+                                        <button type="button" onClick={() => setShowMaterialModal(false)} className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">Cancel</button>
+                                        <button type="submit" className={`px-5 py-2 rounded-xl text-xs font-extrabold text-white shadow-md transition-all ${formData.category === 'Quiz' ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-amber-600/20' : 'bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-teal-600/20'}`}>
+                                            {editingItem ? 'Save Changes' : (formData.category === 'Quiz' ? 'Publish Quiz Link' : 'Publish Material')}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Delete Confirmation Modal */}
+                    {itemToDelete && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md">
+                            <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl text-slate-900 border border-slate-200 space-y-4 text-center">
+                                <div className="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mx-auto text-xl shadow-inner"><i className="fa-solid fa-trash-can"></i></div>
+                                <div>
+                                    <h3 className="text-base font-bold text-slate-900">Remove Material?</h3>
+                                    <p className="text-xs text-slate-600 mt-1">Are you sure you want to remove <strong>"{itemToDelete.title}"</strong> from the portal?</p>
+                                </div>
+                                <div className="flex space-x-2 pt-2">
+                                    <button onClick={() => setItemToDelete(null)} className="w-1/2 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">Cancel</button>
+                                    <button onClick={confirmDeleteMaterial} className="w-1/2 py-2 rounded-xl text-xs font-bold bg-red-600 text-white hover:bg-red-700 shadow-md">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* PERIODIC TABLE DRAWER / MODAL (FULL 118 ELEMENTS) */}
+                    {showPeriodicTable && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-2 sm:p-6 animate-fade-in">
+                            <div className={`w-full max-w-6xl h-[90vh] sm:h-[85vh] rounded-3xl flex flex-col shadow-2xl border ${theme === 'dark' ? 'bg-[#0b1320] border-[#1a2638]' : 'bg-[#f8fafc] border-slate-300'}`}>
+                                <div className="p-4 border-b flex justify-between items-center border-slate-200 dark:border-slate-800">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center"><i className="fa-solid fa-table text-lg"></i></div>
+                                        <div>
+                                            <h2 className={`font-bold text-lg ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>Dynamic Periodic Table (118 Elements)</h2>
+                                            <p className="text-xs text-slate-500">Interactive Chemistry Reference Tool</p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => { setShowPeriodicTable(false); setSelectedElement(null); }} className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-110 transition-transform"><i className="fa-solid fa-xmark"></i></button>
+                                </div>
+
+                                <div className="flex-1 overflow-auto pt-scroll p-4 relative">
+                                    {/* Desktop Grid Layout */}
+                                    <div className="hidden md:grid gap-1 min-w-[1000px] mx-auto" style={{ gridTemplateColumns: 'repeat(18, minmax(0, 1fr))', gridAutoRows: 'minmax(50px, auto)' }}>
+                                        {ELEMENTS.map(el => (
+                                            <button 
+                                                key={el.n} 
+                                                onClick={() => setSelectedElement(el)}
+                                                className={`relative rounded-lg border-2 p-1 text-left flex flex-col justify-between hover:scale-[1.15] hover:z-[10] transition-transform shadow-sm cursor-pointer ${CATEGORY_STYLES[el.cat] || 'bg-slate-700 text-white border-slate-600'}`}
+                                                style={{ gridColumn: el.c, gridRow: el.r }}
+                                            >
+                                                <span className="text-[9px] font-bold absolute top-1 left-1 opacity-80">{el.n}</span>
+                                                <span className="text-base font-black self-center mt-2.5 tracking-tight">{el.sym}</span>
+                                                <span className="text-[8px] text-center uppercase tracking-wider opacity-90 truncate w-full leading-tight mt-1">{el.name}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                    
+                                    {/* Mobile Wrap Layout */}
+                                    <div className="flex md:hidden flex-wrap justify-center gap-1.5 pb-20">
+                                        {ELEMENTS.map(el => (
+                                            <button key={el.n} onClick={() => setSelectedElement(el)} className={`w-[4.2rem] h-[4.2rem] rounded-lg border-2 p-1 text-center flex flex-col items-center justify-center shadow-sm ${CATEGORY_STYLES[el.cat] || 'bg-slate-700 text-white'}`}>
+                                                <span className="text-[8px] font-bold w-full text-left opacity-80 leading-none">{el.n}</span>
+                                                <span className="text-lg font-black leading-none my-0.5">{el.sym}</span>
+                                                <span className="text-[7px] uppercase tracking-wider opacity-90 truncate w-full">{el.name}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Rich Element Detail Slide-Up Drawer */}
+                                {selectedElement && (
+                                    <div className={`absolute bottom-0 left-0 w-full p-5 sm:p-6 rounded-t-3xl border-t shadow-[0_-10px_40px_rgba(0,0,0,0.15)] animate-slide-up transition-all z-[100] ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex gap-4 items-center">
+                                                <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-3xl font-black border-4 shadow-lg ${CATEGORY_STYLES[selectedElement.cat]}`}>{selectedElement.sym}</div>
+                                                <div>
+                                                    <h3 className={`text-xl sm:text-2xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{selectedElement.name}</h3>
+                                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500">{selectedElement.cat.replace('-', ' ')}</span>
+                                                </div>
+                                            </div>
+                                            <button onClick={() => setSelectedElement(null)} className="text-slate-400 hover:text-teal-600 transition-colors"><i className="fa-solid fa-circle-chevron-down text-2xl sm:text-3xl"></i></button>
+                                        </div>
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-4 sm:mt-5">
+                                            <div className={`p-2.5 sm:p-3 rounded-xl border ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+                                                <p className="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase">Atomic Number</p>
+                                                <p className={`text-base sm:text-lg font-black ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{selectedElement.n}</p>
+                                            </div>
+                                            <div className={`p-2.5 sm:p-3 rounded-xl border ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+                                                <p className="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase">Atomic Mass</p>
+                                                <p className={`text-base sm:text-lg font-black ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{selectedElement.m}</p>
+                                            </div>
+                                            <div className={`col-span-2 p-2.5 sm:p-3 rounded-xl border ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+                                                <p className="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase">Electron Configuration</p>
+                                                <p className={`text-base sm:text-lg font-mono font-bold ${theme === 'dark' ? 'text-teal-400' : 'text-teal-700'}`}>{selectedElement.e}</p>
+                                            </div>
+                                        </div>
+                                        <div className="mt-3 sm:mt-4 p-3.5 rounded-xl bg-indigo-50/50 border border-indigo-100 dark:bg-indigo-900/30 dark:border-indigo-800">
+                                            <p className="text-xs text-indigo-800 dark:text-indigo-300 font-medium leading-relaxed"><i className="fa-solid fa-lightbulb text-amber-500 mr-2"></i><strong>Fun Fact: </strong>{selectedElement.f}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* OWNER ACCESS MODAL (Google Only) */}
                     {showOwnerModal && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
                             <div className="bg-[#0b1320] border border-[#1a2638] rounded-2xl p-6 w-full max-w-md shadow-2xl text-slate-100 space-y-4 relative">
@@ -1504,17 +1704,6 @@
                                             <><svg className="w-4 h-4" viewBox="0 0 24 24"><path fill="#08101d" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#08101d" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#08101d" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#08101d" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg><span>Continue with Google</span></>
                                         )}
                                     </button>
-
-                                    <div className="flex items-center space-x-2 my-1.5">
-                                        <div className="flex-1 h-px bg-slate-800"></div>
-                                        <span className="text-[10px] text-slate-500 font-bold uppercase">OR PIN ACCESS</span>
-                                        <div className="flex-1 h-px bg-slate-800"></div>
-                                    </div>
-
-                                    <div className="flex gap-2">
-                                        <input type="password" value={pinInput} onChange={(e) => setPinInput(e.target.value)} placeholder="••••" maxLength={4} className="w-full px-3 py-2.5 rounded-xl bg-[#08101d] border border-[#1a2638] text-center tracking-[1em] text-white focus:outline-none focus:border-teal-500 transition-all text-sm font-mono" />
-                                        <button onClick={handlePinLogin} className="px-5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition-all"><i className="fa-solid fa-arrow-right"></i></button>
-                                    </div>
 
                                     {authError && (
                                         <div className="p-3 bg-red-950/50 border border-red-800/80 rounded-xl text-[11px] text-red-300 leading-snug">
