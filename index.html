@@ -186,15 +186,38 @@
         const INITIAL_MATERIALS = [];
 
         // =========================================================================
-        // NEURAL PROGRESS MAP LOGIC (Integrated from File 2)
+        // NEURAL PROGRESS MAP LOGIC (Integrated & Dynamic)
         // =========================================================================
         const curriculumData = [
-            { id: "01", title: "Matter & Atomic Structure", description: "Fundamental particles, isotopes, and atomic models.", status: "completed", quizUrl: "/quiz/topic-1" },
-            { id: "02", title: "Periodic Table of Elements", description: "Group trends, valency, and electron configurations.", status: "completed", quizUrl: "/quiz/topic-2" },
-            { id: "03", title: "Chemical Formulae & Equations", description: "The mole concept, molar mass, and balancing equations.", status: "available", quizUrl: "/quiz/topic-3" },
-            { id: "04", title: "Acids, Bases and Salts", description: "pH values, neutralization, and solubility rules.", status: "locked", quizUrl: null },
-            { id: "05", title: "Rate of Reaction", description: "Collision theory, catalysts, and activation energy.", status: "locked", quizUrl: null },
-            { id: "06", title: "Carbon Compounds", description: "Alkanes, alkenes, alcohols, and polymer chains.", status: "locked", quizUrl: null }
+            // --- Form 1 Science ---
+            { id: "1.1", form: "Form 1", subject: "Science", title: "Introduction to Scientific Investigation", description: "Science laboratory, physical quantities and their units.", status: "completed", quizUrl: "/quiz/f1-1" },
+            { id: "1.2", form: "Form 1", subject: "Science", title: "Cell as the Basic Unit of Life", description: "Cell structure, function and organization.", status: "completed", quizUrl: "/quiz/f1-2" },
+            { id: "1.3", form: "Form 1", subject: "Science", title: "Coordination and Response", description: "Homeostasis in humans, animals, and plants.", status: "available", quizUrl: "/quiz/f1-3" },
+            { id: "1.4", form: "Form 1", subject: "Science", title: "Reproduction", description: "Human reproductive system, puberty, and fertilization.", status: "locked", quizUrl: null },
+
+            // --- Form 2 Science ---
+            { id: "2.1", form: "Form 2", subject: "Science", title: "Biodiversity", description: "Classification of animals and plants.", status: "completed", quizUrl: "/quiz/f2-1" },
+            { id: "2.2", form: "Form 2", subject: "Science", title: "Ecosystem", description: "Food chains, food webs and nutrient cycles.", status: "available", quizUrl: "/quiz/f2-2" },
+            { id: "2.3", form: "Form 2", subject: "Science", title: "Nutrition", description: "Classes of food and human digestive system.", status: "locked", quizUrl: null },
+            { id: "2.4", form: "Form 2", subject: "Science", title: "Human Health", description: "Infectious and non-infectious diseases.", status: "locked", quizUrl: null },
+
+            // --- Form 3 Science ---
+            { id: "3.1", form: "Form 3", subject: "Science", title: "Stimuli and Responses", description: "Human nervous system and sensory organs.", status: "completed", quizUrl: "/quiz/f3-1" },
+            { id: "3.2", form: "Form 3", subject: "Science", title: "Respiration", description: "Human respiratory system and gaseous exchange.", status: "available", quizUrl: "/quiz/f3-2" },
+            { id: "3.3", form: "Form 3", subject: "Science", title: "Blood and Transport", description: "Human blood circulatory system and blood groups.", status: "locked", quizUrl: null },
+            { id: "3.4", form: "Form 3", subject: "Science", title: "Reactivity of Metals", description: "Position of carbon and hydrogen in the reactivity series.", status: "locked", quizUrl: null },
+
+            // --- Form 4 Chemistry ---
+            { id: "4.1", form: "Form 4", subject: "Chemistry", title: "Matter & Atomic Structure", description: "Fundamental particles, isotopes, and atomic models.", status: "completed", quizUrl: "/quiz/f4-1" },
+            { id: "4.2", form: "Form 4", subject: "Chemistry", title: "Periodic Table of Elements", description: "Group trends, valency, and electron configurations.", status: "completed", quizUrl: "/quiz/f4-2" },
+            { id: "4.3", form: "Form 4", subject: "Chemistry", title: "Chemical Formulae & Equations", description: "The mole concept, molar mass, and balancing equations.", status: "available", quizUrl: "/quiz/f4-3" },
+            { id: "4.4", form: "Form 4", subject: "Chemistry", title: "Acids, Bases and Salts", description: "pH values, neutralization, and solubility rules.", status: "locked", quizUrl: null },
+
+            // --- Form 5 Chemistry ---
+            { id: "5.1", form: "Form 5", subject: "Chemistry", title: "Rate of Reaction", description: "Collision theory, catalysts, and activation energy.", status: "completed", quizUrl: "/quiz/f5-1" },
+            { id: "5.2", form: "Form 5", subject: "Chemistry", title: "Carbon Compounds", description: "Alkanes, alkenes, alcohols, and polymer chains.", status: "available", quizUrl: "/quiz/f5-2" },
+            { id: "5.3", form: "Form 5", subject: "Chemistry", title: "Oxidation and Reduction", description: "Redox reactions, galvanic cells, and electrolysis.", status: "locked", quizUrl: null },
+            { id: "5.4", form: "Form 5", subject: "Chemistry", title: "Thermochemistry", description: "Exothermic/endothermic reactions and heat of precipitation.", status: "locked", quizUrl: null }
         ];
 
         window.handleNodeClick = (topicId) => {
@@ -207,21 +230,39 @@
             }
         };
 
-        const renderProgressMap = (theme) => {
+        const renderProgressMap = (theme, currentForm, currentSubject) => {
             const container = document.getElementById('progress-map');
             if (!container) return;
+            
+            // Clear map container to repaint whenever Form/Subject swaps
             container.innerHTML = ''; 
 
             const isDark = theme === 'dark';
 
-            // Background vertical line
+            // Filter data according to currently active Form & Subject selection
+            const filteredData = curriculumData.filter(
+                node => node.form === currentForm && node.subject === currentSubject
+            );
+
+            // Handle Empty Data States Gracefully
+            if (filteredData.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center p-12 text-sm font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}">
+                        <i class="fa-solid fa-satellite-dish text-4xl mb-4 opacity-50"></i>
+                        <p>No nodes available for ${currentForm} ${currentSubject} yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Background vertical track line
             const trackLine = document.createElement('div');
             trackLine.className = `absolute left-8 md:left-1/2 top-0 bottom-0 w-1 transform md:-translate-x-1/2 rounded-full z-0 transition-colors ${isDark ? 'bg-slate-800' : 'bg-slate-300'}`;
             container.appendChild(trackLine);
 
-            curriculumData.forEach((node, index) => {
+            filteredData.forEach((node, index) => {
                 const isEven = index % 2 === 0; 
-                const isLast = index === curriculumData.length - 1;
+                const isLast = index === filteredData.length - 1;
 
                 let nodeClasses, borderClasses, textClasses, iconClasses, cursorClasses;
 
@@ -816,12 +857,17 @@
                 document.body.className = 'theme-' + theme;
             }, [theme]);
 
+            const getSubjectForForm = (formName) => {
+                return (formName === 'Form 1' || formName === 'Form 2' || formName === 'Form 3') ? 'Science' : 'Chemistry';
+            };
+
             // Execute the Neural Progress Map Render exclusively when the Quiz tab is active
+            // Map now watches `selectedForm` to trigger instant redraws!
             useEffect(() => {
                 if (selectedCategory === 'Quiz') {
-                    renderProgressMap(theme);
+                    renderProgressMap(theme, selectedForm, getSubjectForForm(selectedForm));
                 }
-            }, [selectedCategory, theme]);
+            }, [selectedCategory, theme, selectedForm]);
 
             useEffect(() => {
                 if (!window.FirebaseModule) return;
@@ -932,10 +978,6 @@
                 }
                 setCurrentUser(null);
                 showToast("Signed out. Switched to Student View.", "info");
-            };
-
-            const getSubjectForForm = (formName) => {
-                return (formName === 'Form 1' || formName === 'Form 2' || formName === 'Form 3') ? 'Science' : 'Chemistry';
             };
 
             const isLikelyImageUrl = (value) => {
