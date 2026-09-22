@@ -33,6 +33,9 @@
 
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Added Futuristic Fonts for Quiz Map fallback if needed -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
@@ -49,6 +52,7 @@
                 extend: {
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'], // For the neural map
                     },
                     colors: {
                         brand: { 50: '#f0fdfa', 100: '#ccfbf1', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a' },
@@ -70,7 +74,7 @@
         body.theme-dark { background: linear-gradient(135deg, #0b101d 0%, #0f172a 50%, #162032 100%); color: #f8fafc; }
         body.theme-light { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 35%, #f0fdfa 70%, #f8fafc 100%); color: #0f172a; }
         
-        .glass-card { backdrop-filter: blur(14px); transition: all 0.3s ease; }
+        .glass-card { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); transition: all 0.3s ease; }
         .theme-eyecare .glass-card { background: rgba(248, 250, 252, 0.95); border: 1px solid rgba(203, 213, 225, 0.85); box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.05); }
         .theme-dark .glass-card { background: rgba(30, 41, 59, 0.92); border: 1px solid rgba(51, 65, 85, 0.8); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
         .theme-light .glass-card { background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(203, 213, 225, 0.7); box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05); }
@@ -87,6 +91,44 @@
         .pt-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
         .pt-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
         .pt-scroll::-webkit-scrollbar-thumb { background: rgba(13,148,136,0.5); border-radius: 4px; }
+
+        /* Neural Progress Map CSS Integrations */
+        .neon-green-glow {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4), inset 0 0 8px rgba(34, 197, 94, 0.2);
+            border-color: #22c55e !important;
+        }
+        
+        .neon-blue-glow {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), inset 0 0 8px rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8 !important;
+            animation: neon-pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes neon-pulse {
+            0% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1); }
+            50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.7), inset 0 0 15px rgba(56, 189, 248, 0.4); transform: scale(1.05) translateX(-50%); }
+            100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1); }
+        }
+
+        @media (max-width: 767px) {
+            .neon-blue-glow {
+                animation: neon-pulse-mobile 2s infinite ease-in-out;
+            }
+            @keyframes neon-pulse-mobile {
+                0% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1); }
+                50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.7), inset 0 0 15px rgba(56, 189, 248, 0.4); transform: scale(1.05); }
+                100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1); }
+            }
+        }
+
+        .path-line {
+            transition: all 0.5s ease;
+        }
+        
+        .path-completed {
+            background: linear-gradient(to bottom, #22c55e, #16a34a) !important;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+        }
     </style>
 </head>
 <body class="selection:bg-teal-500 selection:text-white">
@@ -142,6 +184,114 @@
         };
 
         const INITIAL_MATERIALS = [];
+
+        // =========================================================================
+        // NEURAL PROGRESS MAP LOGIC (Integrated from File 2)
+        // =========================================================================
+        const curriculumData = [
+            { id: "01", title: "Matter & Atomic Structure", description: "Fundamental particles, isotopes, and atomic models.", status: "completed", quizUrl: "/quiz/topic-1" },
+            { id: "02", title: "Periodic Table of Elements", description: "Group trends, valency, and electron configurations.", status: "completed", quizUrl: "/quiz/topic-2" },
+            { id: "03", title: "Chemical Formulae & Equations", description: "The mole concept, molar mass, and balancing equations.", status: "available", quizUrl: "/quiz/topic-3" },
+            { id: "04", title: "Acids, Bases and Salts", description: "pH values, neutralization, and solubility rules.", status: "locked", quizUrl: null },
+            { id: "05", title: "Rate of Reaction", description: "Collision theory, catalysts, and activation energy.", status: "locked", quizUrl: null },
+            { id: "06", title: "Carbon Compounds", description: "Alkanes, alkenes, alcohols, and polymer chains.", status: "locked", quizUrl: null }
+        ];
+
+        window.handleNodeClick = (topicId) => {
+            const topic = curriculumData.find(t => t.id === topicId);
+            if (topic.status === "locked") return;
+            if (topic.status === "completed") {
+                alert(`Re-accessing completed data logs for [Module ${topic.id}: ${topic.title}]. Review mode activated.`);
+            } else if (topic.status === "available") {
+                alert(`Initiating new quiz sequence for [Module ${topic.id}: ${topic.title}]. Good luck!`);
+            }
+        };
+
+        const renderProgressMap = (theme) => {
+            const container = document.getElementById('progress-map');
+            if (!container) return;
+            container.innerHTML = ''; 
+
+            const isDark = theme === 'dark';
+
+            // Background vertical line
+            const trackLine = document.createElement('div');
+            trackLine.className = `absolute left-8 md:left-1/2 top-0 bottom-0 w-1 transform md:-translate-x-1/2 rounded-full z-0 transition-colors ${isDark ? 'bg-slate-800' : 'bg-slate-300'}`;
+            container.appendChild(trackLine);
+
+            curriculumData.forEach((node, index) => {
+                const isEven = index % 2 === 0; 
+                const isLast = index === curriculumData.length - 1;
+
+                let nodeClasses, borderClasses, textClasses, iconClasses, cursorClasses;
+
+                if (node.status === 'completed') {
+                    nodeClasses = `neon-green-glow ${isDark ? 'bg-slate-900' : 'bg-white'}`;
+                    borderClasses = `border-green-500/50 hover:border-green-400 bg-gradient-to-br ${isDark ? 'from-slate-900 to-green-900/20' : 'from-white to-green-50'}`;
+                    textClasses = 'text-green-600 dark:text-green-400';
+                    iconClasses = 'fa-check text-green-600 dark:text-green-400';
+                    cursorClasses = 'cursor-pointer hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(34,197,94,0.15)]';
+                } else if (node.status === 'available') {
+                    nodeClasses = `neon-blue-glow ${isDark ? 'bg-slate-900' : 'bg-white'}`;
+                    borderClasses = `border-sky-500/80 ring-1 ring-sky-500 bg-gradient-to-br ${isDark ? 'from-slate-900 to-sky-900/30' : 'from-white to-sky-50'} shadow-[0_0_20px_rgba(14,165,233,0.15)]`;
+                    textClasses = 'text-sky-600 dark:text-sky-400 font-bold';
+                    iconClasses = 'fa-unlock text-sky-600 dark:text-sky-400';
+                    cursorClasses = 'cursor-pointer hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(56,189,248,0.25)]';
+                } else {
+                    nodeClasses = `${isDark ? 'border-slate-800 bg-slate-900' : 'border-slate-300 bg-slate-100'}`;
+                    borderClasses = `border ${isDark ? 'border-slate-800/80 bg-slate-900/40' : 'border-slate-300 bg-white/60'} opacity-70`;
+                    textClasses = isDark ? 'text-slate-500' : 'text-slate-400';
+                    iconClasses = `fa-lock ${isDark ? 'text-slate-600' : 'text-slate-400'}`;
+                    cursorClasses = 'cursor-not-allowed';
+                }
+
+                const itemWrapper = document.createElement('div');
+                itemWrapper.className = `relative z-10 flex items-center mb-16 w-full ${isEven ? 'md:flex-row-reverse' : ''} group`;
+
+                let pathSegmentHTML = '';
+                if (!isLast) {
+                    const lineStateClass = node.status === 'completed' ? 'path-completed' : (isDark ? 'bg-slate-800' : 'bg-slate-300');
+                    pathSegmentHTML = `<div class="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 w-1 h-[calc(100%+4rem)] top-6 -z-10 ${lineStateClass} path-line"></div>`;
+                }
+
+                const titleColor = isDark ? 'text-white' : 'text-slate-900';
+                const descColor = node.status === 'locked' ? (isDark ? 'text-slate-600' : 'text-slate-400') : (isDark ? 'text-slate-400' : 'text-slate-600');
+                const badgeActive = node.status === 'available' ? `<span class="flex items-center gap-1.5 text-[10px] font-bold text-sky-600 dark:text-sky-400 bg-sky-100 dark:bg-sky-950/50 px-2 py-1 rounded-md border border-sky-300 dark:border-sky-800/50 animate-pulse"><i class="fa-solid fa-satellite-dish"></i> ACTIVE</span>` : '';
+                const badgeCleared = node.status === 'completed' ? `<span class="flex items-center gap-1.5 text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-950/50 px-2 py-1 rounded-md border border-green-300 dark:border-green-800/50"><i class="fa-solid fa-check-double"></i> CLEARED</span>` : '';
+
+                itemWrapper.innerHTML = `
+                    ${pathSegmentHTML}
+                    <div class="hidden md:block w-1/2"></div>
+                    
+                    <div class="absolute left-8 md:left-1/2 transform -translate-x-1/2 md:-translate-x-1/2 flex items-center justify-center w-14 h-14 rounded-full border-2 transition-all duration-500 z-20 ${nodeClasses}">
+                        <i class="fa-solid ${iconClasses} text-xl"></i>
+                    </div>
+                    
+                    <div class="w-full pl-24 md:pl-0 md:w-1/2 flex ${isEven ? 'md:pr-16 md:justify-end' : 'md:pl-16 md:justify-start'}">
+                        <div class="w-full max-w-md p-6 rounded-2xl glass-card transition-all duration-300 ${borderClasses} ${cursorClasses}" 
+                             onclick="window.handleNodeClick('${node.id}')">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-display text-[11px] font-bold uppercase tracking-[0.2em] ${textClasses}">Module ${node.id}</span>
+                                ${badgeActive}
+                                ${badgeCleared}
+                            </div>
+                            <h2 class="text-xl md:text-2xl font-bold ${titleColor} mb-2 leading-tight">${node.title}</h2>
+                            <p class="text-sm ${descColor}">${node.description}</p>
+                            ${node.status !== 'locked' ? `
+                                <div class="mt-4 pt-4 border-t ${node.status === 'completed' ? 'border-green-500/30' : 'border-sky-500/30'} flex items-center justify-between">
+                                    <span class="text-xs font-semibold ${textClasses}">
+                                        ${node.status === 'completed' ? 'Review Archives' : 'Initialize Quiz Sequence'}
+                                    </span>
+                                    <i class="fa-solid fa-arrow-right ${textClasses} group-hover:translate-x-1 transition-transform"></i>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(itemWrapper);
+            });
+        };
 
         // =========================================================================
         // 3. FULL PERIODIC TABLE DATA (118 ELEMENTS)
@@ -665,6 +815,13 @@
             useEffect(() => {
                 document.body.className = 'theme-' + theme;
             }, [theme]);
+
+            // Execute the Neural Progress Map Render exclusively when the Quiz tab is active
+            useEffect(() => {
+                if (selectedCategory === 'Quiz') {
+                    renderProgressMap(theme);
+                }
+            }, [selectedCategory, theme]);
 
             useEffect(() => {
                 if (!window.FirebaseModule) return;
@@ -1314,129 +1471,146 @@
                                 </div>
                             </div>
 
-                            {/* Main Display List */}
-                            <>
-                                {/* 3. REFINEMENT & DISCOVERY TOOLBAR */}
-                                <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 pt-1">
-                                    <div className="relative flex-grow sm:max-w-md w-full">
-                                        <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" aria-hidden="true"></i>
-                                        <input 
-                                            type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={`Search in ${selectedForm} ${selectedCategory}...`} aria-label={`Search in ${selectedForm} ${selectedCategory}`}
-                                            className={`w-full border rounded-xl pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:border-teal-600 transition-all shadow-sm ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500' : theme === 'eyecare' ? 'bg-white border-slate-300 text-slate-900 placeholder-slate-500' : 'bg-white border-slate-300 text-slate-800 placeholder-slate-400'}`}
-                                        />
-                                        {searchQuery && (
-                                            <button onClick={() => setSearchQuery('')} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs"><i className="fa-solid fa-xmark"></i></button>
-                                        )}
-                                    </div>
-                                    <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
-                                        <select value={filterLanguage} onChange={(e) => setFilterLanguage(e.target.value)} className={`w-full sm:w-auto px-2.5 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-600 shadow-sm cursor-pointer ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-800'}`} title="Filter Language Medium">
-                                            <option value="ALL">🌐 All Mediums</option>
-                                            <option value="DLP">🇬🇧 DLP (English)</option>
-                                            <option value="BM">🇲🇾 Bahasa Melayu</option>
-                                        </select>
-                                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={`w-full sm:w-auto px-2.5 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-600 shadow-sm cursor-pointer ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-800'}`} title="Sort Materials">
-                                            <option value="newest">Newest First</option>
-                                            <option value="oldest">Oldest First</option>
-                                            <option value="chapter">Chapter (A - Z)</option>
-                                            <option value="views">Most Viewed</option>
-                                        </select>
+                            {/* Main Display List OR Progress Map Integration */}
+                            {selectedCategory === 'Quiz' ? (
+                                <div className="w-full animation-fade-in py-4">
+                                    <header className="text-center mb-10 relative">
+                                        <div className={`inline-block p-3 rounded-2xl shadow-xl border mb-4 ${theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+                                            <i className="fa-solid fa-atom text-4xl text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-indigo-500 animate-[spin_4s_linear_infinite]"></i>
+                                        </div>
+                                        <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-cyan-600 to-indigo-600 drop-shadow-sm tracking-wider mb-2">
+                                            ChemTitra Nodes
+                                        </h1>
+                                        <p className={`text-sm font-bold tracking-widest uppercase ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Neural Syllabus Uplink</p>
+                                    </header>
+                                    <div id="progress-map" className="relative w-full pb-8 pt-4">
+                                        {/* React useEffect will mount vanilla JS UI Here */}
                                     </div>
                                 </div>
-
-                                {/* Student Action Tip */}
-                                <div className={`p-2 sm:p-2.5 rounded-xl border flex items-center space-x-2 text-[11px] font-medium ${theme === 'dark' ? 'bg-teal-950/30 border-teal-900/50 text-teal-300' : theme === 'eyecare' ? 'bg-teal-50/80 border-teal-200 text-teal-900' : 'bg-teal-50 border-teal-200 text-teal-800'}`}>
-                                    <i className="fa-solid fa-lightbulb text-teal-600 flex-shrink-0"></i>
-                                    <span><strong>Student Tip:</strong> {selectedCategory === 'Quiz' ? "Tap Take Quiz to launch your assigned external test modules!" : "Tap Preview to inspect materials directly on your device, or open full screen in a new tab for offline revision!"}</span>
-                                </div>
-
-                                {/* 4. MATERIALS CARD GRID */}
-                                {filteredMaterials.length === 0 ? (
-                                    <div className={`glass-card rounded-2xl p-8 sm:p-10 text-center space-y-3 sm:space-y-4 border-2 border-dashed transition-colors ${theme === 'dark' ? 'border-slate-700 bg-slate-900/60' : 'border-slate-300 bg-[#f8fafc]'}`}>
-                                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-teal-50 flex items-center justify-center mx-auto text-teal-600 text-xl sm:text-2xl shadow-inner border border-teal-100"><i className={`fa-solid ${alternateLanguageCount > 0 ? 'fa-language' : 'fa-folder-open'}`}></i></div>
-                                        
-                                        {searchQuery ? (
-                                            <div className="space-y-1">
-                                                <h4 className={`text-sm sm:text-base font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>No matches found for "{searchQuery}"</h4>
-                                                <p className={`text-xs max-w-md mx-auto ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Try checking your spelling or clearing the search query to see all available materials in {selectedForm}.</p>
-                                            </div>
-                                        ) : (filterLanguage !== 'ALL' && alternateLanguageCount > 0) ? (
-                                            <div className="space-y-3 max-w-md mx-auto">
-                                                <h4 className="text-sm sm:text-base font-bold text-amber-700 dark:text-amber-300 flex items-center justify-center space-x-1.5"><i className="fa-solid fa-circle-info"></i><span>{filterLanguage === 'BM' ? 'Tiada bahan dalam Bahasa Melayu' : 'Tiada bahan dalam DLP (English)'}</span></h4>
-                                                <div className={`text-xs space-y-1.5 p-3 rounded-xl border ${theme === 'dark' ? 'bg-slate-800/80 border-slate-700 text-slate-300' : 'bg-white/80 border-slate-200 text-slate-700'}`}>
-                                                    <p className="leading-snug">🇲🇾 Terdapat <strong>{alternateLanguageCount}</strong> bahan pembelajaran sedia ada untuk {selectedForm} ({selectedCategory}) dalam versi <strong>{filterLanguage === 'BM' ? 'DLP (English)' : 'Bahasa Melayu'}</strong>.</p>
-                                                </div>
-                                                <div className="pt-1"><button onClick={() => setFilterLanguage(filterLanguage === 'BM' ? 'DLP' : 'BM')} className="px-4 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md shadow-teal-600/20 hover:from-teal-700 hover:to-emerald-700 transition-all flex items-center justify-center space-x-1.5 mx-auto"><i className="fa-solid fa-arrows-rotate"></i><span>Switch to {filterLanguage === 'BM' ? 'DLP (English)' : 'Bahasa Melayu'}</span></button></div>
-                                            </div>
-                                        ) : (
-                                            <div className="space-y-1">
-                                                <h4 className={`text-sm sm:text-base font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>No {selectedCategory} available for {selectedForm} yet</h4>
-                                                <p className={`text-xs max-w-md mx-auto ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{isAdmin ? (selectedCategory === 'Quiz' ? `Click the (+) button below to add your Quizizz or Google Forms external links.` : `Click the (+) button below to add your Google Drive files.`) : `Ikmal Hafiz will upload materials here soon. Please check back later!`}</p>
-                                            </div>
-                                        )}
-                                        
-                                        {isAdmin && (
-                                            <div className="pt-2">
-                                                <button onClick={() => openEditor()} className="inline-flex items-center space-x-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-extrabold text-xs shadow-md shadow-teal-600/20 transition-all transform hover:scale-105">
-                                                    <i className="fa-solid fa-plus text-sm"></i><span>Add {selectedCategory} to {selectedForm}</span>
-                                                </button>
-                                            </div>
-                                        )}
+                            ) : (
+                                <>
+                                    {/* 3. REFINEMENT & DISCOVERY TOOLBAR */}
+                                    <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 pt-1">
+                                        <div className="relative flex-grow sm:max-w-md w-full">
+                                            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" aria-hidden="true"></i>
+                                            <input 
+                                                type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={`Search in ${selectedForm} ${selectedCategory}...`} aria-label={`Search in ${selectedForm} ${selectedCategory}`}
+                                                className={`w-full border rounded-xl pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:border-teal-600 transition-all shadow-sm ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500' : theme === 'eyecare' ? 'bg-white border-slate-300 text-slate-900 placeholder-slate-500' : 'bg-white border-slate-300 text-slate-800 placeholder-slate-400'}`}
+                                            />
+                                            {searchQuery && (
+                                                <button onClick={() => setSearchQuery('')} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs"><i className="fa-solid fa-xmark"></i></button>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                                            <select value={filterLanguage} onChange={(e) => setFilterLanguage(e.target.value)} className={`w-full sm:w-auto px-2.5 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-600 shadow-sm cursor-pointer ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-800'}`} title="Filter Language Medium">
+                                                <option value="ALL">🌐 All Mediums</option>
+                                                <option value="DLP">🇬🇧 DLP (English)</option>
+                                                <option value="BM">🇲🇾 Bahasa Melayu</option>
+                                            </select>
+                                            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={`w-full sm:w-auto px-2.5 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-600 shadow-sm cursor-pointer ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-800'}`} title="Sort Materials">
+                                                <option value="newest">Newest First</option>
+                                                <option value="oldest">Oldest First</option>
+                                                <option value="chapter">Chapter (A - Z)</option>
+                                                <option value="views">Most Viewed</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                ) : (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-                                        {filteredMaterials.map((item) => {
-                                            const isNew = isRecentlyUploaded(item.updatedAt);
-                                            return (
-                                                <div key={item.id} className={`glass-card glass-card-hover rounded-2xl p-4 sm:p-5 flex flex-col justify-between space-y-3.5 relative group border ${theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-[#f8fafc] border-slate-300/80'}`}>
-                                                    <div className="space-y-2.5">
-                                                        <div className="flex items-start justify-between gap-1.5">
-                                                            <div className="flex flex-wrap items-center gap-1.5">
-                                                                <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border ${theme === 'dark' ? 'bg-slate-800 text-slate-300 border-slate-700' : 'bg-slate-200/80 text-slate-800 border-slate-300'}`}>{item.chapter || 'Topic Module'}</span>
-                                                                <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded border ${item.language === 'BM' ? 'bg-rose-100 text-rose-800 border-rose-200' : 'bg-cyan-100 text-cyan-800 border-cyan-200'}`}>{item.language === 'BM' ? 'Bahasa Melayu' : 'DLP (English)'}</span>
-                                                                {isNew && <span className="animate-pulse-glow text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm flex items-center space-x-1"><i className="fa-solid fa-bolt text-[8px]"></i><span>NEW</span></span>}
-                                                            </div>
-                                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${item.category === 'Notes' ? 'bg-teal-100 text-teal-800 border border-teal-200' : item.category === 'Exercises' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}><i className={`fa-solid ${item.category === 'Notes' ? 'fa-file-lines' : item.category === 'Exercises' ? 'fa-clipboard-question' : 'fa-bolt'} mr-1`}></i>{item.category}</span>
-                                                        </div>
-                                                        <div>
-                                                            <h4 className={`text-sm sm:text-base font-bold group-hover:text-teal-600 transition-colors line-clamp-2 ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}>{item.title}</h4>
-                                                            {item.description && <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.description}</p>}
-                                                        </div>
-                                                        {item.tags && item.tags.length > 0 && (
-                                                            <div className="flex flex-wrap gap-1 pt-0.5">
-                                                                {item.tags.map((tag, idx) => <span key={idx} className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-md border ${theme === 'dark' ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-200/60 text-slate-600 border-slate-300'}`}>#{tag}</span>)}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between gap-2">
-                                                        <div className={`text-[10px] sm:text-[11px] flex items-center space-x-2 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-                                                            <span className="flex items-center space-x-1" title="Views"><i className="fa-solid fa-eye text-teal-600 text-xs"></i><span>{item.views || 0}</span></span>
-                                                            <span>•</span><span>{item.updatedAt || 'Recent'}</span>
-                                                        </div>
-                                                        <div className="flex items-center space-x-1.5 sm:space-x-2">
-                                                            {item.category === 'Quiz' ? (
-                                                                <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" onClick={() => handleViewMaterial(item)} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition-all flex items-center space-x-1.5 shadow-sm hover:scale-105">
-                                                                    <i className="fa-solid fa-bolt"></i><span>Take Quiz</span>
-                                                                </a>
-                                                            ) : (
-                                                                <>
-                                                                    <button onClick={() => handleViewMaterial(item)} className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs font-semibold bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 transition-all flex items-center space-x-1 shadow-sm"><i className="fa-solid fa-eye text-teal-600"></i><span>Preview</span></button>
-                                                                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" onClick={() => handleViewMaterial(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
-                                                                </>
-                                                            )}
-                                                            {isAdmin && (
-                                                                <>
-                                                                    <button onClick={() => openEditor(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-pen" aria-hidden="true"></i></button>
-                                                                    <button onClick={() => setItemToDelete(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-trash-can" aria-hidden="true"></i></button>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
+
+                                    {/* Student Action Tip */}
+                                    <div className={`p-2 sm:p-2.5 rounded-xl border flex items-center space-x-2 text-[11px] font-medium ${theme === 'dark' ? 'bg-teal-950/30 border-teal-900/50 text-teal-300' : theme === 'eyecare' ? 'bg-teal-50/80 border-teal-200 text-teal-900' : 'bg-teal-50 border-teal-200 text-teal-800'}`}>
+                                        <i className="fa-solid fa-lightbulb text-teal-600 flex-shrink-0"></i>
+                                        <span><strong>Student Tip:</strong> {selectedCategory === 'Quiz' ? "Tap Take Quiz to launch your assigned external test modules!" : "Tap Preview to inspect materials directly on your device, or open full screen in a new tab for offline revision!"}</span>
                                     </div>
-                                )}
-                            </>
+
+                                    {/* 4. MATERIALS CARD GRID */}
+                                    {filteredMaterials.length === 0 ? (
+                                        <div className={`glass-card rounded-2xl p-8 sm:p-10 text-center space-y-3 sm:space-y-4 border-2 border-dashed transition-colors ${theme === 'dark' ? 'border-slate-700 bg-slate-900/60' : 'border-slate-300 bg-[#f8fafc]'}`}>
+                                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-teal-50 flex items-center justify-center mx-auto text-teal-600 text-xl sm:text-2xl shadow-inner border border-teal-100"><i className={`fa-solid ${alternateLanguageCount > 0 ? 'fa-language' : 'fa-folder-open'}`}></i></div>
+                                            
+                                            {searchQuery ? (
+                                                <div className="space-y-1">
+                                                    <h4 className={`text-sm sm:text-base font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>No matches found for "{searchQuery}"</h4>
+                                                    <p className={`text-xs max-w-md mx-auto ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Try checking your spelling or clearing the search query to see all available materials in {selectedForm}.</p>
+                                                </div>
+                                            ) : (filterLanguage !== 'ALL' && alternateLanguageCount > 0) ? (
+                                                <div className="space-y-3 max-w-md mx-auto">
+                                                    <h4 className="text-sm sm:text-base font-bold text-amber-700 dark:text-amber-300 flex items-center justify-center space-x-1.5"><i className="fa-solid fa-circle-info"></i><span>{filterLanguage === 'BM' ? 'Tiada bahan dalam Bahasa Melayu' : 'Tiada bahan dalam DLP (English)'}</span></h4>
+                                                    <div className={`text-xs space-y-1.5 p-3 rounded-xl border ${theme === 'dark' ? 'bg-slate-800/80 border-slate-700 text-slate-300' : 'bg-white/80 border-slate-200 text-slate-700'}`}>
+                                                        <p className="leading-snug">🇲🇾 Terdapat <strong>{alternateLanguageCount}</strong> bahan pembelajaran sedia ada untuk {selectedForm} ({selectedCategory}) dalam versi <strong>{filterLanguage === 'BM' ? 'DLP (English)' : 'Bahasa Melayu'}</strong>.</p>
+                                                    </div>
+                                                    <div className="pt-1"><button onClick={() => setFilterLanguage(filterLanguage === 'BM' ? 'DLP' : 'BM')} className="px-4 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md shadow-teal-600/20 hover:from-teal-700 hover:to-emerald-700 transition-all flex items-center justify-center space-x-1.5 mx-auto"><i className="fa-solid fa-arrows-rotate"></i><span>Switch to {filterLanguage === 'BM' ? 'DLP (English)' : 'Bahasa Melayu'}</span></button></div>
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-1">
+                                                    <h4 className={`text-sm sm:text-base font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>No {selectedCategory} available for {selectedForm} yet</h4>
+                                                    <p className={`text-xs max-w-md mx-auto ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{isAdmin ? (selectedCategory === 'Quiz' ? `Click the (+) button below to add your Quizizz or Google Forms external links.` : `Click the (+) button below to add your Google Drive files.`) : `Ikmal Hafiz will upload materials here soon. Please check back later!`}</p>
+                                                </div>
+                                            )}
+                                            
+                                            {isAdmin && (
+                                                <div className="pt-2">
+                                                    <button onClick={() => openEditor()} className="inline-flex items-center space-x-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-extrabold text-xs shadow-md shadow-teal-600/20 transition-all transform hover:scale-105">
+                                                        <i className="fa-solid fa-plus text-sm"></i><span>Add {selectedCategory} to {selectedForm}</span>
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                                            {filteredMaterials.map((item) => {
+                                                const isNew = isRecentlyUploaded(item.updatedAt);
+                                                return (
+                                                    <div key={item.id} className={`glass-card glass-card-hover rounded-2xl p-4 sm:p-5 flex flex-col justify-between space-y-3.5 relative group border ${theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-[#f8fafc] border-slate-300/80'}`}>
+                                                        <div className="space-y-2.5">
+                                                            <div className="flex items-start justify-between gap-1.5">
+                                                                <div className="flex flex-wrap items-center gap-1.5">
+                                                                    <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border ${theme === 'dark' ? 'bg-slate-800 text-slate-300 border-slate-700' : 'bg-slate-200/80 text-slate-800 border-slate-300'}`}>{item.chapter || 'Topic Module'}</span>
+                                                                    <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded border ${item.language === 'BM' ? 'bg-rose-100 text-rose-800 border-rose-200' : 'bg-cyan-100 text-cyan-800 border-cyan-200'}`}>{item.language === 'BM' ? 'Bahasa Melayu' : 'DLP (English)'}</span>
+                                                                    {isNew && <span className="animate-pulse-glow text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm flex items-center space-x-1"><i className="fa-solid fa-bolt text-[8px]"></i><span>NEW</span></span>}
+                                                                </div>
+                                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${item.category === 'Notes' ? 'bg-teal-100 text-teal-800 border border-teal-200' : item.category === 'Exercises' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}><i className={`fa-solid ${item.category === 'Notes' ? 'fa-file-lines' : item.category === 'Exercises' ? 'fa-clipboard-question' : 'fa-bolt'} mr-1`}></i>{item.category}</span>
+                                                            </div>
+                                                            <div>
+                                                                <h4 className={`text-sm sm:text-base font-bold group-hover:text-teal-600 transition-colors line-clamp-2 ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}>{item.title}</h4>
+                                                                {item.description && <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.description}</p>}
+                                                            </div>
+                                                            {item.tags && item.tags.length > 0 && (
+                                                                <div className="flex flex-wrap gap-1 pt-0.5">
+                                                                    {item.tags.map((tag, idx) => <span key={idx} className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-md border ${theme === 'dark' ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-200/60 text-slate-600 border-slate-300'}`}>#{tag}</span>)}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between gap-2">
+                                                            <div className={`text-[10px] sm:text-[11px] flex items-center space-x-2 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                                                                <span className="flex items-center space-x-1" title="Views"><i className="fa-solid fa-eye text-teal-600 text-xs"></i><span>{item.views || 0}</span></span>
+                                                                <span>•</span><span>{item.updatedAt || 'Recent'}</span>
+                                                            </div>
+                                                            <div className="flex items-center space-x-1.5 sm:space-x-2">
+                                                                {item.category === 'Quiz' ? (
+                                                                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" onClick={() => handleViewMaterial(item)} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition-all flex items-center space-x-1.5 shadow-sm hover:scale-105">
+                                                                        <i className="fa-solid fa-bolt"></i><span>Take Quiz</span>
+                                                                    </a>
+                                                                ) : (
+                                                                    <>
+                                                                        <button onClick={() => handleViewMaterial(item)} className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs font-semibold bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 transition-all flex items-center space-x-1 shadow-sm"><i className="fa-solid fa-eye text-teal-600"></i><span>Preview</span></button>
+                                                                        <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" onClick={() => handleViewMaterial(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                                                                    </>
+                                                                )}
+                                                                {isAdmin && (
+                                                                    <>
+                                                                        <button onClick={() => openEditor(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-pen" aria-hidden="true"></i></button>
+                                                                        <button onClick={() => setItemToDelete(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </>
+                            )}
                         </section>
                     </main>
 
