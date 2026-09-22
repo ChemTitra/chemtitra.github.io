@@ -1819,33 +1819,109 @@
 
                                 {/* Rich Element Detail Slide-Up Drawer */}
                                 {selectedElement && (
-                                    <div className={`absolute bottom-0 left-0 w-full p-5 sm:p-6 rounded-t-3xl border-t shadow-[0_-10px_40px_rgba(0,0,0,0.15)] animate-slide-up transition-all z-[100] ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
+                                    <div className={`absolute bottom-0 left-0 w-full p-6 sm:p-8 rounded-t-[2.5rem] border-t shadow-[0_-15px_50px_rgba(0,0,0,0.25)] animate-slide-up transition-all z-[100] ${
+                                        theme === 'dark' ? 'bg-slate-900 border-slate-700' : 
+                                        theme === 'eyecare' ? 'bg-[#fcf8f2] border-[#e8dccb]' : 
+                                        'bg-white border-slate-200'
+                                    }`}>
                                         <div className="flex justify-between items-start">
-                                            <div className="flex gap-4 items-center">
+                                            <div className="flex gap-4 sm:gap-5 items-center">
                                                 <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-3xl font-black border-4 shadow-lg ${CATEGORY_STYLES[selectedElement.cat]}`}>{selectedElement.sym}</div>
                                                 <div>
-                                                    <h3 className={`text-xl sm:text-2xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{selectedElement.name}</h3>
-                                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-500">{selectedElement.cat.replace('-', ' ')}</span>
+                                                    <h3 className={`text-2xl sm:text-3xl font-black tracking-tight ${
+                                                        theme === 'dark' ? 'text-white' : 
+                                                        theme === 'eyecare' ? 'text-[#4a3525]' : 
+                                                        'text-slate-900'
+                                                    }`}>{selectedElement.name}</h3>
+                                                    <span className={`text-xs sm:text-sm font-bold uppercase tracking-widest ${
+                                                        theme === 'dark' ? 'text-slate-400' : 
+                                                        theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                        'text-slate-500'
+                                                    }`}>{selectedElement.cat.replace('-', ' ')}</span>
                                                 </div>
                                             </div>
-                                            <button onClick={() => setSelectedElement(null)} className="text-slate-400 hover:text-teal-600 transition-colors"><i className="fa-solid fa-circle-chevron-down text-2xl sm:text-3xl"></i></button>
+                                            <button onClick={() => setSelectedElement(null)} className={`transition-transform hover:scale-110 ${
+                                                theme === 'dark' ? 'text-slate-500 hover:text-cyan-400' : 
+                                                theme === 'eyecare' ? 'text-[#c2a788] hover:text-[#8b6b4a]' : 
+                                                'text-slate-400 hover:text-teal-600'
+                                            }`}><i className="fa-solid fa-circle-chevron-down text-3xl sm:text-4xl"></i></button>
                                         </div>
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-4 sm:mt-5">
-                                            <div className={`p-2.5 sm:p-3 rounded-xl border ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
-                                                <p className="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase">Atomic Number</p>
-                                                <p className={`text-base sm:text-lg font-black ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{selectedElement.n}</p>
+                                        
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6 sm:mt-8">
+                                            <div className={`p-3 sm:p-4 rounded-2xl border transition-colors ${
+                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
+                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
+                                                'bg-slate-50 border-slate-200 shadow-sm'
+                                            }`}>
+                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
+                                                    theme === 'dark' ? 'text-slate-400' : 
+                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                    'text-slate-500'
+                                                }`}>Atomic Number</p>
+                                                <p className={`text-xl sm:text-2xl font-black ${
+                                                    theme === 'dark' ? 'text-white' : 
+                                                    theme === 'eyecare' ? 'text-[#4a3525]' : 
+                                                    'text-slate-900'
+                                                }`}>{selectedElement.n}</p>
                                             </div>
-                                            <div className={`p-2.5 sm:p-3 rounded-xl border ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
-                                                <p className="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase">Atomic Mass</p>
-                                                <p className={`text-base sm:text-lg font-black ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{selectedElement.m}</p>
+                                            
+                                            <div className={`p-3 sm:p-4 rounded-2xl border transition-colors ${
+                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
+                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
+                                                'bg-slate-50 border-slate-200 shadow-sm'
+                                            }`}>
+                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
+                                                    theme === 'dark' ? 'text-slate-400' : 
+                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                    'text-slate-500'
+                                                }`}>Atomic Mass</p>
+                                                <p className={`text-xl sm:text-2xl font-black ${
+                                                    theme === 'dark' ? 'text-white' : 
+                                                    theme === 'eyecare' ? 'text-[#4a3525]' : 
+                                                    'text-slate-900'
+                                                }`}>{selectedElement.m}</p>
                                             </div>
-                                            <div className={`col-span-2 p-2.5 sm:p-3 rounded-xl border ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
-                                                <p className="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase">Electron Configuration</p>
-                                                <p className={`text-base sm:text-lg font-mono font-bold ${theme === 'dark' ? 'text-teal-400' : 'text-teal-700'}`}>{selectedElement.e}</p>
+                                            
+                                            <div className={`col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
+                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
+                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
+                                                'bg-slate-50 border-slate-200 shadow-sm'
+                                            }`}>
+                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
+                                                    theme === 'dark' ? 'text-slate-400' : 
+                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                    'text-slate-500'
+                                                }`}>Electron Configuration</p>
+                                                <p className={`text-xl sm:text-2xl font-mono font-black ${
+                                                    theme === 'dark' ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]' : 
+                                                    theme === 'eyecare' ? 'text-[#7d4b26]' : 
+                                                    'text-teal-700'
+                                                }`}>{selectedElement.e}</p>
                                             </div>
                                         </div>
-                                        <div className="mt-3 sm:mt-4 p-3.5 rounded-xl bg-indigo-50/50 border border-indigo-100 dark:bg-indigo-900/30 dark:border-indigo-800">
-                                            <p className="text-xs text-indigo-800 dark:text-indigo-300 font-medium leading-relaxed"><i className="fa-solid fa-lightbulb text-amber-500 mr-2"></i><strong>Fun Fact: </strong>{selectedElement.f}</p>
+                                        
+                                        <div className={`mt-4 sm:mt-5 p-4 sm:p-5 rounded-2xl border flex items-start sm:items-center transition-all ${
+                                            theme === 'dark' ? 'bg-indigo-950/50 border-indigo-500/30 shadow-[0_4px_20px_-5px_rgba(99,102,241,0.2)]' : 
+                                            theme === 'eyecare' ? 'bg-[#f0e1c5] border-[#d4b996]' : 
+                                            'bg-indigo-50 border-indigo-200'
+                                        }`}>
+                                            <i className={`fa-solid fa-lightbulb text-xl sm:text-2xl mr-3 sm:mr-4 mt-0.5 sm:mt-0 flex-shrink-0 ${
+                                                theme === 'dark' ? 'text-yellow-300 drop-shadow-[0_0_10px_rgba(253,224,71,0.6)]' : 
+                                                theme === 'eyecare' ? 'text-[#b87333]' : 
+                                                'text-amber-500'
+                                            }`}></i>
+                                            <p className={`text-sm sm:text-base font-semibold leading-relaxed ${
+                                                theme === 'dark' ? 'text-indigo-50' : 
+                                                theme === 'eyecare' ? 'text-[#5a3e26]' : 
+                                                'text-indigo-950'
+                                            }`}>
+                                                <strong className={`font-black mr-1.5 uppercase tracking-wide ${
+                                                    theme === 'dark' ? 'text-cyan-300' : 
+                                                    theme === 'eyecare' ? 'text-[#7d4b26]' : 
+                                                    'text-indigo-700'
+                                                }`}>Fun Fact:</strong> 
+                                                {selectedElement.f}
+                                            </p>
                                         </div>
                                     </div>
                                 )}
