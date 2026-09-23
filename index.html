@@ -643,14 +643,15 @@
                     if (!response.ok) throw new Error(`API Error: ${response.status}`);
                     const data = await response.json();
                     
-                    if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
-                        setMessages(prev => [...prev, { role: "model", text: data.candidates[0].content.parts[0].text }]);
+                    if (data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+                        const responseText = data.candidates[0].content.parts[0].text;
+                        setMessages(prev => [...prev, { role: "model", text: responseText }]);
                     } else {
-                        throw new Error("Invalid response format");
+                        throw new Error("Invalid response format: Missing array indices.");
                     }
                 } catch (error) {
                     console.error("Gemini API Error:", error);
-                    setMessages(prev => [...prev, { role: "model", text: "⚠️ Error connecting to the AI Tutor. Please verify your API key and check your internet connection." }]);
+                    setMessages(prev => [...prev, { role: "model", text: "⚠️ Error connecting to the AI Tutor. Please verify your internet connection or API settings." }]);
                 } finally {
                     setIsLoading(false);
                 }
