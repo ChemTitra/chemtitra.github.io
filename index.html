@@ -601,7 +601,7 @@
         };
 
         // --- SUBCOMPONENT: Floating AI Chat Tutor ---
-        const GEMINI_API_KEY = "PASTE_YOUR_KEY_HERE";
+        const GEMINI_API_KEY = "AQ.Ab8RN6LLUTmXOkoQnj6SX3hSiqw-vmtkdarZTWWLNjnqCN3yrw";
 
         const AIChatWidget = ({ theme }) => {
             const [isOpen, setIsOpen] = useState(false);
@@ -620,8 +620,8 @@
             }, [messages, isLoading, isOpen]);
 
             const handleSend = async () => {
-                if (!inputText.trim() || !GEMINI_API_KEY || GEMINI_API_KEY === "PASTE_YOUR_KEY_HERE") {
-                    if (GEMINI_API_KEY === "PASTE_YOUR_KEY_HERE") {
+                if (!inputText.trim() || !GEMINI_API_KEY || GEMINI_API_KEY === "AQ.Ab8RN6LLUTmXOkoQnj6SX3hSiqw-vmtkdarZTWWLNjnqCN3yrw") {
+                    if (GEMINI_API_KEY === "AQ.Ab8RN6LLUTmXOkoQnj6SX3hSiqw-vmtkdarZTWWLNjnqCN3yrw") {
                          setMessages(prev => [...prev, { role: "user", text: inputText.trim() }, { role: "model", text: "⚠️ Please configure your GEMINI_API_KEY in the source code to unlock my capabilities!" }]);
                          setInputText("");
                     }
