@@ -19,7 +19,7 @@
       style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://cdn.tailwindcss.com;
       font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;
       img-src 'self' data: https:;
-      connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://generativelanguage.googleapis.com;
+      connect-src 'self' https://googleapis.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://generativelanguage.googleapis.com;
       frame-src https://drive.google.com https://accounts.google.com https://*.firebaseapp.com;
       base-uri 'self';
       object-src 'none';
@@ -590,9 +590,7 @@
             return null;
         };
 
-        // =========================================================================
-        // VIRTUAL AI TUTOR (GEMINI API INTEGRATION)
-        // =========================================================================
+        // --- SUBCOMPONENT: Floating AI Chat Tutor ---
         const GEMINI_API_KEY = "AQ.Ab8RN6LLUTmXOkoQnj6SX3hSiqw-vmtkdarZTWWLNjnqCN3yrw";
 
         const AIChatWidget = ({ theme }) => {
