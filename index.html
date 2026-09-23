@@ -245,7 +245,13 @@
         window.handleNodeClick = (topicId) => {
             const topic = curriculumData.find(t => t.id === topicId);
             if (topic && topic.status === "available") {
-                alert(`Initiating new quiz sequence for [Chapter ${topic.chapter}: ${topic.title}]. Good luck!`);
+                const url = topic.quizUrl;
+                // Checks for a real external URL (e.g., starts with http)
+                if (url && url.startsWith("http")) {
+                    window.open(url, '_blank');
+                } else {
+                    alert(`Data stream active for ${topic.title}. The quiz link for this chapter will be uploaded soon!`);
+                }
             }
         };
 
