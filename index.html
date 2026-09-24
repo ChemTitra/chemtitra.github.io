@@ -472,7 +472,15 @@
             { n: 101, sym: 'Md', name: 'Mendelevium', m: 258, cat: 'actinide', c: 16, r: 9, e: '[Rn] 5f13 7s2', f: 'Named after Dmitri Mendeleev, creator of the periodic table.' },
             { n: 102, sym: 'No', name: 'Nobelium', m: 259, cat: 'actinide', c: 17, r: 9, e: '[Rn] 5f14 7s2', f: 'Named after Alfred Nobel, inventor of dynamite.' },
             { n: 103, sym: 'Lr', name: 'Lawrencium', m: 266, cat: 'actinide', c: 18, r: 9, e: '[Rn] 5f14 6d1 7s2', f: 'Named after Ernest Lawrence, inventor of the cyclotron.' }
-        ];
+        ].map(el => {
+            let state = 'Solid';
+            if (['H', 'He', 'N', 'O', 'F', 'Ne', 'Cl', 'Ar', 'Kr', 'Xe', 'Rn'].includes(el.sym)) {
+                state = 'Gas';
+            } else if (['Hg', 'Br'].includes(el.sym)) {
+                state = 'Liquid';
+            }
+            return { ...el, state };
+        });
 
         const CATEGORY_STYLES = {
             'alkali-metal': 'bg-rose-500/90 text-white border-rose-600',
@@ -1781,8 +1789,9 @@
                                             }`}><i className="fa-solid fa-circle-chevron-down text-3xl sm:text-4xl"></i></button>
                                         </div>
                                         
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6 sm:mt-8">
-                                            <div className={`p-3 sm:p-4 rounded-2xl border transition-colors ${
+                                        <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 sm:gap-4 mt-6 sm:mt-8">
+                                            {/* Atomic Number */}
+                                            <div className={`col-span-1 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
                                                 theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
                                                 theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
                                                 'bg-slate-50 border-slate-200 shadow-sm'
@@ -1799,7 +1808,8 @@
                                                 }`}>{selectedElement.n}</p>
                                             </div>
                                             
-                                            <div className={`p-3 sm:p-4 rounded-2xl border transition-colors ${
+                                            {/* Atomic Mass */}
+                                            <div className={`col-span-1 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
                                                 theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
                                                 theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
                                                 'bg-slate-50 border-slate-200 shadow-sm'
@@ -1815,8 +1825,32 @@
                                                     'text-slate-900'
                                                 }`}>{selectedElement.m}</p>
                                             </div>
+
+                                            {/* NEW: Physical State (STP) */}
+                                            <div className={`col-span-2 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors flex flex-col justify-center ${
+                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
+                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
+                                                'bg-slate-50 border-slate-200 shadow-sm'
+                                            }`}>
+                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
+                                                    theme === 'dark' ? 'text-slate-400' : 
+                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                    'text-slate-500'
+                                                }`}>Physical State (STP)</p>
+                                                <p className={`text-xl sm:text-2xl font-black flex items-center space-x-2.5 ${
+                                                    theme === 'dark' ? 'text-white' : 
+                                                    theme === 'eyecare' ? 'text-[#4a3525]' : 
+                                                    'text-slate-900'
+                                                }`}>
+                                                    {selectedElement.state === 'Gas' && <i className="fa-solid fa-cloud text-sky-400 text-lg sm:text-xl"></i>}
+                                                    {selectedElement.state === 'Liquid' && <i className="fa-solid fa-droplet text-blue-500 text-lg sm:text-xl"></i>}
+                                                    {selectedElement.state === 'Solid' && <i className="fa-solid fa-cube text-slate-500 text-lg sm:text-xl"></i>}
+                                                    <span>{selectedElement.state}</span>
+                                                </p>
+                                            </div>
                                             
-                                            <div className={`col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
+                                            {/* Electron Configuration */}
+                                            <div className={`col-span-2 sm:col-span-6 p-3 sm:p-4 rounded-2xl border transition-colors ${
                                                 theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
                                                 theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
                                                 'bg-slate-50 border-slate-200 shadow-sm'
