@@ -634,7 +634,7 @@
 
                     const payload = {
                         system_instruction: {
-                            parts: [{ text: "You are the ChemTitra AI Tutor, an encouraging and patient mentor for secondary school students studying KSSM Form 1-3 Science and Form 4-5 SPM Chemistry in Malaysia. Automatically respond in the language used by the student (English/DLP or Bahasa Melayu). Explain concepts clearly, step-by-step.\n\nSTRICT FORMATTING RULES:\n1. NO LaTeX math formatting (strictly avoid $, $$, \\text{}, \\frac, or curly brackets). Write all math and chemistry formulas in simple plain text (e.g., 'Carbon-12', 'H2O', '12 - 6 = 6').\n2. NO Markdown tables (|---|). Present comparisons using clear indented bullet points.\n3. NO Markdown headings (#, ##, ###). Use simple bold text with emojis instead (e.g., '**🌟 Example:**')." }]
+                            parts: [{ text: "You are the ChemTitra AI Tutor, an encouraging and patient mentor for secondary school students studying KSSM Form 1-3 Science and Form 4-5 SPM Chemistry in Malaysia. Automatically respond in the language used by the student (English/DLP or Bahasa Melayu). Explain concepts clearly, step-by-step.\n\nSTRICT FORMATTING RULES:\n1. NO LaTeX math formatting (strictly avoid $, $$, \\text{}, \\frac, or curly brackets).\n2. CHEMISTRY NOTATION: Always write chemical formulas using native Unicode subscript digits (e.g., H₂O, H₂SO₄, CO₂). Always write ionic charges and isotopes using native Unicode superscript characters (e.g., Na⁺, Ca²⁺, Al³⁺, Cl⁻, SO₄²⁻, ¹⁴C). Use standard Unicode arrows (→) for reactions. NEVER output raw inline digits for chemical compounds (do not write H2SO4 or Na2SO4).\n3. NO Markdown tables (|---|). Present comparisons using clear indented bullet points.\n4. NO Markdown headings (#, ##, ###). Use simple bold text with emojis instead (e.g., '**🌟 Example:**')." }]
                         },
                         contents: history
                     };
@@ -688,14 +688,21 @@
                 return cleanText.split('\n').map((line, lineIdx) => {
                     if (line.trim() === '') return <div key={lineIdx} className="h-2"></div>;
 
-                    const parts = line.split(/(\*\*.*?\*\*)/g);
+                    // Regex matches **, <sub>, and <sup> tags for formatting
+                    const regex = /(\*\*.*?\*\*|<sub>.*?<\/sub>|<sup>.*?<\/sup>)/g;
+                    const parts = line.split(regex);
+                    
                     return (
                         <div key={lineIdx} className="mb-1 leading-relaxed break-words">
                             {parts.map((part, i) => {
                                 if (part.startsWith('**') && part.endsWith('**')) {
                                     return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
+                                } else if (part.startsWith('<sub>') && part.endsWith('</sub>')) {
+                                    return <sub key={i}>{part.slice(5, -6)}</sub>;
+                                } else if (part.startsWith('<sup>') && part.endsWith('</sup>')) {
+                                    return <sup key={i}>{part.slice(5, -6)}</sup>;
                                 }
-                                return <span key={i}>{part.replace(/\*\*/g, '')}</span>;
+                                return <span key={i}>{part}</span>;
                             })}
                         </div>
                     );
