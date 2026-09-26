@@ -1044,27 +1044,31 @@
                 }
             };
 
-            const handleDeleteClick = async (material) => {
-                if (window.confirm(`Are you sure you want to delete "${material.title}"?`)) {
-                    
-                    if (!material.id) { 
-                        console.error("Missing document ID"); 
-                        setMaterials(prev => prev.filter(m => m !== material));
-                        return; 
-                    }
-                    
-                    setMaterials(prev => prev.filter(m => m.id !== material.id));
+            const confirmDeleteMaterial = async () => {
+                if (!itemToDelete) return;
+                
+                const material = itemToDelete;
+                
+                if (!material.id) { 
+                    console.error("Missing document ID"); 
+                    setMaterials(prev => prev.filter(m => m !== material));
+                    setItemToDelete(null);
+                    return; 
+                }
+                
+                setMaterials(prev => prev.filter(m => m.id !== material.id));
 
-                    try {
-                        if (db && window.FirebaseModule) {
-                            const { doc, deleteDoc } = window.FirebaseModule;
-                            await deleteDoc(doc(db, "chemtitra_materials", material.id));
-                        }
-                        showToast('🗑️ Material deleted successfully.', 'info');
-                    } catch (err) {
-                        console.error("Delete error:", err);
-                        showToast('Removed from screen (DB error: ' + err.message + ')', 'error');
+                try {
+                    if (db && window.FirebaseModule) {
+                        const { doc, deleteDoc } = window.FirebaseModule;
+                        await deleteDoc(doc(db, "chemtitra_materials", material.id));
                     }
+                    showToast('🗑️ Material deleted successfully.', 'info');
+                } catch (err) {
+                    console.error("Delete error:", err);
+                    showToast('Removed from screen (DB error: ' + err.message + ')', 'error');
+                } finally {
+                    setItemToDelete(null);
                 }
             };
 
@@ -1389,19 +1393,30 @@
 
                             {/* 2. DIRECT RESOURCE CATEGORY TABS */}
                             <div className={`flex flex-col sm:flex-row items-center justify-between p-1.5 sm:p-2 rounded-2xl border gap-2.5 ${theme === 'dark' ? 'bg-slate-900 border-slate-800' : theme === 'eyecare' ? 'bg-slate-300/70 border-slate-300' : 'bg-slate-200/70 border-slate-300'}`}>
-                                <div className="grid grid-cols-3 w-full sm:w-[32rem] gap-1.5">
+                                <div className="grid grid-cols-3 w-full sm:w-[32rem] gap-1.5 sm:gap-2">
                                     {['Notes', 'Exercises', 'Quiz'].map(cat => (
                                         <button
                                             key={cat}
                                             onClick={() => setSelectedCategory(cat)}
-                                            className={`py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl text-[10px] sm:text-xs font-bold flex items-center justify-center space-x-1.5 transition-all ${
+                                            className={`py-2 sm:py-2 px-1 sm:px-3 rounded-xl text-[10px] sm:text-xs font-bold flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 transition-all relative ${
                                                 selectedCategory === cat
                                                 ? cat === 'Notes' ? 'bg-teal-700 text-white shadow-md' : cat === 'Exercises' ? 'bg-indigo-700 text-white shadow-md' : 'bg-amber-600 text-white shadow-md'
                                                 : theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:text-slate-900 hover:bg-white/60'
                                             }`}
                                         >
-                                            <i className={`fa-solid ${cat === 'Notes' ? 'fa-book-open' : cat === 'Exercises' ? 'fa-pen-ruler' : 'fa-bolt'}`}></i>
-                                            <span className="whitespace-nowrap">{cat}</span>
+                                            <div className="flex items-center space-x-1 sm:space-x-1.5">
+                                                <i className={`fa-solid ${cat === 'Notes' ? 'fa-book-open' : cat === 'Exercises' ? 'fa-pen-ruler' : 'fa-map'}`}></i>
+                                                <span className="whitespace-nowrap">{cat}</span>
+                                            </div>
+                                            {cat === 'Quiz' && (
+                                                <span className={`mt-0.5 sm:mt-0 px-1.5 py-0.5 rounded-[4px] text-[7px] sm:text-[8px] font-black uppercase tracking-wider ${
+                                                    selectedCategory === 'Quiz' 
+                                                    ? 'bg-white/30 text-white' 
+                                                    : theme === 'dark' ? 'bg-amber-900/60 text-amber-400' : 'bg-amber-100 text-amber-700'
+                                                }`}>
+                                                    Map View
+                                                </span>
+                                            )}
                                         </button>
                                     ))}
                                 </div>
@@ -1748,12 +1763,17 @@
                                     </div>
                                     
                                     {/* Mobile Wrap Layout */}
-                                    <div className="flex md:hidden flex-wrap justify-center gap-1.5 pb-20">
+                                    <div className="flex md:hidden flex-wrap justify-center gap-2.5 pb-20 px-1">
                                         {ELEMENTS.map(el => (
-                                            <button key={el.n} onClick={() => setSelectedElement(el)} className={`w-[4.2rem] h-[4.2rem] rounded-lg border-2 p-1 text-center flex flex-col items-center justify-center shadow-sm ${CATEGORY_STYLES[el.cat] || 'bg-slate-700 text-white'}`}>
-                                                <span className="text-[8px] font-bold w-full text-left opacity-80 leading-none">{el.n}</span>
-                                                <span className="text-lg font-black leading-none my-0.5">{el.sym}</span>
-                                                <span className="text-[7px] uppercase tracking-wider opacity-90 truncate w-full">{el.name}</span>
+                                            <button 
+                                                key={el.n} 
+                                                onClick={() => setSelectedElement(el)} 
+                                                className={`w-[4.75rem] h-[4.75rem] rounded-xl border-2 p-1.5 text-center flex flex-col items-center justify-between shadow-sm active:scale-95 transition-transform ${CATEGORY_STYLES[el.cat] || 'bg-slate-700 text-white'}`}
+                                                aria-label={`${el.name}, Element ${el.n}`}
+                                            >
+                                                <span className="text-[9px] font-bold w-full text-left opacity-80 leading-none">{el.n}</span>
+                                                <span className="text-xl font-black leading-none">{el.sym}</span>
+                                                <span className="text-[8px] uppercase tracking-wider opacity-90 truncate w-full">{el.name}</span>
                                             </button>
                                         ))}
                                     </div>
