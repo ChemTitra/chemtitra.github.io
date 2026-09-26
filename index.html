@@ -7,15 +7,45 @@
 
     <meta name="description" content="Ikmal Hafiz's educational workspace. Access curated Form 1-3 Science and Form 4-5 Chemistry notes, exam exercises and online quizzes.">
 
-    <!-- Fonts and Icons -->
+    <meta property="og:title" content="ChemTitra | Science & Chemistry Portal">
+    <meta property="og:description" content="Ikmal Hafiz's educational workspace. Access curated Form 1-3 Science and Form 4-5 Chemistry notes, exam exercises and online quizzes.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://www.gstatic.com https://apis.google.com https://accounts.google.com https://cdnjs.cloudflare.com;
+      style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://cdn.tailwindcss.com;
+      font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;
+      img-src 'self' data: https:;
+      connect-src 'self' https://googleapis.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://generativelanguage.googleapis.com;
+      frame-src https://drive.google.com https://accounts.google.com https://*.firebaseapp.com;
+      base-uri 'self';
+      object-src 'none';
+    ">
+
+    <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Futuristic Fonts for Quiz Map -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
+    </noscript>
+
+    <!-- React and Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin defer></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin defer></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" defer></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -26,13 +56,13 @@
                     },
                     colors: {
                         brand: { 50: '#f0fdfa', 100: '#ccfbf1', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a' },
+                        chem: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3' }
                     }
                 }
             }
         }
     </script>
     
-    <!-- Custom CSS Base for Themes -->
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -40,225 +70,611 @@
             min-height: 100vh;
             transition: background 0.4s ease, color 0.4s ease;
         }
-        /* Theme Variables & Backgrounds */
-        body.theme-light { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 35%, #f0fdfa 70%, #f8fafc 100%); color: #0f172a; }
+        body.theme-eyecare { background: linear-gradient(135deg, #e5e9f0 0%, #edf2f7 50%, #e2e8f0 100%); color: #0f172a; }
         body.theme-dark { background: linear-gradient(135deg, #0b101d 0%, #0f172a 50%, #162032 100%); color: #f8fafc; }
-        body.theme-eyecare { background: linear-gradient(135deg, #f5ebd9 0%, #fcf8f2 50%, #f0e1c5 100%); color: #4a2e1b; }
+        body.theme-light { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 35%, #f0fdfa 70%, #f8fafc 100%); color: #0f172a; }
         
-        /* Glassmorphism Classes */
         .glass-card { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); transition: all 0.3s ease; }
-        .theme-light .glass-card { background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(203, 213, 225, 0.7); box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05); }
+        .theme-eyecare .glass-card { background: rgba(248, 250, 252, 0.95); border: 1px solid rgba(203, 213, 225, 0.85); box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.05); }
         .theme-dark .glass-card { background: rgba(30, 41, 59, 0.92); border: 1px solid rgba(51, 65, 85, 0.8); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
-        .theme-eyecare .glass-card { background: rgba(252, 248, 242, 0.95); border: 1px solid rgba(232, 220, 203, 0.85); box-shadow: 0 4px 15px -3px rgba(74, 46, 27, 0.08); }
+        .theme-light .glass-card { background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(203, 213, 225, 0.7); box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05); }
         
-        /* Scrollbar styles for Chat Panel */
-        .pt-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
+        .glass-card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glass-card-hover:hover { transform: translateY(-3px); border-color: rgba(13, 148, 136, 0.6); box-shadow: 0 12px 24px -6px rgba(13, 148, 136, 0.18); }
+        
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+        @keyframes pulse-glow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: 0.9; } }
+        .animate-pulse-glow { animation: pulse-glow 2s infinite ease-in-out; }
+        .frameless-portrait { filter: drop-shadow(0 10px 18px rgba(15, 23, 42, 0.14)); transition: transform 0.3s ease, filter 0.3s ease; }
+        .frameless-portrait:hover { transform: translateY(-2px) scale(1.02); filter: drop-shadow(0 14px 22px rgba(13, 148, 136, 0.22)); }
+        
+        .pt-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
         .pt-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
-        .pt-scroll::-webkit-scrollbar-thumb { background: rgba(20, 184, 166, 0.5); border-radius: 4px; }
+        .pt-scroll::-webkit-scrollbar-thumb { background: rgba(13,148,136,0.5); border-radius: 4px; }
+
+        /* Neural Progress Map CSS Integrations */
+        .neon-green-glow {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4), inset 0 0 8px rgba(34, 197, 94, 0.2);
+            border-color: #22c55e !important;
+        }
         
-        /* Animations */
-        @keyframes float-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-float-up { animation: float-up 0.3s ease-out forwards; }
+        .neon-blue-glow {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), inset 0 0 8px rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8 !important;
+            animation: neon-pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes neon-pulse {
+            0% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1); }
+            50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.7), inset 0 0 15px rgba(56, 189, 248, 0.4); transform: scale(1.05) translateX(-50%); }
+            100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1); }
+        }
+
+        @media (max-width: 767px) {
+            .neon-blue-glow {
+                animation: neon-pulse-mobile 2s infinite ease-in-out;
+            }
+            @keyframes neon-pulse-mobile {
+                0% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1); }
+                50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.7), inset 0 0 15px rgba(56, 189, 248, 0.4); transform: scale(1.05); }
+                100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1); }
+            }
+        }
+
+        .path-line { transition: all 0.5s ease; }
+        .path-completed {
+            background: linear-gradient(to bottom, #22c55e, #16a34a) !important;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+        }
     </style>
-
-    <!-- React and Babel -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin defer></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin defer></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js" defer></script>
-
-    <!-- Google Gen AI SDK Integration -->
-    <script type="module">
-        import { GoogleGenAI } from "https://esm.run/@google/genai";
-        window.GoogleAI = { GoogleGenAI };
-    </script>
 </head>
-<body class="selection:bg-teal-500 selection:text-white theme-light">
+<body class="selection:bg-teal-500 selection:text-white">
+    <canvas id="bg-canvas"></canvas>
     
-    <div id="root"></div>
+    <!-- Branded Instant Preloader -->
+    <div id="root">
+        <div class="min-h-screen flex flex-col items-center justify-center p-4 bg-[#e5e9f0] text-slate-800 font-sans">
+            <div class="relative flex items-center justify-center mb-4">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-teal-600 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-xl animate-bounce">
+                    <i class="fa-solid fa-flask-vial"></i>
+                </div>
+            </div>
+            <h2 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-teal-700 via-cyan-700 to-indigo-700 bg-clip-text text-transparent">
+                ChemTitra
+            </h2>
+            <p class="text-xs font-semibold text-slate-500 mt-1 flex items-center space-x-1.5">
+                <i class="fa-solid fa-circle-notch fa-spin text-teal-600"></i>
+                <span>Preparing learning materials...</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Modular Import -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, onSnapshot, setDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        window.FirebaseModule = { initializeApp, getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, getFirestore, collection, doc, onSnapshot, setDoc, addDoc, deleteDoc };
+    </script>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, useRef, useMemo } = React;
 
-        // Configuration & Placeholders
+        // =========================================================================
+        // 1. AUTHORIZED OWNER EMAIL
+        // =========================================================================
+        const AUTHORIZED_OWNER_EMAIL = "teacherikmal@gmail.com";
+        const PERMANENT_AVATAR_URL = "/profile.png";
+        const FALLBACK_AVATAR = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 220' fill='none'><rect width='200' height='220' fill='%230f172a' rx='20'/><circle cx='100' cy='80' r='45' fill='%2314b8a6'/><path d='M30 190 C30 140 70 130 100 130 C130 130 170 140 170 190 Z' fill='%2338bdf8'/><circle cx='85' cy='75' r='6' fill='%23ffffff'/><circle cx='115' cy='75' r='6' fill='%23ffffff'/><path d='M90 95 Q100 105 110 95' stroke='%23ffffff' stroke-width='4' stroke-linecap='round'/></svg>";
+
+        // =========================================================================
+        // 2. FIREBASE PROJECT CONFIGURATION
+        // =========================================================================
         const FIREBASE_CONFIG = {
-            apiKey: "YOUR_GOOGLE_AI_API_KEY_HERE", // Replace with valid API Key
-            projectId: "chemtitra"
+            apiKey: "AIzaSyC6BD_YpR5E7V11poCYxYeDBrUofOb6dfY",
+            authDomain: "chemtitra.firebaseapp.com",
+            projectId: "chemtitra",
+            storageBucket: "chemtitra.firebasestorage.app",
+            messagingSenderId: "814020603631",
+            appId: "1:814020603631:web:f9f482e498204c5eafb51a"
         };
 
-        const curriculumData = [ /* FILLED_IN_PHASE_2 */ ];
-        const ELEMENTS = [ /* FILLED_IN_PHASE_3 */ ];
+        const INITIAL_MATERIALS = [];
 
         // =========================================================================
-        // TITRABOT AI CHAT WIDGET
+        // NEURAL PROGRESS MAP LOGIC (Integrated & Dynamic)
         // =========================================================================
-        const AIChatWidget = ({ theme }) => {
-            const [isOpen, setIsOpen] = useState(false);
-            const [input, setInput] = useState("");
-            const [isLoading, setIsLoading] = useState(false);
-            const [messages, setMessages] = useState([
-                { 
-                    role: "model", 
-                    text: "Hai! 👋 I'm TitraBot, your KSSM Science and Chemistry assistant. Need help understanding a formula or stuck on a concept? Let's figure it out together! 🧪" 
+        const curriculumData = [
+            // --- FORM 1 SCIENCE (9 Chapters) ---
+            { id: "1.1", subject: "science", form: 1, chapter: 1, title: "Introduction to Scientific Investigation", description: "Laboratory safety, physical quantities and scientific methods.", status: "available", quizUrl: "/quiz/f1-1" },
+            { id: "1.2", subject: "science", form: 1, chapter: 2, title: "Cell as the Basic Unit of Life", description: "Cellular structures, functions and organization in organisms.", status: "available", quizUrl: "/quiz/f1-2" },
+            { id: "1.3", subject: "science", form: 1, chapter: 3, title: "Coordination and Response", description: "Homeostasis, regulation of water and body temperature.", status: "available", quizUrl: "/quiz/f1-3" },
+            { id: "1.4", subject: "science", form: 1, chapter: 4, title: "Reproduction", description: "Sexual and asexual reproduction, human reproductive system and pollination.", status: "available", quizUrl: "/quiz/f1-4" },
+            { id: "1.5", subject: "science", form: 1, chapter: 5, title: "Matter", description: "States of matter, physical and chemical properties of substances.", status: "available", quizUrl: "/quiz/f1-5" },
+            { id: "1.6", subject: "science", form: 1, chapter: 6, title: "Periodic Table", description: "Classification of elements, metals, non-metals and atomic structure.", status: "available", quizUrl: "/quiz/f1-6" },
+            { id: "1.7", subject: "science", form: 1, chapter: 7, title: "Air", description: "Composition of air, oxygen cycle, carbon cycle and combustion.", status: "available", quizUrl: "/quiz/f1-7" },
+            { id: "1.8", subject: "science", form: 1, chapter: 8, title: "Light and Optics", description: "Properties of light, reflection, refraction and optical instruments.", status: "available", quizUrl: "/quiz/f1-8" },
+            { id: "1.9", subject: "science", form: 1, chapter: 9, title: "Earth", description: "Stratification of the Earth, rocks, exogenic and endogenic processes.", status: "available", quizUrl: "/quiz/f1-9" },
+
+            // --- FORM 2 SCIENCE (13 Chapters) ---
+            { id: "2.1", subject: "science", form: 2, chapter: 1, title: "Biodiversity", description: "Classification of organisms, biodiversity preservation and dichotomous keys.", status: "available", quizUrl: "/quiz/f2-1" },
+            { id: "2.2", subject: "science", form: 2, chapter: 2, title: "Ecosystem", description: "Energy flow, nutrient cycles and interactions among organisms.", status: "available", quizUrl: "/quiz/f2-2" },
+            { id: "2.3", subject: "science", form: 2, chapter: 3, title: "Nutrition", description: "Balanced diets, human digestive system and nutrient absorption.", status: "available", quizUrl: "/quiz/f2-3" },
+            { id: "2.4", subject: "science", form: 2, chapter: 4, title: "Human Health", description: "Infectious and non-infectious diseases, body defense mechanisms.", status: "available", quizUrl: "/quiz/f2-4" },
+            { id: "2.5", subject: "science", form: 2, chapter: 5, title: "Water and Solution", description: "Physical properties of water, evaporation, solubility and water purification.", status: "available", quizUrl: "/quiz/f2-5" },
+            { id: "2.6", subject: "science", form: 2, chapter: 6, title: "Acid and Alkali", description: "Properties of acidic and alkaline substances, pH scale and neutralization.", status: "available", quizUrl: "/quiz/f2-6" },
+            { id: "2.7", subject: "science", form: 2, chapter: 7, title: "Electricity and Magnetism", description: "Electrostatics, electric current, voltage, resistance and magnetic fields.", status: "available", quizUrl: "/quiz/f2-7" },
+            { id: "2.8", subject: "science", form: 2, chapter: 8, title: "Force and Motion", description: "Types of forces, measurement of force, atmospheric pressure and levers.", status: "available", quizUrl: "/quiz/f2-8" },
+            { id: "2.9", subject: "science", form: 2, chapter: 9, title: "Heat", description: "Heat transfer, thermal equilibrium, expansion and heat insulation.", status: "available", quizUrl: "/quiz/f2-9" },
+            { id: "2.10", subject: "science", form: 2, chapter: 10, title: "Sound Waves", description: "Characteristics of sound waves, reflection, absorption and pitch.", status: "available", quizUrl: "/quiz/f2-10" },
+            { id: "2.11", subject: "science", form: 2, chapter: 11, title: "Stars and Galaxies in the Universe", description: "Characteristics and life cycle of stars, the Milky Way galaxy.", status: "available", quizUrl: "/quiz/f2-11" },
+            { id: "2.12", subject: "science", form: 2, chapter: 12, title: "Solar System", description: "Distance of planets from the Sun, physical characteristics of planets.", status: "available", quizUrl: "/quiz/f2-12" },
+            { id: "2.13", subject: "science", form: 2, chapter: 13, title: "Meteoroid, Asteroid, Comet", description: "Characteristics of space debris and movements relative to Earth.", status: "available", quizUrl: "/quiz/f2-13" },
+
+            // --- FORM 3 SCIENCE (10 Chapters) ---
+            { id: "3.1", subject: "science", form: 3, chapter: 1, title: "Stimuli and Responses", description: "Human nervous system, sensory organs, plant tropism and animal vision.", status: "available", quizUrl: "/quiz/f3-1" },
+            { id: "3.2", subject: "science", form: 3, chapter: 2, title: "Respiration", description: "Human respiratory system, gas transport and respiratory health hazards.", status: "available", quizUrl: "/quiz/f3-2" },
+            { id: "3.3", subject: "science", form: 3, chapter: 3, title: "Transportation", description: "Human circulatory system, blood groups and transpiration in plants.", status: "available", quizUrl: "/quiz/f3-3" },
+            { id: "3.4", subject: "science", form: 3, chapter: 4, title: "Reactivity of Metals", description: "Reactivity series, extraction of metals from their ores.", status: "available", quizUrl: "/quiz/f3-4" },
+            { id: "3.5", subject: "science", form: 3, chapter: 5, title: "Thermochemistry", description: "Endothermic and exothermic reactions in chemical processes.", status: "available", quizUrl: "/quiz/f3-5" },
+            { id: "3.6", subject: "science", form: 3, chapter: 6, title: "Electricity and Magnetism", description: "Generation of electricity, transformers and electrical transmission systems.", status: "available", quizUrl: "/quiz/f3-6" },
+            { id: "3.7", subject: "science", form: 3, chapter: 7, title: "Energy and Power", description: "Work, power, potential energy and kinetic energy calculations.", status: "available", quizUrl: "/quiz/f3-7" },
+            { id: "3.8", subject: "science", form: 3, chapter: 8, title: "Radioactivity", description: "Discovery of radioactivity, ionizing radiation and half-life concepts.", status: "available", quizUrl: "/quiz/f3-8" },
+            { id: "3.9", subject: "science", form: 3, chapter: 9, title: "Space Weather", description: "Solar phenomena, sunspots, solar flares and geomagnetic storms.", status: "available", quizUrl: "/quiz/f3-9" },
+            { id: "3.10", subject: "science", form: 3, chapter: 10, title: "Space Exploration", description: "History of space exploration, satellites and space telescopes.", status: "available", quizUrl: "/quiz/f3-10" },
+
+            // --- FORM 4 CHEMISTRY (8 Chapters) ---
+            { id: "4.1", subject: "chemistry", form: 4, chapter: 1, title: "Introduction to Chemistry", description: "Fields of chemistry, laboratory safety and careers in chemistry.", status: "available", quizUrl: "/quiz/f4-1" },
+            { id: "4.2", subject: "chemistry", form: 4, chapter: 2, title: "Matter and the Atomic Structure", description: "Kinetic theory of matter, melting points, isotopes and atomic layout.", status: "available", quizUrl: "/quiz/f4-2" },
+            { id: "4.3", subject: "chemistry", form: 4, chapter: 3, title: "The Mole Concept, Chemical Formula and Equation", description: "Molar mass, chemical formulas, structural calculations and balanced equations.", status: "available", quizUrl: "/quiz/f4-3" },
+            { id: "4.4", subject: "chemistry", form: 4, chapter: 4, title: "The Periodic Table of Elements", description: "Development of the periodic table, Group 1, Group 17, Group 18 and Period 3 trends.", status: "available", quizUrl: "/quiz/f4-4" },
+            { id: "4.5", subject: "chemistry", form: 4, chapter: 5, title: "Chemical Bond", description: "Ionic bonding, covalent bonding, intermolecular forces and metallic bonding.", status: "available", quizUrl: "/quiz/f4-5" },
+            { id: "4.6", subject: "chemistry", form: 4, chapter: 6, title: "Acid, Base and Salt", description: "Chemical properties of acids and bases, pH scaling and preparation of salts.", status: "available", quizUrl: "/quiz/f4-6" },
+            { id: "4.7", subject: "chemistry", form: 4, chapter: 7, title: "Rate of Reaction", description: "Average and instantaneous rates, collision theory and reaction factors.", status: "available", quizUrl: "/quiz/f4-7" },
+            { id: "4.8", subject: "chemistry", form: 4, chapter: 8, title: "Manufactured Substances in Industry", description: "Alloy, glass, ceramics and composite materials.", status: "available", quizUrl: "/quiz/f4-8" },
+
+            // --- FORM 5 CHEMISTRY (5 Chapters) ---
+            { id: "5.1", subject: "chemistry", form: 5, chapter: 1, title: "Redox Equilibrium", description: "Oxidation and reduction processes, standard electrode potentials and cells.", status: "available", quizUrl: "/quiz/f5-1" },
+            { id: "5.2", subject: "chemistry", form: 5, chapter: 2, title: "Carbon Compound", description: "Hydrocarbons, homologous series, alkanes, alkenes, alcohols, carboxylic acids and esters.", status: "available", quizUrl: "/quiz/f5-2" },
+            { id: "5.3", subject: "chemistry", form: 5, chapter: 3, title: "Thermochemistry", description: "Heat of precipitation, neutralization, displacement and combustion.", status: "available", quizUrl: "/quiz/f5-3" },
+            { id: "5.4", subject: "chemistry", form: 5, chapter: 4, title: "Polymer", description: "Natural polymers, synthetic polymers, polymerization and vulcanization of rubber.", status: "available", quizUrl: "/quiz/f5-4" },
+            { id: "5.5", subject: "chemistry", form: 5, chapter: 5, title: "Consumer and Industrial Chemistry", description: "Oils, fats, soaps, detergents, food additives and medicines.", status: "available", quizUrl: "/quiz/f5-5" }
+        ];
+
+        window.handleNodeClick = (topicId) => {
+            const topic = curriculumData.find(t => t.id === topicId);
+            if (topic && topic.status === "available") {
+                const url = topic.quizUrl;
+                if (url && url.startsWith("http")) {
+                    window.open(url, '_blank');
+                } else {
+                    alert(`Data stream active for ${topic.title}. The quiz link for this chapter will be uploaded soon!`);
                 }
-            ]);
+            }
+        };
+
+        const renderProgressMap = (theme, currentFormStr, currentSubjectStr) => {
+            const container = document.getElementById('progress-map');
+            if (!container) return;
             
-            const messagesEndRef = useRef(null);
+            container.innerHTML = ''; 
 
-            // Auto-scroll to bottom on new message
-            useEffect(() => {
-                if (messagesEndRef.current) {
-                    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+            const isDark = theme === 'dark';
+            const isEyeCare = theme === 'eyecare';
+
+            const formTarget = parseInt(currentFormStr.replace(/\D/g, ''), 10);
+            const subjectTarget = currentSubjectStr.toLowerCase();
+
+            const filteredData = curriculumData.filter(
+                node => node.form === formTarget && node.subject === subjectTarget
+            );
+
+            if (filteredData.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center p-12 text-sm font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}">
+                        <i class="fa-solid fa-satellite-dish text-4xl mb-4 opacity-50"></i>
+                        <p>No syllabus nodes mapped for ${currentFormStr} ${currentSubjectStr} yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const trackLine = document.createElement('div');
+            trackLine.className = `absolute left-8 md:left-1/2 top-0 bottom-0 w-1 transform md:-translate-x-1/2 rounded-full z-0 transition-colors ${isDark ? 'bg-slate-800' : isEyeCare ? 'bg-slate-300' : 'bg-slate-300'}`;
+            container.appendChild(trackLine);
+
+            filteredData.forEach((node, index) => {
+                const isEven = index % 2 === 0; 
+                const isLast = index === filteredData.length - 1;
+
+                const nodeClasses = `neon-blue-glow ${isDark ? 'bg-slate-900' : isEyeCare ? 'bg-[#f8fafc]' : 'bg-white'}`;
+                const borderClasses = `border-sky-500/80 ring-1 ring-sky-500 bg-gradient-to-br ${isDark ? 'from-slate-900 to-sky-900/30' : isEyeCare ? 'from-[#f0f3f8] to-indigo-50/50' : 'from-white to-sky-50'} shadow-[0_0_20px_rgba(14,165,233,0.15)]`;
+                const cursorClasses = 'cursor-pointer hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(56,189,248,0.25)]';
+
+                const textClasses = isDark ? 'text-sky-400 font-bold' : isEyeCare ? 'text-indigo-700 font-bold' : 'text-blue-600 font-bold';
+                const iconClasses = `fa-graduation-cap ${isDark ? 'text-sky-400' : isEyeCare ? 'text-indigo-700' : 'text-blue-600'}`;
+                const titleColor = isDark ? 'text-white' : 'text-slate-900';
+                const descColor = isDark ? 'text-slate-300' : isEyeCare ? 'text-slate-700' : 'text-slate-600';
+
+                const badgeBgColor = isDark ? 'bg-sky-950/80 border-sky-800' : isEyeCare ? 'bg-indigo-100 border-indigo-300' : 'bg-blue-100 border-blue-300';
+                const badgeTextColor = isDark ? 'text-sky-300' : isEyeCare ? 'text-indigo-800' : 'text-blue-800';
+                const badgeActive = `<span class="flex items-center gap-1.5 text-[10px] font-bold ${badgeTextColor} ${badgeBgColor} px-2 py-1 rounded-md border animate-pulse"><i class="fa-solid fa-satellite-dish"></i> ACTIVE</span>`;
+
+                const itemWrapper = document.createElement('div');
+                itemWrapper.className = `relative z-10 flex items-center mb-16 w-full ${isEven ? 'md:flex-row-reverse' : ''} group`;
+
+                let pathSegmentHTML = '';
+                if (!isLast) {
+                    const lineStateClass = isDark ? 'bg-slate-800' : 'bg-slate-300';
+                    pathSegmentHTML = `<div class="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 w-1 h-[calc(100%+4rem)] top-6 -z-10 ${lineStateClass} path-line"></div>`;
                 }
-            }, [messages, isOpen]);
 
-            const handleSend = async () => {
-                const userText = input.trim();
-                if (!userText || isLoading) return;
-
-                // Add user message to UI immediately
-                const newMessages = [...messages, { role: "user", text: userText }];
-                setMessages(newMessages);
-                setInput("");
-                setIsLoading(true);
-
-                try {
-                    // SDK Initialization & Request Format
-                    const ai = new window.GoogleAI.GoogleGenAI({ apiKey: FIREBASE_CONFIG.apiKey });
+                itemWrapper.innerHTML = `
+                    ${pathSegmentHTML}
+                    <div class="hidden md:block w-1/2"></div>
                     
-                    // Format previous messages for conversational context if needed (omitted here for simple structural adherence, standard implementation below)
-                    const systemInstruction = `
-                        You are 'TitraBot', an expert, friendly Malaysian KSSM secondary school Science and Chemistry teacher.
-                        Your characteristics:
-                        1. You use appropriate emojis to make learning fun and visually engaging.
-                        2. You use real-world analogies (especially related to Malaysian context like food, weather, everyday items) to explain complex chemical concepts.
-                        3. You are bilingual, naturally mixing English (DLP) and Bahasa Melayu where appropriate to help students understand.
-                        4. CRITICAL: You MUST use the Socratic method. Do NOT just give the final answer. Guide the student step-by-step with guiding questions to help them arrive at the answer themselves.
-                    `.trim();
+                    <div class="absolute left-8 md:left-1/2 transform -translate-x-1/2 md:-translate-x-1/2 flex items-center justify-center w-14 h-14 rounded-full border-2 transition-all duration-500 z-20 ${nodeClasses}">
+                        <i class="fa-solid ${iconClasses} text-xl"></i>
+                    </div>
+                    
+                    <div class="w-full pl-24 md:pl-0 md:w-1/2 flex ${isEven ? 'md:pr-16 md:justify-end' : 'md:pl-16 md:justify-start'}">
+                        <div class="w-full max-w-md p-6 rounded-2xl glass-card transition-all duration-300 ${borderClasses} ${cursorClasses}" 
+                             onclick="window.handleNodeClick('${node.id}')">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-display text-[11px] uppercase tracking-[0.2em] ${textClasses}">Chapter ${node.chapter}</span>
+                                ${badgeActive}
+                            </div>
+                            <h2 class="text-xl md:text-2xl font-bold ${titleColor} mb-2 leading-tight">${node.title}</h2>
+                            <p class="text-sm ${descColor}">${node.description}</p>
+                            <div class="mt-4 pt-4 border-t border-sky-500/30 flex items-center justify-between">
+                                <span class="text-xs ${textClasses}">
+                                    Initialize Quiz Sequence
+                                </span>
+                                <i class="fa-solid fa-arrow-right ${textClasses} group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-                    const response = await ai.models.generateContent({
-                        model: "gemini-2.5-flash",
-                        contents: userText,
-                        config: {
-                            systemInstruction: systemInstruction,
-                            temperature: 0.7
+                container.appendChild(itemWrapper);
+            });
+        };
+
+        // =========================================================================
+        // 3. FULL PERIODIC TABLE DATA (118 ELEMENTS)
+        // =========================================================================
+        const ELEMENTS = [
+            // Row 1
+            { n: 1, sym: 'H', name: 'Hydrogen', m: 1.008, cat: 'nonmetal', c: 1, r: 1, e: '1s1', f: 'The most abundant chemical substance in the universe.' },
+            { n: 2, sym: 'He', name: 'Helium', m: 4.002, cat: 'noble-gas', c: 18, r: 1, e: '1s2', f: 'Liquid helium is used to cool MRI machines.' },
+            // Row 2
+            { n: 3, sym: 'Li', name: 'Lithium', m: 6.94, cat: 'alkali-metal', c: 1, r: 2, e: '[He] 2s1', f: 'Crucial for rechargeable batteries in EV cars and phones.' },
+            { n: 4, sym: 'Be', name: 'Beryllium', m: 9.012, cat: 'alkaline-earth', c: 2, r: 2, e: '[He] 2s2', f: 'Used to make the mirrors for the James Webb Space Telescope.' },
+            { n: 5, sym: 'B', name: 'Boron', m: 10.81, cat: 'metalloid', c: 13, r: 2, e: '[He] 2s2 2p1', f: 'Used in pyrotechnics to create a distinctive green color.' },
+            { n: 6, sym: 'C', name: 'Carbon', m: 12.011, cat: 'nonmetal', c: 14, r: 2, e: '[He] 2s2 2p2', f: 'Forms the backbone of all known life on Earth.' },
+            { n: 7, sym: 'N', name: 'Nitrogen', m: 14.007, cat: 'nonmetal', c: 15, r: 2, e: '[He] 2s2 2p3', f: 'Makes up about 78% of the Earth\'s atmosphere.' },
+            { n: 8, sym: 'O', name: 'Oxygen', m: 15.999, cat: 'nonmetal', c: 16, r: 2, e: '[He] 2s2 2p4', f: 'Liquid oxygen is highly magnetic and blue in color.' },
+            { n: 9, sym: 'F', name: 'Fluorine', m: 18.998, cat: 'halogen', c: 17, r: 2, e: '[He] 2s2 2p5', f: 'The most electronegative and reactive of all elements.' },
+            { n: 10, sym: 'Ne', name: 'Neon', m: 20.180, cat: 'noble-gas', c: 18, r: 2, e: '[He] 2s2 2p6', f: 'Emits a bright reddish-orange glow in discharge tubes.' },
+            // Row 3
+            { n: 11, sym: 'Na', name: 'Sodium', m: 22.990, cat: 'alkali-metal', c: 1, r: 3, e: '[Ne] 3s1', f: 'Explosively reactive with water, but forms table salt with Chlorine.' },
+            { n: 12, sym: 'Mg', name: 'Magnesium', m: 24.305, cat: 'alkaline-earth', c: 2, r: 3, e: '[Ne] 3s2', f: 'Burns with an incredibly brilliant white light.' },
+            { n: 13, sym: 'Al', name: 'Aluminum', m: 26.982, cat: 'post-transition', c: 13, r: 3, e: '[Ne] 3s2 3p1', f: 'The most abundant metal in the Earth\'s crust.' },
+            { n: 14, sym: 'Si', name: 'Silicon', m: 28.085, cat: 'metalloid', c: 14, r: 3, e: '[Ne] 3s2 3p2', f: 'The foundational semiconductor in computer microchips.' },
+            { n: 15, sym: 'P', name: 'Phosphorus', m: 30.974, cat: 'nonmetal', c: 15, r: 3, e: '[Ne] 3s2 3p3', f: 'Discovered originally by boiling down human urine.' },
+            { n: 16, sym: 'S', name: 'Sulfur', m: 32.06, cat: 'nonmetal', c: 16, r: 3, e: '[Ne] 3s2 3p4', f: 'Has a distinctive rotten-egg smell when combined with hydrogen.' },
+            { n: 17, sym: 'Cl', name: 'Chlorine', m: 35.45, cat: 'halogen', c: 17, r: 3, e: '[Ne] 3s2 3p5', f: 'Used worldwide to disinfect drinking water and swimming pools.' },
+            { n: 18, sym: 'Ar', name: 'Argon', m: 39.95, cat: 'noble-gas', c: 18, r: 3, e: '[Ne] 3s2 3p6', f: 'Used inside incandescent light bulbs to prevent the filament from oxidizing.' },
+            // Row 4
+            { n: 19, sym: 'K', name: 'Potassium', m: 39.098, cat: 'alkali-metal', c: 1, r: 4, e: '[Ar] 4s1', f: 'Essential for nerve function; bananas are famously rich in it.' },
+            { n: 20, sym: 'Ca', name: 'Calcium', m: 40.078, cat: 'alkaline-earth', c: 2, r: 4, e: '[Ar] 4s2', f: 'The most abundant metal in the human body (bones and teeth).' },
+            { n: 21, sym: 'Sc', name: 'Scandium', m: 44.956, cat: 'transition-metal', c: 3, r: 4, e: '[Ar] 3d1 4s2', f: 'Used to strengthen aluminum alloys for aerospace parts.' },
+            { n: 22, sym: 'Ti', name: 'Titanium', m: 47.867, cat: 'transition-metal', c: 4, r: 4, e: '[Ar] 3d2 4s2', f: 'Extremely strong but lightweight; highly resistant to corrosion.' },
+            { n: 23, sym: 'V', name: 'Vanadium', m: 50.942, cat: 'transition-metal', c: 5, r: 4, e: '[Ar] 3d3 4s2', f: 'Primarily used to produce specialty steel alloys (e.g. tools, axles).' },
+            { n: 24, sym: 'Cr', name: 'Chromium', m: 51.996, cat: 'transition-metal', c: 6, r: 4, e: '[Ar] 3d5 4s1', f: 'Provides the stainless property to stainless steel.' },
+            { n: 25, sym: 'Mn', name: 'Manganese', m: 54.938, cat: 'transition-metal', c: 7, r: 4, e: '[Ar] 3d5 4s2', f: 'Acts as a depolarizer in standard dry-cell alkaline batteries.' },
+            { n: 26, sym: 'Fe', name: 'Iron', m: 55.845, cat: 'transition-metal', c: 8, r: 4, e: '[Ar] 3d6 4s2', f: 'The core of the Earth is believed to consist primarily of an iron-nickel alloy.' },
+            { n: 27, sym: 'Co', name: 'Cobalt', m: 58.933, cat: 'transition-metal', c: 9, r: 4, e: '[Ar] 3d7 4s2', f: 'Produces an intense blue color used historically in glass and ceramics.' },
+            { n: 28, sym: 'Ni', name: 'Nickel', m: 58.693, cat: 'transition-metal', c: 10, r: 4, e: '[Ar] 3d8 4s2', f: 'Widely used in plating to resist corrosion.' },
+            { n: 29, sym: 'Cu', name: 'Copper', m: 63.546, cat: 'transition-metal', c: 11, r: 4, e: '[Ar] 3d10 4s1', f: 'An excellent conductor of electricity, second only to silver.' },
+            { n: 30, sym: 'Zn', name: 'Zinc', m: 65.38, cat: 'transition-metal', c: 12, r: 4, e: '[Ar] 3d10 4s2', f: 'Used to galvanize iron to prevent it from rusting.' },
+            { n: 31, sym: 'Ga', name: 'Gallium', m: 69.723, cat: 'post-transition', c: 13, r: 4, e: '[Ar] 3d10 4s2 3p1', f: 'Melts just above room temperature; it will literally melt in your hand.' },
+            { n: 32, sym: 'Ge', name: 'Germanium', m: 72.630, cat: 'metalloid', c: 14, r: 4, e: '[Ar] 3d10 4s2 3p2', f: 'An important semiconductor used in fiber optics and solar panels.' },
+            { n: 33, sym: 'As', name: 'Arsenic', m: 74.922, cat: 'metalloid', c: 15, r: 4, e: '[Ar] 3d10 4s2 3p3', f: 'Historically infamous as a poison, but used in semiconductors.' },
+            { n: 34, sym: 'Se', name: 'Selenium', m: 78.971, cat: 'nonmetal', c: 16, r: 4, e: '[Ar] 3d10 4s2 3p4', f: 'Its electrical conductivity increases dramatically when exposed to light.' },
+            { n: 35, sym: 'Br', name: 'Bromine', m: 79.904, cat: 'halogen', c: 17, r: 4, e: '[Ar] 3d10 4s2 3p5', f: 'One of only two elements that are liquid at standard room temperature.' },
+            { n: 36, sym: 'Kr', name: 'Krypton', m: 83.798, cat: 'noble-gas', c: 18, r: 4, e: '[Ar] 3d10 4s2 3p6', f: 'Used in high-speed photography flashes and fluorescent bulbs.' },
+            // Row 5
+            { n: 37, sym: 'Rb', name: 'Rubidium', m: 85.468, cat: 'alkali-metal', c: 1, r: 5, e: '[Kr] 5s1', f: 'Ignites spontaneously in air and reacts violently with water.' },
+            { n: 38, sym: 'Sr', name: 'Strontium', m: 87.62, cat: 'alkaline-earth', c: 2, r: 5, e: '[Kr] 5s2', f: 'Gives a brilliant red color to fireworks and flares.' },
+            { n: 39, sym: 'Y', name: 'Yttrium', m: 88.906, cat: 'transition-metal', c: 3, r: 5, e: '[Kr] 4d1 5s2', f: 'Used to make the red color in older cathode ray tube TVs.' },
+            { n: 40, sym: 'Zr', name: 'Zirconium', m: 91.224, cat: 'transition-metal', c: 4, r: 5, e: '[Kr] 4d2 5s2', f: 'Its cubic form is a popular, inexpensive diamond simulant.' },
+            { n: 41, sym: 'Nb', name: 'Niobium', m: 92.906, cat: 'transition-metal', c: 5, r: 5, e: '[Kr] 4d4 5s1', f: 'Used in superconducting magnets, like those in MRI scanners.' },
+            { n: 42, sym: 'Mo', name: 'Molybdenum', m: 95.95, cat: 'transition-metal', c: 6, r: 5, e: '[Kr] 4d5 5s1', f: 'Can withstand extreme heat; used in military armor and aircraft.' },
+            { n: 43, sym: 'Tc', name: 'Technetium', m: 98, cat: 'transition-metal', c: 7, r: 5, e: '[Kr] 4d5 5s2', f: 'The lightest element with no stable isotopes; entirely radioactive.' },
+            { n: 44, sym: 'Ru', name: 'Ruthenium', m: 101.07, cat: 'transition-metal', c: 8, r: 5, e: '[Kr] 4d7 5s1', f: 'Added to platinum and palladium to make wear-resistant electrical contacts.' },
+            { n: 45, sym: 'Rh', name: 'Rhodium', m: 102.91, cat: 'transition-metal', c: 9, r: 5, e: '[Kr] 4d8 5s1', f: 'One of the rarest and most valuable precious metals.' },
+            { n: 46, sym: 'Pd', name: 'Palladium', m: 106.42, cat: 'transition-metal', c: 10, r: 5, e: '[Kr] 4d10', f: 'Crucial in catalytic converters to clean car exhaust.' },
+            { n: 47, sym: 'Ag', name: 'Silver', m: 107.87, cat: 'transition-metal', c: 11, r: 5, e: '[Kr] 4d10 5s1', f: 'Has the highest electrical and thermal conductivity of all elements.' },
+            { n: 48, sym: 'Cd', name: 'Cadmium', m: 112.41, cat: 'transition-metal', c: 12, r: 5, e: '[Kr] 4d10 5s2', f: 'Highly toxic; historically used in rechargeable Ni-Cd batteries.' },
+            { n: 49, sym: 'In', name: 'Indium', m: 114.82, cat: 'post-transition', c: 13, r: 5, e: '[Kr] 4d10 5s2 5p1', f: 'So soft that you can chew it like gum (though not recommended).' },
+            { n: 50, sym: 'Sn', name: 'Tin', m: 118.71, cat: 'post-transition', c: 14, r: 5, e: '[Kr] 4d10 5s2 5p2', f: 'Used to coat other metals to prevent corrosion, famously in "tin" cans.' },
+            { n: 51, sym: 'Sb', name: 'Antimony', m: 121.76, cat: 'metalloid', c: 15, r: 5, e: '[Kr] 4d10 5s2 5p3', f: 'Expands upon freezing, an unusual property shared with water.' },
+            { n: 52, sym: 'Te', name: 'Tellurium', m: 127.6, cat: 'metalloid', c: 16, r: 5, e: '[Kr] 4d10 5s2 5p4', f: 'Mildly toxic; exposure gives you a horrific garlic-like body odor.' },
+            { n: 53, sym: 'I', name: 'Iodine', m: 126.9, cat: 'halogen', c: 17, r: 5, e: '[Kr] 4d10 5s2 5p5', f: 'Sublimes from a dark solid directly into a purple gas.' },
+            { n: 54, sym: 'Xe', name: 'Xenon', m: 131.29, cat: 'noble-gas', c: 18, r: 5, e: '[Kr] 4d10 5s2 5p6', f: 'Used in high-intensity arc lamps for IMAX movie projectors.' },
+            // Row 6 (s and d block)
+            { n: 55, sym: 'Cs', name: 'Cesium', m: 132.91, cat: 'alkali-metal', c: 1, r: 6, e: '[Xe] 6s1', f: 'Used to power the world’s most accurate atomic clocks.' },
+            { n: 56, sym: 'Ba', name: 'Barium', m: 137.33, cat: 'alkaline-earth', c: 2, r: 6, e: '[Xe] 6s2', f: 'Barium enemas are used as a contrast agent in X-ray imaging.' },
+            { n: 72, sym: 'Hf', name: 'Hafnium', m: 178.49, cat: 'transition-metal', c: 4, r: 6, e: '[Xe] 4f14 5d2 6s2', f: 'Used in control rods for nuclear submarines due to high neutron absorption.' },
+            { n: 73, sym: 'Ta', name: 'Tantalum', m: 180.95, cat: 'transition-metal', c: 5, r: 6, e: '[Xe] 4f14 5d3 6s2', f: 'Highly bio-compatible, used in surgical implants and bone repair.' },
+            { n: 74, sym: 'W', name: 'Tungsten', m: 183.84, cat: 'transition-metal', c: 6, r: 6, e: '[Xe] 4f14 5d4 6s2', f: 'Has the highest melting point of all metallic elements (3422 °C).' },
+            { n: 75, sym: 'Re', name: 'Rhenium', m: 186.21, cat: 'transition-metal', c: 7, r: 6, e: '[Xe] 4f14 5d5 6s2', f: 'One of the rarest elements in the Earth\'s crust.' },
+            { n: 76, sym: 'Os', name: 'Osmium', m: 190.23, cat: 'transition-metal', c: 8, r: 6, e: '[Xe] 4f14 5d6 6s2', f: 'The densest naturally occurring element.' },
+            { n: 77, sym: 'Ir', name: 'Iridium', m: 192.22, cat: 'transition-metal', c: 9, r: 6, e: '[Xe] 4f14 5d7 6s2', f: 'The most corrosion-resistant metal known.' },
+            { n: 78, sym: 'Pt', name: 'Platinum', m: 195.08, cat: 'transition-metal', c: 10, r: 6, e: '[Xe] 4f14 5d9 6s1', f: 'Used heavily in jewelry and catalytic converters.' },
+            { n: 79, sym: 'Au', name: 'Gold', m: 196.97, cat: 'transition-metal', c: 11, r: 6, e: '[Xe] 4f14 5d10 6s1', f: 'So malleable that one ounce can be beaten into a 300 square foot sheet.' },
+            { n: 80, sym: 'Hg', name: 'Mercury', m: 200.59, cat: 'transition-metal', c: 12, r: 6, e: '[Xe] 4f14 5d10 6s2', f: 'The only metal that is liquid at standard temperature and pressure.' },
+            { n: 81, sym: 'Tl', name: 'Thallium', m: 204.38, cat: 'post-transition', c: 13, r: 6, e: '[Xe] 4f14 5d10 6s2 6p1', f: 'Highly toxic and infamous as a slow-acting "poisoner\'s poison".' },
+            { n: 82, sym: 'Pb', name: 'Lead', m: 207.2, cat: 'post-transition', c: 14, r: 6, e: '[Xe] 4f14 5d10 6s2 6p2', f: 'Extremely dense; heavily used in radiation shielding.' },
+            { n: 83, sym: 'Bi', name: 'Bismuth', m: 208.98, cat: 'post-transition', c: 15, r: 6, e: '[Xe] 4f14 5d10 6s2 6p3', f: 'The active ingredient in Pepto-Bismol for stomach aches.' },
+            { n: 84, sym: 'Po', name: 'Polonium', m: 209, cat: 'post-transition', c: 16, r: 6, e: '[Xe] 4f14 5d10 6s2 6p4', f: 'Highly radioactive; discovered by Marie and Pierre Curie.' },
+            { n: 85, sym: 'At', name: 'Astatine', m: 210, cat: 'halogen', c: 17, r: 6, e: '[Xe] 4f14 5d10 6s2 6p5', f: 'The rarest naturally occurring element on Earth.' },
+            { n: 86, sym: 'Rn', name: 'Radon', m: 222, cat: 'noble-gas', c: 18, r: 6, e: '[Xe] 4f14 5d10 6s2 6p6', f: 'A heavy radioactive gas that can accumulate in basements.' },
+            // Row 7 (s and d block)
+            { n: 87, sym: 'Fr', name: 'Francium', m: 223, cat: 'alkali-metal', c: 1, r: 7, e: '[Rn] 7s1', f: 'Highly radioactive and incredibly scarce.' },
+            { n: 88, sym: 'Ra', name: 'Radium', m: 226, cat: 'alkaline-earth', c: 2, r: 7, e: '[Rn] 7s2', f: 'Historically used in self-luminous paints for watch dials.' },
+            { n: 104, sym: 'Rf', name: 'Rutherfordium', m: 267, cat: 'transition-metal', c: 4, r: 7, e: '[Rn] 5f14 6d2 7s2', f: 'Named after Ernest Rutherford, the father of nuclear physics.' },
+            { n: 105, sym: 'Db', name: 'Dubnium', m: 268, cat: 'transition-metal', c: 5, r: 7, e: '[Rn] 5f14 6d3 7s2', f: 'Named after Dubna, Russia, where many superheavy elements are synthesized.' },
+            { n: 106, sym: 'Sg', name: 'Seaborgium', m: 269, cat: 'transition-metal', c: 6, r: 7, e: '[Rn] 5f14 6d4 7s2', f: 'Named after Glenn T. Seaborg, who was still alive when it was named.' },
+            { n: 107, sym: 'Bh', name: 'Bohrium', m: 270, cat: 'transition-metal', c: 7, r: 7, e: '[Rn] 5f14 6d5 7s2', f: 'Named after Niels Bohr, pioneer of atomic structure.' },
+            { n: 108, sym: 'Hs', name: 'Hassium', m: 269, cat: 'transition-metal', c: 8, r: 7, e: '[Rn] 5f14 6d6 7s2', f: 'Named after the German state of Hesse.' },
+            { n: 109, sym: 'Mt', name: 'Meitnerium', m: 278, cat: 'transition-metal', c: 9, r: 7, e: '[Rn] 5f14 6d7 7s2', f: 'Named in honor of Lise Meitner, a co-discoverer of nuclear fission.' },
+            { n: 110, sym: 'Ds', name: 'Darmstadtium', m: 281, cat: 'transition-metal', c: 10, r: 7, e: '[Rn] 5f14 6d8 7s2', f: 'Synthetic element produced by bombarding lead with nickel.' },
+            { n: 111, sym: 'Rg', name: 'Roentgenium', m: 282, cat: 'transition-metal', c: 11, r: 7, e: '[Rn] 5f14 6d9 7s2', f: 'Named after Wilhelm Röntgen, the discoverer of X-rays.' },
+            { n: 112, sym: 'Cn', name: 'Copernicium', m: 285, cat: 'transition-metal', c: 12, r: 7, e: '[Rn] 5f14 6d10 7s2', f: 'Named after the astronomer Nicolaus Copernicus.' },
+            { n: 113, sym: 'Nh', name: 'Nihonium', m: 286, cat: 'post-transition', c: 13, r: 7, e: '[Rn] 5f14 6d10 7s2 7p1', f: 'The first element discovered in and named after Japan (Nihon).' },
+            { n: 114, sym: 'Fl', name: 'Flerovium', m: 289, cat: 'post-transition', c: 14, r: 7, e: '[Rn] 5f14 6d10 7s2 7p2', f: 'Located in the theoretical "island of stability".' },
+            { n: 115, sym: 'Mc', name: 'Moscovium', m: 290, cat: 'post-transition', c: 15, r: 7, e: '[Rn] 5f14 6d10 7s2 7p3', f: 'A highly radioactive, short-lived synthetic element.' },
+            { n: 116, sym: 'Lv', name: 'Livermorium', m: 293, cat: 'post-transition', c: 16, r: 7, e: '[Rn] 5f14 6d10 7s2 7p4', f: 'Named after the Lawrence Livermore National Laboratory.' },
+            { n: 117, sym: 'Ts', name: 'Tennessine', m: 294, cat: 'halogen', c: 17, r: 7, e: '[Rn] 5f14 6d10 7s2 7p5', f: 'Named in recognition of Tennessee\'s contributions to superheavy element research.' },
+            { n: 118, sym: 'Og', name: 'Oganesson', m: 294, cat: 'noble-gas', c: 18, r: 7, e: '[Rn] 5f14 6d10 7s2 7p6', f: 'The heaviest element discovered so far.' },
+            // Row 8 (Lanthanides, placed in columns 4-18)
+            { n: 57, sym: 'La', name: 'Lanthanum', m: 138.91, cat: 'lanthanide', c: 4, r: 8, e: '[Xe] 5d1 6s2', f: 'Used in camera lenses to increase refractive index.' },
+            { n: 58, sym: 'Ce', name: 'Cerium', m: 140.12, cat: 'lanthanide', c: 5, r: 8, e: '[Xe] 4f1 5d1 6s2', f: 'The most abundant of the rare-earth metals.' },
+            { n: 59, sym: 'Pr', name: 'Praseodymium', m: 140.91, cat: 'lanthanide', c: 6, r: 8, e: '[Xe] 4f3 6s2', f: 'Used in special glasses to protect welders\' eyes.' },
+            { n: 60, sym: 'Nd', name: 'Neodymium', m: 144.24, cat: 'lanthanide', c: 7, r: 8, e: '[Xe] 4f4 6s2', f: 'Used to create the strongest permanent magnets known.' },
+            { n: 61, sym: 'Pm', name: 'Promethium', m: 145, cat: 'lanthanide', c: 8, r: 8, e: '[Xe] 4f5 6s2', f: 'Used as a beta radiation source in thickness gauges.' },
+            { n: 62, sym: 'Sm', name: 'Samarium', m: 150.36, cat: 'lanthanide', c: 9, r: 8, e: '[Xe] 4f6 6s2', f: 'Used alongside cobalt to make high-temperature magnets.' },
+            { n: 63, sym: 'Eu', name: 'Europium', m: 151.96, cat: 'lanthanide', c: 10, r: 8, e: '[Xe] 4f7 6s2', f: 'Used in Euro banknotes as an anti-counterfeiting measure.' },
+            { n: 64, sym: 'Gd', name: 'Gadolinium', m: 157.25, cat: 'lanthanide', c: 11, r: 8, e: '[Xe] 4f7 5d1 6s2', f: 'Used routinely as a contrast agent in MRI scans.' },
+            { n: 65, sym: 'Tb', name: 'Terbium', m: 158.93, cat: 'lanthanide', c: 12, r: 8, e: '[Xe] 4f9 6s2', f: 'Produces the green phosphors used in color displays.' },
+            { n: 66, sym: 'Dy', name: 'Dysprosium', m: 162.50, cat: 'lanthanide', c: 13, r: 8, e: '[Xe] 4f10 6s2', f: 'Highly susceptible to magnetization, used in hard drives.' },
+            { n: 67, sym: 'Ho', name: 'Holmium', m: 164.93, cat: 'lanthanide', c: 14, r: 8, e: '[Xe] 4f11 6s2', f: 'Has the highest magnetic strength of any element.' },
+            { n: 68, sym: 'Er', name: 'Erbium', m: 167.26, cat: 'lanthanide', c: 15, r: 8, e: '[Xe] 4f12 6s2', f: 'Used as an optical amplifier in fiber optic cables.' },
+            { n: 69, sym: 'Tm', name: 'Thulium', m: 168.93, cat: 'lanthanide', c: 16, r: 8, e: '[Xe] 4f13 6s2', f: 'One of the rarest and most expensive rare-earth metals.' },
+            { n: 70, sym: 'Yb', name: 'Ytterbium', m: 173.05, cat: 'lanthanide', c: 17, r: 8, e: '[Xe] 4f14 6s2', f: 'Used in portable X-ray machines.' },
+            { n: 71, sym: 'Lu', name: 'Lutetium', m: 174.97, cat: 'lanthanide', c: 18, r: 8, e: '[Xe] 4f14 5d1 6s2', f: 'The hardest and densest of the rare-earth elements.' },
+            // Row 9 (Actinides, placed in columns 4-18)
+            { n: 89, sym: 'Ac', name: 'Actinium', m: 227, cat: 'actinide', c: 4, r: 9, e: '[Rn] 6d1 7s2', f: 'Glows blue in the dark due to intense radioactivity.' },
+            { n: 90, sym: 'Th', name: 'Thorium', m: 232.04, cat: 'actinide', c: 5, r: 9, e: '[Rn] 6d2 7s2', f: 'A potential clean nuclear fuel alternative to Uranium.' },
+            { n: 91, sym: 'Pa', name: 'Protactinium', m: 231.04, cat: 'actinide', c: 6, r: 9, e: '[Rn] 5f2 6d1 7s2', f: 'Highly toxic and radioactive, with few uses outside research.' },
+            { n: 92, sym: 'U', name: 'Uranium', m: 238.03, cat: 'actinide', c: 7, r: 9, e: '[Rn] 5f3 6d1 7s2', f: 'The primary fuel for nuclear reactors worldwide.' },
+            { n: 93, sym: 'Np', name: 'Neptunium', m: 237, cat: 'actinide', c: 8, r: 9, e: '[Rn] 5f4 6d1 7s2', f: 'A byproduct of nuclear reactors used to create Plutonium.' },
+            { n: 94, sym: 'Pu', name: 'Plutonium', m: 244, cat: 'actinide', c: 9, r: 9, e: '[Rn] 5f6 7s2', f: 'Famously powers deep-space probes like Voyager and Curiosity.' },
+            { n: 95, sym: 'Am', name: 'Americium', m: 243, cat: 'actinide', c: 10, r: 9, e: '[Rn] 5f7 7s2', f: 'Found in incredibly tiny amounts in household smoke detectors.' },
+            { n: 96, sym: 'Cm', name: 'Curium', m: 247, cat: 'actinide', c: 11, r: 9, e: '[Rn] 5f7 6d1 7s2', f: 'Named in honor of Marie and Pierre Curie.' },
+            { n: 97, sym: 'Bk', name: 'Berkelium', m: 247, cat: 'actinide', c: 12, r: 9, e: '[Rn] 5f9 7s2', f: 'Synthesized at the University of California, Berkeley.' },
+            { n: 98, sym: 'Cf', name: 'Californium', m: 251, cat: 'actinide', c: 13, r: 9, e: '[Rn] 5f10 7s2', f: 'A powerful neutron source used in metal detectors and cancer therapy.' },
+            { n: 99, sym: 'Es', name: 'Einsteinium', m: 252, cat: 'actinide', c: 14, r: 9, e: '[Rn] 5f11 7s2', f: 'Discovered in the debris of the first hydrogen bomb test.' },
+            { n: 100, sym: 'Fm', name: 'Fermium', m: 257, cat: 'actinide', c: 15, r: 9, e: '[Rn] 5f12 7s2', f: 'The heaviest element that can be formed by neutron bombardment.' },
+            { n: 101, sym: 'Md', name: 'Mendelevium', m: 258, cat: 'actinide', c: 16, r: 9, e: '[Rn] 5f13 7s2', f: 'Named after Dmitri Mendeleev, creator of the periodic table.' },
+            { n: 102, sym: 'No', name: 'Nobelium', m: 259, cat: 'actinide', c: 17, r: 9, e: '[Rn] 5f14 7s2', f: 'Named after Alfred Nobel, inventor of dynamite.' },
+            { n: 103, sym: 'Lr', name: 'Lawrencium', m: 266, cat: 'actinide', c: 18, r: 9, e: '[Rn] 5f14 6d1 7s2', f: 'Named after Ernest Lawrence, inventor of the cyclotron.' }
+        ].map(el => {
+            let state = 'Solid';
+            if (['H', 'He', 'N', 'O', 'F', 'Ne', 'Cl', 'Ar', 'Kr', 'Xe', 'Rn'].includes(el.sym)) {
+                state = 'Gas';
+            } else if (['Hg', 'Br'].includes(el.sym)) {
+                state = 'Liquid';
+            }
+            return { ...el, state };
+        });
+
+        const CATEGORY_STYLES = {
+            'alkali-metal': 'bg-rose-500/90 text-white border-rose-600',
+            'alkaline-earth': 'bg-orange-500/90 text-white border-orange-600',
+            'transition-metal': 'bg-indigo-500/90 text-white border-indigo-600',
+            'post-transition': 'bg-sky-500/90 text-white border-sky-600',
+            'metalloid': 'bg-teal-500/90 text-white border-teal-600',
+            'nonmetal': 'bg-emerald-500/90 text-white border-emerald-600',
+            'halogen': 'bg-lime-500/90 text-white border-lime-600',
+            'noble-gas': 'bg-purple-500/90 text-white border-purple-600',
+            'lanthanide': 'bg-pink-500/90 text-white border-pink-600',
+            'actinide': 'bg-fuchsia-500/90 text-white border-fuchsia-600',
+        };
+
+        const formatEmbedUrl = (rawUrl) => {
+            if (!rawUrl) return '';
+            let url = rawUrl.trim();
+            const driveFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (driveFileMatch && driveFileMatch[1]) { return `https://drive.google.com/file/d/${driveFileMatch[1]}/preview`; }
+            const driveIdMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+            if (driveIdMatch && driveIdMatch[1]) { return `https://drive.google.com/file/d/${driveIdMatch[1]}/preview`; }
+            const driveUcMatch = url.match(/drive\.google\.com\/uc\?id=([a-zA-Z0-9_-]+)/);
+            if (driveUcMatch && driveUcMatch[1]) { return `https://drive.google.com/file/d/${driveUcMatch[1]}/preview`; }
+            return url;
+        };
+
+        const isRecentlyUploaded = (dateString) => {
+            if (!dateString) return false;
+            const itemDate = new Date(dateString);
+            const today = new Date();
+            const diffDays = Math.ceil(Math.abs(today - itemDate) / (1000 * 60 * 60 * 24));
+            return diffDays <= 7;
+        };
+
+        const MolecularCanvas = ({ theme }) => {
+            useEffect(() => {
+                const canvas = document.getElementById('bg-canvas');
+                if (!canvas) return;
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (prefersReducedMotion) return;
+
+                const ctx = canvas.getContext('2d');
+                let animationFrameId;
+                let isPaused = document.hidden;
+                let width = canvas.width = window.innerWidth;
+                let height = canvas.height = window.innerHeight;
+
+                const handleResize = () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; };
+                window.addEventListener('resize', handleResize);
+
+                const handleVisibility = () => {
+                    isPaused = document.hidden;
+                    if (!isPaused) { animationFrameId = requestAnimationFrame(render); }
+                };
+                document.addEventListener('visibilitychange', handleVisibility);
+
+                const numParticles = Math.min(80, Math.floor((width * height) / 24000));
+                const particles = [];
+                const colors = theme === 'dark' 
+                    ? ['#14b8a6', '#38bdf8', '#818cf8', '#2dd4bf', '#60a5fa']
+                    : theme === 'eyecare'
+                    ? ['#0f766e', '#0284c7', '#4338ca', '#0d9488', '#1e40af']
+                    : ['#0d9488', '#0284c7', '#6366f1', '#14b8a6', '#0284c7'];
+
+                for (let i = 0; i < numParticles; i++) {
+                    particles.push({
+                        x: Math.random() * width, y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+                        radius: Math.random() * 2 + 1,
+                        color: colors[Math.floor(Math.random() * colors.length)]
+                    });
+                }
+
+                const render = () => {
+                    ctx.clearRect(0, 0, width, height);
+                    const strokeAlpha = theme === 'dark' ? 0.2 : theme === 'eyecare' ? 0.15 : 0.25;
+                    for (let i = 0; i < particles.length; i++) {
+                        for (let j = i + 1; j < particles.length; j++) {
+                            const dx = particles[i].x - particles[j].x;
+                            const dy = particles[i].y - particles[j].y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < 120) {
+                                ctx.beginPath();
+                                ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.strokeStyle = theme === 'dark'
+                                    ? `rgba(100, 116, 139, ${strokeAlpha * (1 - dist / 120)})`
+                                    : `rgba(148, 163, 184, ${strokeAlpha * (1 - dist / 120)})`;
+                                ctx.lineWidth = 0.75;
+                                ctx.stroke();
+                            }
                         }
+                    }
+
+                    particles.forEach(p => {
+                        p.x += p.vx; p.y += p.vy;
+                        if (p.x < 0 || p.x > width) p.vx *= -1;
+                        if (p.y < 0 || p.y > height) p.vy *= -1;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = p.color;
+                        ctx.fill();
                     });
 
-                    // Add bot response to UI
-                    setMessages(prev => [...prev, { role: "model", text: response.text }]);
-                } catch (error) {
-                    console.error("AI Generation Error:", error);
-                    setMessages(prev => [...prev, { 
-                        role: "model", 
-                        text: "Alamak! 😅 My servers are taking a little break right now. Could you check your API configuration or try again in a moment?" 
-                    }]);
-                } finally {
-                    setIsLoading(false);
-                }
-            };
+                    if (!isPaused) { animationFrameId = requestAnimationFrame(render); }
+                };
 
-            const handleKeyDown = (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend();
-                }
-            };
+                render();
+                return () => {
+                    window.removeEventListener('resize', handleResize);
+                    document.removeEventListener('visibilitychange', handleVisibility);
+                    cancelAnimationFrame(animationFrameId);
+                };
+            }, [theme]);
+            return null;
+        };
 
-            // Dynamic Theme Styling Variables
-            const isDark = theme === 'dark';
-            const isEyecare = theme === 'eyecare';
-
-            const panelBg = isDark ? 'bg-slate-900/95 border-slate-700' : isEyecare ? 'bg-[#fcf8f2] border-[#e8dccb]' : 'bg-white/95 border-slate-200';
-            const headerBg = isDark ? 'bg-slate-800 border-slate-700' : isEyecare ? 'bg-[#f0e1c5] border-[#d4b996]' : 'bg-gradient-to-r from-teal-50 to-indigo-50 border-slate-200';
-            const headerText = isDark ? 'text-white' : isEyecare ? 'text-[#4a2e1b]' : 'text-slate-800';
-            
-            const botBubbleBg = isDark ? 'bg-slate-800 text-slate-100 border-slate-700' : isEyecare ? 'bg-[#f5ebd9] text-[#4a2e1b] border-[#e8dccb]' : 'bg-white text-slate-900 border-slate-200';
-            const userBubbleBg = 'bg-teal-600 text-white border-teal-700';
-            
-            const inputBg = isDark ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-500' : isEyecare ? 'bg-[#f5ebd9] border-[#d4b996] text-[#4a2e1b] placeholder-[#8b6b4a]' : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400';
+        // --- SUBCOMPONENT: Floating AI Chat Tutor ---
+        const AIChatWidget = ({ theme }) => {
+            const [isOpen, setIsOpen] = useState(false);
 
             return (
-                <div className="fixed bottom-6 right-6 z-[70] flex flex-col items-end">
-                    
+                <>
+                    {/* Floating Toggle Button */}
+                    <div 
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-tr from-teal-500 to-indigo-600 shadow-[0_0_20px_rgba(20,184,166,0.6)] text-white flex items-center justify-center text-2xl z-[70] hover:scale-110 active:scale-95 transition-all cursor-pointer"
+                        title="ChemTitra AI Tutor"
+                    >
+                        <i className={`fa-solid ${isOpen ? 'fa-xmark' : 'fa-robot'}`}></i>
+                    </div>
+
                     {/* Chat Panel */}
                     {isOpen && (
-                        <div className={`mb-4 w-80 sm:w-[26rem] max-w-[calc(100vw-3rem)] h-[500px] max-h-[75vh] rounded-3xl flex flex-col shadow-2xl glass-card transition-all ${panelBg}`}>
+                        <div className={`fixed bottom-24 right-6 w-80 sm:w-[26rem] max-w-[calc(100vw-3rem)] h-[500px] max-h-[75vh] z-[70] rounded-3xl flex flex-col overflow-hidden shadow-2xl glass-card transition-all ${theme === 'dark' ? 'bg-slate-900/95 border-slate-700' : 'bg-white/95 border-slate-200'}`}>
                             
                             {/* Header */}
-                            <div className={`flex items-center justify-between p-4 border-b rounded-t-3xl ${headerBg}`}>
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-teal-500 to-indigo-600 flex items-center justify-center text-white text-sm shadow-md relative">
-                                        <i className="fa-solid fa-robot"></i>
-                                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+                            <div className="flex items-center justify-between p-4 border-b border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-r from-teal-500/10 to-indigo-500/10">
+                                <div className="flex items-center space-x-2">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-teal-500 to-indigo-600 flex items-center justify-center text-white text-xs shadow-md">
+                                        <i className="fa-solid fa-flask"></i>
                                     </div>
                                     <div>
-                                        <h3 className={`text-sm font-bold leading-tight ${headerText}`}>TitraBot AI</h3>
-                                        <p className={`text-[10px] font-semibold ${isEyecare ? 'text-[#8b6b4a]' : 'text-teal-600 dark:text-teal-400'}`}>Powered by Gemini 2.5 Flash</p>
+                                        <h3 className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>Virtual AI Tutor</h3>
+                                        <p className="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">Powered by Gemini</p>
                                     </div>
                                 </div>
-                                <button onClick={() => setIsOpen(false)} className={`transition-colors p-1.5 rounded-lg ${isEyecare ? 'text-[#8b6b4a] hover:bg-[#e8dccb]' : 'text-slate-400 hover:text-teal-600 hover:bg-black/5'}`}>
-                                    <i className="fa-solid fa-chevron-down text-sm"></i>
+                                <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-teal-600 transition-colors p-1">
+                                    <i className="fa-solid fa-xmark text-sm"></i>
                                 </button>
                             </div>
 
-                            {/* Message Feed */}
-                            <div className="flex-1 p-4 overflow-y-auto space-y-4 pt-scroll text-sm flex flex-col">
-                                {messages.map((msg, idx) => {
-                                    const isUser = msg.role === "user";
-                                    return (
-                                        <div key={idx} className={`flex ${isUser ? 'justify-end' : 'justify-start'} animate-float-up`}>
-                                            {!isUser && (
-                                                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-teal-500 to-indigo-600 flex items-center justify-center text-white text-[10px] mr-2 mt-1 flex-shrink-0">
-                                                    <i className="fa-solid fa-robot"></i>
-                                                </div>
-                                            )}
-                                            <div className={`max-w-[80%] rounded-2xl p-3 shadow-sm whitespace-pre-wrap leading-relaxed border ${
-                                                isUser 
-                                                    ? `${userBubbleBg} rounded-tr-sm` 
-                                                    : `${botBubbleBg} rounded-tl-sm`
-                                            }`}>
-                                                {msg.text}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                                
-                                {/* Loading Indicator */}
-                                {isLoading && (
-                                    <div className="flex justify-start animate-float-up">
-                                        <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-teal-500 to-indigo-600 flex items-center justify-center text-white text-[10px] mr-2 mt-1 flex-shrink-0">
-                                            <i className="fa-solid fa-robot"></i>
-                                        </div>
-                                        <div className={`rounded-2xl rounded-tl-sm p-3 shadow-sm border flex items-center space-x-1.5 ${botBubbleBg}`}>
-                                            <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce"></div>
-                                            <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce" style={{animationDelay: '0.15s'}}></div>
-                                            <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></div>
-                                        </div>
+                            {/* Chat View (Offline / Maintenance) */}
+                            <div className="flex-1 p-4 overflow-y-auto space-y-4 pt-scroll text-sm">
+                                <div className="flex justify-start">
+                                    <div className={`max-w-[85%] rounded-2xl p-3 shadow-sm whitespace-pre-wrap leading-relaxed ${
+                                        theme === 'dark' 
+                                            ? 'bg-slate-800 text-slate-100 border border-slate-700 rounded-bl-none' 
+                                            : theme === 'eyecare' 
+                                                ? 'bg-[#fcf8f2] text-[#4a2e1b] border border-[#e8dccb] rounded-bl-none' 
+                                                : 'bg-white text-slate-900 border border-slate-200 rounded-bl-none'
+                                    }`}>
+                                        Hello! Welcome to ChemTitra. The AI Tutor database is currently offline for system maintenance and content staging.
                                     </div>
-                                )}
-                                <div ref={messagesEndRef} />
+                                </div>
+                                <div className="flex justify-start">
+                                    <div className={`max-w-[85%] rounded-2xl p-3 shadow-sm whitespace-pre-wrap leading-relaxed ${
+                                        theme === 'dark' 
+                                            ? 'bg-slate-800 text-slate-100 border border-slate-700 rounded-bl-none' 
+                                            : theme === 'eyecare' 
+                                                ? 'bg-[#fcf8f2] text-[#4a2e1b] border border-[#e8dccb] rounded-bl-none' 
+                                                : 'bg-white text-slate-900 border border-slate-200 rounded-bl-none'
+                                    }`}>
+                                        Please check back soon! In the meantime, feel free to explore our curated notes, exercises and interactive periodic table.
+                                    </div>
+                                </div>
                             </div>
 
-                            {/* Input Area */}
-                            <div className={`p-3 border-t rounded-b-3xl ${isDark ? 'border-slate-700 bg-slate-800/50' : isEyecare ? 'border-[#e8dccb] bg-[#f0e1c5]/30' : 'border-slate-200 bg-slate-50/50'}`}>
-                                <div className="relative flex items-end">
-                                    <textarea 
-                                        rows="1"
-                                        value={input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        onKeyDown={handleKeyDown}
-                                        placeholder="Ask about KSSM Chemistry..." 
-                                        className={`w-full pr-12 pl-4 py-3 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all resize-none shadow-inner ${inputBg}`}
-                                        style={{ minHeight: '44px', maxHeight: '100px' }}
+                            {/* Input Area (Disabled) */}
+                            <div className={`p-3 border-t ${theme === 'dark' ? 'border-slate-700 bg-slate-900' : 'border-slate-200 bg-white'}`}>
+                                <div className="relative flex items-center">
+                                    <input 
+                                        type="text" 
+                                        disabled
+                                        placeholder="Chat is currently offline..." 
+                                        className={`w-full pr-10 pl-4 py-2.5 rounded-xl text-xs focus:outline-none transition-all cursor-not-allowed opacity-60 ${
+                                            theme === 'dark' ? 'bg-slate-800 border border-slate-700 text-white placeholder-slate-500' : 
+                                            theme === 'eyecare' ? 'bg-[#fcf8f2] border border-[#e8dccb] text-[#4a3525] placeholder-slate-400' : 
+                                            'bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400'
+                                        }`}
                                     />
                                     <button 
-                                        onClick={handleSend}
-                                        disabled={!input.trim() || isLoading}
-                                        className={`absolute right-1.5 bottom-1.5 w-8 h-8 rounded-lg flex items-center justify-center text-xs transition-all ${
-                                            input.trim() && !isLoading 
-                                                ? 'bg-teal-600 text-white shadow-md hover:bg-teal-700 active:scale-95 cursor-pointer' 
-                                                : `bg-slate-300 text-slate-100 cursor-not-allowed ${isDark ? 'bg-slate-700 text-slate-500' : isEyecare ? 'bg-[#d4b996] text-[#fcf8f2]' : ''}`
-                                        }`}
+                                        disabled
+                                        className="absolute right-1.5 w-8 h-8 rounded-lg bg-slate-400 text-white flex items-center justify-center text-xs shadow transition-all cursor-not-allowed opacity-50"
                                     >
                                         <i className="fa-solid fa-paper-plane"></i>
                                     </button>
@@ -266,65 +682,1298 @@
                             </div>
                         </div>
                     )}
-
-                    {/* Floating Toggle Button */}
-                    <button 
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="w-14 h-14 rounded-full bg-gradient-to-tr from-teal-500 to-indigo-600 shadow-[0_0_20px_rgba(20,184,166,0.5)] text-white flex items-center justify-center text-2xl hover:scale-110 active:scale-95 transition-all focus:outline-none"
-                        title="TitraBot AI Tutor"
-                    >
-                        <i className={`fa-solid transition-transform duration-300 ${isOpen ? 'fa-xmark rotate-90' : 'fa-robot'}`}></i>
-                    </button>
-                </div>
+                </>
             );
         };
 
-        // =========================================================================
-        // MAIN APPLICATION COMPONENT
-        // =========================================================================
-        const App = () => {
-            const [theme, setTheme] = useState('light'); // Switch between 'light', 'dark', 'eyecare'
+        function App() {
+            const [theme, setTheme] = useState('eyecare');
+            const [selectedForm, setSelectedForm] = useState('Form 4');
+            const [selectedCategory, setSelectedCategory] = useState('Notes'); 
+            const [searchQuery, setSearchQuery] = useState('');
+            const [sortBy, setSortBy] = useState('newest');
+            const [filterLanguage, setFilterLanguage] = useState('ALL');
 
-            // Apply body classes for global CSS variables/backgrounds
+            const [mobileBioExpanded, setMobileBioExpanded] = useState(false);
+            const [showPeriodicTable, setShowPeriodicTable] = useState(false);
+            const [selectedElement, setSelectedElement] = useState(null);
+
+            const [materials, setMaterials] = useState(() => {
+                const saved = localStorage.getItem('chemtitra_materials_cache');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                    } catch (e) {
+                        console.warn("Using default initial materials.");
+                    }
+                }
+                return INITIAL_MATERIALS;
+            });
+
+            const [announcement, setAnnouncement] = useState(() => {
+                return localStorage.getItem('chemtitra_announcement') || '📢 Welcome to ChemTitra! Explore my curated notes, exam exercises and online quizzes.';
+            });
+            const [isEditingAnnouncement, setIsEditingAnnouncement] = useState(false);
+            const [announcementInput, setAnnouncementInput] = useState(announcement);
+
+            const [currentUser, setCurrentUser] = useState(null);
+            const [showOwnerModal, setShowOwnerModal] = useState(false);
+            const [authLoading, setAuthLoading] = useState(false);
+            const [authError, setAuthError] = useState('');
+            const [firebaseAuth, setFirebaseAuth] = useState(null);
+            const [db, setDb] = useState(null);
+
+            const [avatarUrl, setAvatarUrl] = useState(() => {
+                return localStorage.getItem('chemtitra_avatar_url') || PERMANENT_AVATAR_URL;
+            });
+            const [avatarSaving, setAvatarSaving] = useState(false);
+            const [showAvatarUrlModal, setShowAvatarUrlModal] = useState(false);
+            const [avatarUrlInput, setAvatarUrlInput] = useState('');
+
+            const isAdmin = useMemo(() => {
+                return !!(
+                    currentUser && 
+                    currentUser.email && 
+                    currentUser.email.trim().toLowerCase() === AUTHORIZED_OWNER_EMAIL.trim().toLowerCase()
+                );
+            }, [currentUser]);
+
+            const [showMaterialModal, setShowMaterialModal] = useState(false);
+            const [editingItem, setEditingItem] = useState(null);
+            const [activePdfItem, setActivePdfItem] = useState(null);
+            const [itemToDelete, setItemToDelete] = useState(null);
+            const [toast, setToast] = useState({ show: false, message: '', type: 'info' });
+
+            const [formData, setFormData] = useState({
+                form: 'Form 4', subject: 'Chemistry', category: 'Notes',
+                chapter: '', title: '', description: '', fileUrl: '',
+                language: 'DLP', tags: ''
+            });
+
+            const showToast = (message, type = 'info') => {
+                setToast({ show: true, message, type });
+                setTimeout(() => setToast(prev => ({ ...prev, show: false })), 4000);
+            };
+
             useEffect(() => {
-                document.body.className = `theme-${theme} selection:bg-teal-500 selection:text-white`;
+                localStorage.setItem('chemtitra_materials_cache', JSON.stringify(materials));
+            }, [materials]);
+
+            useEffect(() => {
+                document.body.className = 'theme-' + theme;
             }, [theme]);
 
-            return (
-                <div className="min-h-screen relative z-10 flex flex-col font-sans">
+            const getSubjectForForm = (formName) => {
+                return (formName === 'Form 1' || formName === 'Form 2' || formName === 'Form 3') ? 'Science' : 'Chemistry';
+            };
+
+            // Execute the Neural Progress Map Render exclusively when the Quiz tab is active
+            // Map now watches `selectedForm` to trigger instant redraws!
+            useEffect(() => {
+                if (selectedCategory === 'Quiz') {
+                    renderProgressMap(theme, selectedForm, getSubjectForForm(selectedForm));
+                }
+            }, [selectedCategory, theme, selectedForm]);
+
+            useEffect(() => {
+                if (!window.FirebaseModule) return;
+                const { 
+                    initializeApp, 
+                    getAuth, 
+                    onAuthStateChanged, 
+                    getFirestore, 
+                    collection, 
+                    doc,
+                    onSnapshot 
+                } = window.FirebaseModule;
+
+                try {
+                    const app = initializeApp(FIREBASE_CONFIG);
+                    const authInst = getAuth(app);
+                    const dbInst = getFirestore(app);
+                    setFirebaseAuth(authInst);
+                    setDb(dbInst);
+
+                    const unsubscribeAuth = onAuthStateChanged(authInst, (user) => {
+                        if (user) {
+                            if (user.email && user.email.trim().toLowerCase() === AUTHORIZED_OWNER_EMAIL.trim().toLowerCase()) {
+                                setCurrentUser(user);
+                                showToast(`Welcome back, Ikmal!`, 'success');
+                            } else {
+                                setCurrentUser(null);
+                                setAuthError(`Access Denied: ${user.email} is not authorized.`);
+                                window.FirebaseModule.signOut(authInst);
+                            }
+                        } else {
+                            setCurrentUser(null);
+                        }
+                    });
+
+                    const materialsRef = collection(dbInst, 'chemtitra_materials');
+                    const unsubscribeFirestore = onSnapshot(materialsRef, (snapshot) => {
+                        if (!snapshot.empty) {
+                            const fetched = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                            setMaterials(fetched);
+                        }
+                    }, (err) => {
+                        console.warn('Using local cache for materials:', err.message);
+                    });
+
+                    const profileConfigRef = doc(dbInst, 'chemtitra_config', 'profile');
+                    const unsubscribeProfile = onSnapshot(profileConfigRef, (snap) => {
+                        if (snap.exists() && snap.data().avatarUrl) {
+                            setAvatarUrl(snap.data().avatarUrl);
+                            localStorage.setItem('chemtitra_avatar_url', snap.data().avatarUrl);
+                        }
+                    }, (err) => {
+                        console.warn('Using cached/default avatar:', err.message);
+                    });
+
+                    return () => {
+                        unsubscribeAuth();
+                        unsubscribeFirestore();
+                        unsubscribeProfile();
+                    };
+                } catch (e) {
+                    console.warn('Firebase init error (using offline mode):', e);
+                }
+            }, []);
+
+            const handleGoogleSignIn = async () => {
+                setAuthError('');
+                setAuthLoading(true);
+
+                if (!firebaseAuth || !window.FirebaseModule) {
+                    setAuthLoading(false);
+                    setAuthError("Firebase is not yet configured.");
+                    return;
+                }
+
+                try {
+                    const { signInWithPopup, GoogleAuthProvider, signOut } = window.FirebaseModule;
+                    const provider = new GoogleAuthProvider();
+                    provider.setCustomParameters({ prompt: 'select_account' });
+
+                    const result = await signInWithPopup(firebaseAuth, provider);
+                    const user = result.user;
+
+                    if (user && user.email && user.email.trim().toLowerCase() === AUTHORIZED_OWNER_EMAIL.trim().toLowerCase()) {
+                        setCurrentUser(user);
+                        setShowOwnerModal(false);
+                        setAuthLoading(false);
+                        showToast("Owner access verified via Google!", "success");
+                    } else {
+                        await signOut(firebaseAuth);
+                        setCurrentUser(null);
+                        setAuthLoading(false);
+                        setAuthError(`Access Denied: ${user.email} is not authorized.`);
+                    }
+                } catch (error) {
+                    setAuthLoading(false);
+                    if (error.code === 'auth/popup-closed-by-user') {
+                        setAuthError("Sign-in cancelled. Please try again.");
+                    } else {
+                        setAuthError(error.message || "An error occurred during Google Sign-In.");
+                    }
+                }
+            };
+
+            const handleSignOut = async () => {
+                if (firebaseAuth && window.FirebaseModule && currentUser) {
+                    await window.FirebaseModule.signOut(firebaseAuth);
+                }
+                setCurrentUser(null);
+                showToast("Signed out. Switched to Student View.", "info");
+            };
+
+            const isLikelyImageUrl = (value) => {
+                try {
+                    const parsed = new URL(value);
+                    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+                } catch {
+                    return false;
+                }
+            };
+
+            const handleSaveAvatarUrl = async () => {
+                const url = avatarUrlInput.trim();
+                if (!url) return showToast('Please paste an image URL first.', 'error');
+                if (!isLikelyImageUrl(url)) return showToast('That doesn\'t look like a valid link — make sure it starts with https://', 'error');
+                if (!isAdmin || !db || !window.FirebaseModule) return showToast('Not ready yet — please try again in a moment.', 'error');
+
+                setAvatarSaving(true);
+                try {
+                    const { doc, setDoc } = window.FirebaseModule;
+                    await setDoc(doc(db, 'chemtitra_config', 'profile'), {
+                        avatarUrl: url,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+
+                    setAvatarUrl(url);
+                    localStorage.setItem('chemtitra_avatar_url', url);
+                    showToast('Profile photo updated!', 'success');
+                    setShowAvatarUrlModal(false);
+                    setAvatarUrlInput('');
+                } catch (err) {
+                    showToast(err.message || 'Failed to save the photo link. Please try again.', 'error');
+                } finally {
+                    setAvatarSaving(false);
+                }
+            };
+
+            const handleViewMaterial = (item) => {
+                setActivePdfItem(item);
+                const updatedViews = (item.views || 0) + 1;
+                setMaterials(prev => prev.map(m => m.id === item.id ? { ...m, views: updatedViews } : m));
+            };
+
+            const openEditor = (item = null) => {
+                if (item) {
+                    setEditingItem(item);
+                    setFormData({
+                        form: item.form,
+                        subject: item.subject,
+                        category: item.category,
+                        chapter: item.chapter || '',
+                        title: item.title || '',
+                        description: item.description || '',
+                        fileUrl: item.rawUrl || item.fileUrl || '',
+                        language: item.language || 'DLP',
+                        tags: item.tags ? item.tags.join(', ') : ''
+                    });
+                } else {
+                    setEditingItem(null);
+                    setFormData({
+                        form: selectedForm,
+                        subject: getSubjectForForm(selectedForm),
+                        category: selectedCategory,
+                        chapter: '',
+                        title: '',
+                        description: '',
+                        fileUrl: '',
+                        language: 'DLP',
+                        tags: ''
+                    });
+                }
+                setShowMaterialModal(true);
+            };
+
+            const handleSaveMaterial = async (e) => {
+                e.preventDefault();
+                if (!formData.title || !formData.fileUrl) return showToast('Please enter both the title and document URL.', 'error');
+
+                const formattedUrl = formData.category === 'Quiz' ? formData.fileUrl.trim() : formatEmbedUrl(formData.fileUrl);
+                const tagsArray = formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : ['KSSM'];
+
+                const newItemData = {
+                    form: formData.form,
+                    subject: getSubjectForForm(formData.form),
+                    category: formData.category,
+                    chapter: formData.chapter.trim() || 'General Topic',
+                    title: formData.title,
+                    description: formData.description,
+                    fileUrl: formattedUrl,
+                    rawUrl: formData.fileUrl,
+                    language: formData.language || 'DLP',
+                    views: editingItem ? (editingItem.views || 0) : 0,
+                    updatedAt: new Date().toISOString().split('T')[0],
+                    tags: tagsArray
+                };
+
+                try {
+                    if (db && window.FirebaseModule) {
+                        const { doc, setDoc, addDoc, collection } = window.FirebaseModule;
+                        if (editingItem) {
+                            const docRef = doc(db, 'chemtitra_materials', editingItem.id);
+                            await setDoc(docRef, newItemData, { merge: true });
+                        } else {
+                            const colRef = collection(db, 'chemtitra_materials');
+                            await addDoc(colRef, newItemData);
+                        }
+                    } else {
+                        if (editingItem) {
+                            setMaterials(prev => prev.map(m => m.id === editingItem.id ? { ...m, ...newItemData } : m));
+                        } else {
+                            const id = 'mat-' + Date.now();
+                            setMaterials(prev => [{ id, ...newItemData }, ...prev]);
+                        }
+                    }
+
+                    window.alert(editingItem ? "🎉 Success! Material has been updated successfully!" : "🎉 Success! Material has been published successfully!");
+
+                    showToast(editingItem ? '🎉 Success! Material updated successfully!' : '🎉 Success! Material published successfully!', 'success');
+                    setShowMaterialModal(false);
                     
-                    {/* Demo Header for Theme Switching Context */}
-                    <header className={`p-4 border-b flex justify-between items-center ${
-                        theme === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 
-                        theme === 'eyecare' ? 'bg-[#f0e1c5] border-[#d4b996] text-[#4a2e1b]' : 
-                        'bg-white border-slate-200 text-slate-800'
+                    setFormData({
+                        form: formData.form,
+                        subject: getSubjectForForm(formData.form),
+                        category: formData.category,
+                        chapter: '',
+                        title: '',
+                        description: '',
+                        fileUrl: '',
+                        language: formData.language,
+                        tags: ''
+                    });
+
+                } catch (err) {
+                    if (editingItem) {
+                        setMaterials(prev => prev.map(m => m.id === editingItem.id ? { ...m, ...newItemData } : m));
+                    } else {
+                        const id = 'mat-' + Date.now();
+                        setMaterials(prev => [{ id, ...newItemData }, ...prev]);
+                    }
+
+                    window.alert(editingItem ? "🎉 Success! Material has been updated successfully (Saved Offline)!" : "🎉 Success! Material has been published successfully (Saved Offline)!");
+
+                    showToast('🎉 Success! Saved to local storage.', 'success');
+                    setShowMaterialModal(false);
+                    
+                    setFormData({
+                        form: formData.form,
+                        subject: getSubjectForForm(formData.form),
+                        category: formData.category,
+                        chapter: '',
+                        title: '',
+                        description: '',
+                        fileUrl: '',
+                        language: formData.language,
+                        tags: ''
+                    });
+                }
+            };
+
+            const handleDeleteClick = async (material) => {
+                if (window.confirm(`Are you sure you want to delete "${material.title}"?`)) {
+                    
+                    if (!material.id) { 
+                        console.error("Missing document ID"); 
+                        setMaterials(prev => prev.filter(m => m !== material));
+                        return; 
+                    }
+                    
+                    setMaterials(prev => prev.filter(m => m.id !== material.id));
+
+                    try {
+                        if (db && window.FirebaseModule) {
+                            const { doc, deleteDoc } = window.FirebaseModule;
+                            await deleteDoc(doc(db, "chemtitra_materials", material.id));
+                        }
+                        showToast('🗑️ Material deleted successfully.', 'info');
+                    } catch (err) {
+                        console.error("Delete error:", err);
+                        showToast('Removed from screen (DB error: ' + err.message + ')', 'error');
+                    }
+                }
+            };
+
+            const alternateLanguageCount = useMemo(() => {
+                if (filterLanguage === 'ALL') return 0;
+                const targetAlt = filterLanguage === 'BM' ? 'DLP' : 'BM';
+                return materials.filter(m => m.form === selectedForm && m.category === selectedCategory && m.language === targetAlt).length;
+            }, [materials, selectedForm, selectedCategory, filterLanguage]);
+
+            const filteredMaterials = useMemo(() => {
+                let list = materials.filter(item => {
+                    const matchesForm = item.form === selectedForm;
+                    const matchesCategory = item.category === selectedCategory;
+                    const matchesLang = filterLanguage === 'ALL' || (item.language && item.language === filterLanguage);
+                    const query = searchQuery.toLowerCase().trim();
+                    const matchesSearch = !query ||
+                        item.title.toLowerCase().includes(query) ||
+                        (item.chapter && item.chapter.toLowerCase().includes(query)) ||
+                        (item.description && item.description.toLowerCase().includes(query)) ||
+                        (item.tags && item.tags.some(t => t.toLowerCase().includes(query)));
+                    return matchesForm && matchesCategory && matchesLang && matchesSearch;
+                });
+
+                list.sort((a, b) => {
+                    if (sortBy === 'newest') return (b.updatedAt || '').localeCompare(a.updatedAt || '');
+                    else if (sortBy === 'oldest') return (a.updatedAt || '').localeCompare(b.updatedAt || '');
+                    else if (sortBy === 'chapter') return (a.chapter || '').localeCompare(b.chapter || '');
+                    else if (sortBy === 'views') return (b.views || 0) - (a.views || 0);
+                    return 0;
+                });
+
+                return list;
+            }, [materials, selectedForm, selectedCategory, searchQuery, sortBy, filterLanguage]);
+
+            return (
+                <div className="min-h-screen relative z-10 flex flex-col">
+                    <MolecularCanvas theme={theme} />
+
+                    {/* Toast Notification */}
+                    {toast.show && (
+                        <div className="fixed top-5 right-5 z-50 animate-bounce transition-all">
+                            <div className={`px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm font-semibold border ${
+                                toast.type === 'success' ? 'bg-teal-900 text-teal-100 border-teal-500' :
+                                toast.type === 'error' ? 'bg-red-900 text-red-100 border-red-500' :
+                                'bg-slate-900 text-slate-100 border-slate-700'
+                            }`}>
+                                <i className={`fa-solid ${
+                                    toast.type === 'success' ? 'fa-circle-check text-teal-300' :
+                                    toast.type === 'error' ? 'fa-triangle-exclamation text-red-300' :
+                                    'fa-circle-info text-cyan-300'
+                                } text-lg`}></i>
+                                <span>{toast.message}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Top Navigation Header */}
+                    <header className={`border-b sticky top-0 z-40 backdrop-blur-md shadow-sm transition-all ${
+                        theme === 'dark' ? 'bg-slate-900/90 border-slate-800' :
+                        theme === 'eyecare' ? 'bg-[#f0f3f8]/95 border-slate-300/80' :
+                        'bg-white/90 border-slate-200'
                     }`}>
-                        <h1 className="text-xl font-bold font-display tracking-wide">
-                            <i className="fa-solid fa-flask text-teal-600 mr-2"></i>ChemTitra
-                        </h1>
-                        <div className="flex gap-2">
-                            <button onClick={() => setTheme('light')} className="px-3 py-1 rounded text-xs font-bold border border-slate-300 bg-white text-slate-700">Light</button>
-                            <button onClick={() => setTheme('dark')} className="px-3 py-1 rounded text-xs font-bold border border-slate-700 bg-slate-800 text-white">Dark</button>
-                            <button onClick={() => setTheme('eyecare')} className="px-3 py-1 rounded text-xs font-bold border border-[#d4b996] bg-[#f5ebd9] text-[#4a2e1b]">Eye-Care</button>
+                        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
+                            <div className="flex items-center space-x-2.5 sm:space-x-3">
+                                <div 
+                                    onClick={() => !isAdmin && setShowOwnerModal(true)}
+                                    className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-teal-600 to-indigo-600 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-md shadow-teal-600/20 cursor-pointer transition-transform hover:scale-105 active:scale-95 relative flex-shrink-0"
+                                >
+                                    <i className="fa-solid fa-flask-vial" aria-hidden="true"></i>
+                                    {!isAdmin && (
+                                        <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[8px] sm:text-[9px] shadow">
+                                            <i className="fa-solid fa-lock" aria-hidden="true"></i>
+                                        </span>
+                                    )}
+                                </div>
+                                <div>
+                                    <h1 className="text-lg sm:text-xl font-black tracking-tight flex items-center space-x-1.5 sm:space-x-2">
+                                        <span className="bg-gradient-to-r from-teal-600 via-cyan-600 to-indigo-600 bg-clip-text text-transparent">ChemTitra</span>
+                                        <span className="text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-800 border border-teal-200 font-bold">EduPortal</span>
+                                    </h1>
+                                    <p className={`text-[10px] sm:text-xs font-medium ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>Ikmal Hafiz's Teaching Workspace</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center space-x-1.5 sm:space-x-3">
+                                
+                                {/* Dynamic Periodic Table Button */}
+                                <button
+                                    onClick={() => setShowPeriodicTable(true)}
+                                    className={`px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border text-xs font-bold transition-all flex items-center space-x-1.5 shadow-sm ${
+                                        theme === 'dark' ? 'bg-indigo-900/50 border-indigo-700/80 text-indigo-300 hover:bg-indigo-800' : 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100'
+                                    }`}
+                                    title="Open Interactive Periodic Table"
+                                >
+                                    <i className="fa-solid fa-table-cells text-[10px] sm:text-xs"></i>
+                                    <span className="hidden md:inline text-[11px]">Periodic Table</span>
+                                </button>
+
+                                {/* Theme & Controls */}
+                                <div className={`flex items-center p-0.5 sm:p-1 rounded-xl border text-xs font-bold transition-all ${
+                                    theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-300' :
+                                    theme === 'eyecare' ? 'bg-slate-200/90 border-slate-300 text-slate-700' :
+                                    'bg-slate-100 border-slate-200 text-slate-700'
+                                }`}>
+                                    <button onClick={() => setTheme('eyecare')} className={`px-2 sm:px-2.5 py-1 rounded-lg flex items-center space-x-1 transition-all ${theme === 'eyecare' ? 'bg-teal-700 text-white shadow-sm' : 'hover:text-teal-700'}`} title="Eye-Care theme">
+                                        <i className="fa-solid fa-eye text-xs"></i><span className="hidden sm:inline text-[11px]">Eye-Care</span>
+                                    </button>
+                                    <button onClick={() => setTheme('dark')} className={`px-2 sm:px-2.5 py-1 rounded-lg flex items-center space-x-1 transition-all ${theme === 'dark' ? 'bg-indigo-600 text-white shadow-sm' : 'hover:text-indigo-400'}`} title="Dark theme">
+                                        <i className="fa-solid fa-moon text-xs"></i><span className="hidden sm:inline text-[11px]">Dark</span>
+                                    </button>
+                                    <button onClick={() => setTheme('light')} className={`px-2 sm:px-2.5 py-1 rounded-lg flex items-center space-x-1 transition-all ${theme === 'light' ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'hover:text-slate-900'}`} title="Light theme">
+                                        <i className="fa-solid fa-sun text-xs"></i><span className="hidden sm:inline text-[11px]">Light</span>
+                                    </button>
+                                </div>
+
+                                {isAdmin ? (
+                                    <div className="flex items-center space-x-1.5 sm:space-x-2">
+                                        <button onClick={() => openEditor()} className="px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white shadow-md shadow-teal-600/20 flex items-center space-x-1 sm:space-x-1.5 transition-all transform hover:scale-105">
+                                            <i className="fa-solid fa-plus text-xs sm:text-sm"></i><span className="whitespace-nowrap hidden sm:inline">Add Material</span><span className="sm:hidden">Add</span>
+                                        </button>
+                                        <button onClick={handleSignOut} className="p-2 sm:px-3 sm:py-2 rounded-xl text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 transition-all flex items-center space-x-1" title="Sign Out of Owner Mode">
+                                            <i className="fa-solid fa-arrow-right-from-bracket text-xs"></i><span className="hidden md:inline text-[11px]">Sign out</span>
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button onClick={() => { setAuthError(''); setShowOwnerModal(true); }} className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs font-bold bg-slate-200/80 hover:bg-slate-300 text-slate-700 border border-slate-300/80 transition-all flex items-center space-x-1 shadow-sm" title="Owner Access">
+                                        <i className="fa-solid fa-user-shield text-teal-600 text-xs"></i><span className="hidden sm:inline text-[11px]">Owner access</span>
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </header>
 
-                    <main className="flex-grow p-6 flex items-center justify-center">
-                        <div className="text-center opacity-70">
-                            <i className="fa-solid fa-layer-group text-4xl mb-4"></i>
-                            <p className="text-sm font-semibold uppercase tracking-widest">Portal Core Engine Active</p>
+                    {/* Announcement Banner */}
+                    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4 w-full">
+                        <div className={`p-2.5 sm:p-3.5 rounded-2xl border flex items-center justify-between gap-3 shadow-sm ${
+                            theme === 'dark' ? 'bg-indigo-950/40 border-indigo-900/60 text-indigo-200' :
+                            theme === 'eyecare' ? 'bg-indigo-50/90 border-indigo-200 text-indigo-950' :
+                            'bg-indigo-50 border-indigo-200 text-indigo-900'
+                        }`}>
+                            <div className="flex items-center space-x-2.5 sm:space-x-3 overflow-hidden">
+                                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 text-xs shadow">
+                                    <i className="fa-solid fa-bullhorn"></i>
+                                </div>
+                                <p className="text-[11px] sm:text-xs font-semibold leading-snug truncate sm:whitespace-normal">
+                                    {announcement}
+                                </p>
+                            </div>
+                            {isAdmin && (
+                                <button
+                                    onClick={() => { setAnnouncementInput(announcement); setIsEditingAnnouncement(true); }}
+                                    className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white text-indigo-800 border border-indigo-300 hover:bg-indigo-50 transition-all flex items-center space-x-1 flex-shrink-0 shadow-sm"
+                                    title="Edit Notice"
+                                >
+                                    <i className="fa-solid fa-pen text-[10px]"></i>
+                                    <span>Edit</span>
+                                </button>
+                            )}
                         </div>
+                    </div>
+
+                    {/* Main Content Area */}
+                    <main className="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5 space-y-4 sm:space-y-6">
+
+                        {/* DESKTOP PROFILE VIEW */}
+                        <section className={`hidden md:block glass-card rounded-3xl py-5 px-8 relative overflow-hidden transition-all ${
+                            theme === 'dark' ? 'bg-slate-900/80 border-slate-800 text-slate-100' :
+                            theme === 'eyecare' ? 'bg-[#f4f7fb] border-slate-300/80 text-slate-900' :
+                            'bg-gradient-to-r from-teal-50/50 via-white to-indigo-50/50 border-slate-200'
+                        }`}>
+                            <div className="absolute -right-12 -top-12 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                            <div className="absolute -left-12 -bottom-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                            <div className="flex items-center gap-6 relative z-10">
+                                <div className="relative flex-shrink-0 flex items-center justify-center">
+                                    <img 
+                                        src={avatarUrl} 
+                                        alt="Ikmal Hafiz" 
+                                        width="176" height="208" fetchpriority="high" referrerPolicy="no-referrer"
+                                        className="frameless-portrait w-40 lg:w-44 h-auto max-h-52 object-contain object-bottom select-none"
+                                        onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_AVATAR; }}
+                                    />
+                                    {isAdmin && (
+                                        <button type="button" onClick={() => { setAvatarUrlInput(avatarUrl && avatarUrl !== PERMANENT_AVATAR_URL ? avatarUrl : ''); setShowAvatarUrlModal(true); }} className="absolute bottom-2 right-1 w-9 h-9 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center shadow-lg border-2 border-white transition-transform hover:scale-105">
+                                            <i className="fa-solid fa-camera text-xs" aria-hidden="true"></i>
+                                        </button>
+                                    )}
+                                </div>
+
+                                <div className="flex-1 space-y-1.5">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <h2 className={`text-2xl lg:text-3xl font-extrabold tracking-tight ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}>
+                                            Ikmal Hafiz
+                                        </h2>
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200 shadow-sm">
+                                            <i className="fa-solid fa-certificate text-indigo-600 mr-1.5"></i>
+                                            Chemistry & Science Educator
+                                        </span>
+                                    </div>
+
+                                    <p className={`text-[13px] lg:text-[14px] leading-relaxed max-w-3xl font-normal ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>
+                                        Graduated from <strong className="text-teal-700 font-semibold">UiTM Puncak Alam</strong> with a 
+                                        <strong className={`font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}> Bachelor of Science Education (Hons.) Chemistry</strong>. 
+                                        Passionate in teaching chemistry and science, combining effective pedagogy with <strong className="text-teal-700 font-semibold">applied AI and digital learning tools</strong> to provide clear, accessible materials for students to excel at their own pace.
+                                    </p>
+
+                                    <div className="flex flex-wrap gap-1.5 pt-1">
+                                        <div className={`px-2.5 py-1 rounded-xl border text-[11px] font-semibold flex items-center space-x-1.5 shadow-sm ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-700'}`}>
+                                            <i className="fa-solid fa-graduation-cap text-teal-600"></i><span>UiTM Puncak Alam</span>
+                                        </div>
+                                        <div className={`px-2.5 py-1 rounded-xl border text-[11px] font-semibold flex items-center space-x-1.5 shadow-sm ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-700'}`}>
+                                            <i className="fa-solid fa-microscope text-cyan-600"></i><span>Science & Chemistry Specialist</span>
+                                        </div>
+                                        <div className={`px-2.5 py-1 rounded-xl border text-[11px] font-semibold flex items-center space-x-1.5 shadow-sm ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-700'}`}>
+                                            <i className="fa-solid fa-wand-magic-sparkles text-indigo-600"></i><span>Applied AI in Education</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* MOBILE PROFILE VIEW */}
+                        <section className={`block md:hidden glass-card rounded-2xl p-2.5 transition-all ${
+                            theme === 'dark' ? 'bg-slate-900/90 border-slate-800 text-slate-100' :
+                            theme === 'eyecare' ? 'bg-[#f4f7fb] border-slate-300/80 text-slate-900' :
+                            'bg-white border-slate-200'
+                        }`}>
+                            <div className="flex items-center justify-between gap-2.5">
+                                <div className="flex items-center space-x-2.5 overflow-hidden">
+                                    <div className="relative flex-shrink-0">
+                                        <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500/20 to-indigo-500/20 p-0.5 border border-teal-500/30 flex items-center justify-center overflow-hidden">
+                                            <img src={avatarUrl} alt="Ikmal Hafiz" width="48" height="48" fetchpriority="high" referrerPolicy="no-referrer" className="w-full h-full object-contain object-top" onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_AVATAR; }} />
+                                        </div>
+                                        {isAdmin && (
+                                            <button type="button" onClick={() => { setAvatarUrlInput(avatarUrl && avatarUrl !== PERMANENT_AVATAR_URL ? avatarUrl : ''); setShowAvatarUrlModal(true); }} className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center shadow border border-white">
+                                                <i className="fa-solid fa-camera text-[8px]"></i>
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="truncate">
+                                        <h2 className="text-xs font-black truncate leading-tight">Ikmal Hafiz</h2>
+                                        <p className="text-[10px] text-teal-700 dark:text-teal-400 font-bold truncate">B.Sc. Ed (Hons) Chemistry • UiTM</p>
+                                        <p className="text-[9px] text-slate-500 truncate">Science & Chemistry Educator</p>
+                                    </div>
+                                </div>
+
+                                <button onClick={() => setMobileBioExpanded(!mobileBioExpanded)} className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-all flex items-center space-x-1 flex-shrink-0 ${mobileBioExpanded ? 'bg-teal-700 text-white border-teal-700' : 'bg-slate-100 text-slate-700 border-slate-300'}`}>
+                                    <span>{mobileBioExpanded ? 'Tutup' : 'Bio'}</span>
+                                    <i className={`fa-solid ${mobileBioExpanded ? 'fa-chevron-up' : 'fa-chevron-down'} text-[8px]`}></i>
+                                </button>
+                            </div>
+
+                            {mobileBioExpanded && (
+                                <div className="pt-2.5 mt-2 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+                                    <p className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
+                                        Graduated from <strong>UiTM Puncak Alam</strong> with a <strong>Bachelor of Science Education (Hons.) Chemistry</strong>. Passionate in teaching chemistry & science with applied AI & digital learning tools.
+                                    </p>
+                                    <div className="flex flex-wrap gap-1">
+                                        <span className="px-2 py-0.5 rounded-md bg-teal-100 text-teal-800 text-[9px] font-bold">UiTM Puncak Alam</span>
+                                        <span className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800 text-[9px] font-bold">Science & Chemistry</span>
+                                        <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[9px] font-bold">Applied AI</span>
+                                    </div>
+                                </div>
+                            )}
+                        </section>
+
+                        {/* VERTICAL CONTROL HIERARCHY */}
+                        <section className="space-y-4 sm:space-y-5">
+                            
+                            {/* 1. ACADEMIC SCOPE SELECTION */}
+                            <div className="space-y-2.5">
+                                <div className="border-b border-slate-300/80 pb-2">
+                                    <h3 className={`text-base sm:text-xl font-bold flex items-center space-x-2 ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}>
+                                        <i className="fa-solid fa-layer-group text-teal-600"></i>
+                                        <span>Form Levels & Subjects</span>
+                                    </h3>
+                                    <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                                        Select your academic level to access KSSM Science (Forms 1–3) or Chemistry (Forms 4–5).
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                                    {/* Lower Secondary Science */}
+                                    <div className={`p-3 rounded-2xl border space-y-2 shadow-sm ${theme === 'dark' ? 'bg-slate-900/90 border-slate-800' : theme === 'eyecare' ? 'bg-[#e2e8f0]/80 border-slate-300' : 'bg-teal-50/70 border-teal-200/80'}`}>
+                                        <div className="flex items-center justify-between px-1">
+                                            <span className="text-[11px] font-bold text-teal-800 tracking-wider flex items-center space-x-1.5 uppercase">
+                                                <i className="fa-solid fa-seedling text-teal-600"></i><span>LOWER SECONDARY SCIENCE</span>
+                                            </span>
+                                        </div>
+                                        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                                            {['Form 1', 'Form 2', 'Form 3'].map(fName => {
+                                                const isActive = selectedForm === fName;
+                                                return (
+                                                    <button key={fName} onClick={() => setSelectedForm(fName)} className={`py-2.5 sm:py-3 px-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1 ${isActive ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md shadow-teal-600/20 ring-2 ring-teal-300' : theme === 'dark' ? 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700' : 'bg-white text-slate-700 hover:bg-slate-50 hover:text-teal-700 border border-slate-300/80 shadow-sm'}`}>
+                                                        <span>{fName}</span>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Upper Secondary Chemistry */}
+                                    <div className={`p-3 rounded-2xl border space-y-2 shadow-sm ${theme === 'dark' ? 'bg-slate-900/90 border-slate-800' : theme === 'eyecare' ? 'bg-[#e2e8f0]/80 border-slate-300' : 'bg-indigo-50/70 border-indigo-200/80'}`}>
+                                        <div className="flex items-center justify-between px-1">
+                                            <span className="text-[11px] font-bold text-indigo-800 tracking-wider flex items-center space-x-1.5 uppercase">
+                                                <i className="fa-solid fa-vial-circle-check text-indigo-600"></i><span>UPPER SECONDARY CHEMISTRY</span>
+                                            </span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                                            {['Form 4', 'Form 5'].map(fName => {
+                                                const isActive = selectedForm === fName;
+                                                return (
+                                                    <button key={fName} onClick={() => setSelectedForm(fName)} className={`py-2.5 sm:py-3 px-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1 ${isActive ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-600/20 ring-2 ring-indigo-300' : theme === 'dark' ? 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700' : 'bg-white text-slate-700 hover:bg-slate-50 hover:text-indigo-700 border border-slate-300/80 shadow-sm'}`}>
+                                                        <span>{fName}</span>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 2. DIRECT RESOURCE CATEGORY TABS */}
+                            <div className={`flex flex-col sm:flex-row items-center justify-between p-1.5 sm:p-2 rounded-2xl border gap-2.5 ${theme === 'dark' ? 'bg-slate-900 border-slate-800' : theme === 'eyecare' ? 'bg-slate-300/70 border-slate-300' : 'bg-slate-200/70 border-slate-300'}`}>
+                                <div className="grid grid-cols-3 w-full sm:w-[32rem] gap-1.5">
+                                    {['Notes', 'Exercises', 'Quiz'].map(cat => (
+                                        <button
+                                            key={cat}
+                                            onClick={() => setSelectedCategory(cat)}
+                                            className={`py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl text-[10px] sm:text-xs font-bold flex items-center justify-center space-x-1.5 transition-all ${
+                                                selectedCategory === cat
+                                                ? cat === 'Notes' ? 'bg-teal-700 text-white shadow-md' : cat === 'Exercises' ? 'bg-indigo-700 text-white shadow-md' : 'bg-amber-600 text-white shadow-md'
+                                                : theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:text-slate-900 hover:bg-white/60'
+                                            }`}
+                                        >
+                                            <i className={`fa-solid ${cat === 'Notes' ? 'fa-book-open' : cat === 'Exercises' ? 'fa-pen-ruler' : 'fa-bolt'}`}></i>
+                                            <span className="whitespace-nowrap">{cat}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className={`flex items-center space-x-2 text-[11px] sm:text-xs pr-1 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                                    <span>Viewing:</span>
+                                    <span className={`font-bold px-2.5 py-0.5 rounded-lg border shadow-sm ${theme === 'dark' ? 'bg-slate-800 text-slate-100 border-slate-700' : 'bg-white text-slate-800 border-slate-300'}`}>
+                                        {selectedForm} • {getSubjectForForm(selectedForm)} ({selectedCategory})
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Main Display List OR Progress Map Integration */}
+                            {selectedCategory === 'Quiz' ? (
+                                <div className="w-full animation-fade-in py-4">
+                                    <header className="text-center mb-10 relative">
+                                        <div className={`inline-block p-3 rounded-2xl shadow-xl border mb-4 ${theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+                                            <i className="fa-solid fa-atom text-4xl text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-indigo-500 animate-[spin_4s_linear_infinite]"></i>
+                                        </div>
+                                        <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-cyan-600 to-indigo-600 drop-shadow-sm tracking-wider mb-2">
+                                            ChemTitra Nodes
+                                        </h1>
+                                        <p className={`text-sm font-bold tracking-widest uppercase ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Neural Syllabus Uplink</p>
+                                    </header>
+                                    <div id="progress-map" className="relative w-full pb-8 pt-4">
+                                        {/* React useEffect will mount vanilla JS UI Here */}
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    {/* 3. REFINEMENT & DISCOVERY TOOLBAR */}
+                                    <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 pt-1">
+                                        <div className="relative flex-grow sm:max-w-md w-full">
+                                            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" aria-hidden="true"></i>
+                                            <input 
+                                                type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={`Search in ${selectedForm} ${selectedCategory}...`} aria-label={`Search in ${selectedForm} ${selectedCategory}`}
+                                                className={`w-full border rounded-xl pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:border-teal-600 transition-all shadow-sm ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500' : theme === 'eyecare' ? 'bg-white border-slate-300 text-slate-900 placeholder-slate-500' : 'bg-white border-slate-300 text-slate-800 placeholder-slate-400'}`}
+                                            />
+                                            {searchQuery && (
+                                                <button onClick={() => setSearchQuery('')} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs"><i className="fa-solid fa-xmark"></i></button>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                                            <select value={filterLanguage} onChange={(e) => setFilterLanguage(e.target.value)} className={`w-full sm:w-auto px-2.5 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-600 shadow-sm cursor-pointer ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-800'}`} title="Filter Language Medium">
+                                                <option value="ALL">🌐 All Mediums</option>
+                                                <option value="DLP">🇬🇧 DLP (English)</option>
+                                                <option value="BM">🇲🇾 Bahasa Melayu</option>
+                                            </select>
+                                            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={`w-full sm:w-auto px-2.5 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-600 shadow-sm cursor-pointer ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-800'}`} title="Sort Materials">
+                                                <option value="newest">Newest First</option>
+                                                <option value="oldest">Oldest First</option>
+                                                <option value="chapter">Chapter (A - Z)</option>
+                                                <option value="views">Most Viewed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Student Action Tip */}
+                                    <div className={`p-2 sm:p-2.5 rounded-xl border flex items-center space-x-2 text-[11px] font-medium ${theme === 'dark' ? 'bg-teal-950/30 border-teal-900/50 text-teal-300' : theme === 'eyecare' ? 'bg-teal-50/80 border-teal-200 text-teal-900' : 'bg-teal-50 border-teal-200 text-teal-800'}`}>
+                                        <i className="fa-solid fa-lightbulb text-teal-600 flex-shrink-0"></i>
+                                        <span><strong>Student Tip:</strong> {selectedCategory === 'Quiz' ? "Tap Take Quiz to launch your assigned external test modules!" : "Tap Preview to inspect materials directly on your device, or open full screen in a new tab for offline revision!"}</span>
+                                    </div>
+
+                                    {/* 4. MATERIALS CARD GRID */}
+                                    {filteredMaterials.length === 0 ? (
+                                        <div className={`glass-card rounded-2xl p-8 sm:p-10 text-center space-y-3 sm:space-y-4 border-2 border-dashed transition-colors ${theme === 'dark' ? 'border-slate-700 bg-slate-900/60' : 'border-slate-300 bg-[#f8fafc]'}`}>
+                                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-teal-50 flex items-center justify-center mx-auto text-teal-600 text-xl sm:text-2xl shadow-inner border border-teal-100"><i className={`fa-solid ${alternateLanguageCount > 0 ? 'fa-language' : 'fa-folder-open'}`}></i></div>
+                                            
+                                            {searchQuery ? (
+                                                <div className="space-y-1">
+                                                    <h4 className={`text-sm sm:text-base font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>No matches found for "{searchQuery}"</h4>
+                                                    <p className={`text-xs max-w-md mx-auto ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Try checking your spelling or clearing the search query to see all available materials in {selectedForm}.</p>
+                                                </div>
+                                            ) : (filterLanguage !== 'ALL' && alternateLanguageCount > 0) ? (
+                                                <div className="space-y-3 max-w-md mx-auto">
+                                                    <h4 className="text-sm sm:text-base font-bold text-amber-700 dark:text-amber-300 flex items-center justify-center space-x-1.5"><i className="fa-solid fa-circle-info"></i><span>{filterLanguage === 'BM' ? 'Tiada bahan dalam Bahasa Melayu' : 'Tiada bahan dalam DLP (English)'}</span></h4>
+                                                    <div className={`text-xs space-y-1.5 p-3 rounded-xl border ${theme === 'dark' ? 'bg-slate-800/80 border-slate-700 text-slate-300' : 'bg-white/80 border-slate-200 text-slate-700'}`}>
+                                                        <p className="leading-snug">🇲🇾 Terdapat <strong>{alternateLanguageCount}</strong> bahan pembelajaran sedia ada untuk {selectedForm} ({selectedCategory}) dalam versi <strong>{filterLanguage === 'BM' ? 'DLP (English)' : 'Bahasa Melayu'}</strong>.</p>
+                                                    </div>
+                                                    <div className="pt-1"><button onClick={() => setFilterLanguage(filterLanguage === 'BM' ? 'DLP' : 'BM')} className="px-4 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md shadow-teal-600/20 hover:from-teal-700 hover:to-emerald-700 transition-all flex items-center justify-center space-x-1.5 mx-auto"><i className="fa-solid fa-arrows-rotate"></i><span>Switch to {filterLanguage === 'BM' ? 'DLP (English)' : 'Bahasa Melayu'}</span></button></div>
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-1">
+                                                    <h4 className={`text-sm sm:text-base font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>No {selectedCategory} available for {selectedForm} yet</h4>
+                                                    <p className={`text-xs max-w-md mx-auto ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{isAdmin ? (selectedCategory === 'Quiz' ? `Click the (+) button below to add your Quizizz or Google Forms external links.` : `Click the (+) button below to add your Google Drive files.`) : `Ikmal Hafiz will upload materials here soon. Please check back later!`}</p>
+                                                </div>
+                                            )}
+                                            
+                                            {isAdmin && (
+                                                <div className="pt-2">
+                                                    <button onClick={() => openEditor()} className="inline-flex items-center space-x-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-extrabold text-xs shadow-md shadow-teal-600/20 transition-all transform hover:scale-105">
+                                                        <i className="fa-solid fa-plus text-sm"></i><span>Add {selectedCategory} to {selectedForm}</span>
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                                            {filteredMaterials.map((item) => {
+                                                const isNew = isRecentlyUploaded(item.updatedAt);
+                                                return (
+                                                    <div key={item.id} className={`glass-card glass-card-hover rounded-2xl p-4 sm:p-5 flex flex-col justify-between space-y-3.5 relative group border ${theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-[#f8fafc] border-slate-300/80'}`}>
+                                                        <div className="space-y-2.5">
+                                                            <div className="flex items-start justify-between gap-1.5">
+                                                                <div className="flex flex-wrap items-center gap-1.5">
+                                                                    <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border ${theme === 'dark' ? 'bg-slate-800 text-slate-300 border-slate-700' : 'bg-slate-200/80 text-slate-800 border-slate-300'}`}>{item.chapter || 'Topic Module'}</span>
+                                                                    <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded border ${item.language === 'BM' ? 'bg-rose-100 text-rose-800 border-rose-200' : 'bg-cyan-100 text-cyan-800 border-cyan-200'}`}>{item.language === 'BM' ? 'Bahasa Melayu' : 'DLP (English)'}</span>
+                                                                    {isNew && <span className="animate-pulse-glow text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm flex items-center space-x-1"><i className="fa-solid fa-bolt text-[8px]"></i><span>NEW</span></span>}
+                                                                </div>
+                                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${item.category === 'Notes' ? 'bg-teal-100 text-teal-800 border border-teal-200' : item.category === 'Exercises' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}><i className={`fa-solid ${item.category === 'Notes' ? 'fa-file-lines' : item.category === 'Exercises' ? 'fa-clipboard-question' : 'fa-bolt'} mr-1`}></i>{item.category}</span>
+                                                            </div>
+                                                            <div>
+                                                                <h4 className={`text-sm sm:text-base font-bold group-hover:text-teal-600 transition-colors line-clamp-2 ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}>{item.title}</h4>
+                                                                {item.description && <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.description}</p>}
+                                                            </div>
+                                                            {item.tags && item.tags.length > 0 && (
+                                                                <div className="flex flex-wrap gap-1 pt-0.5">
+                                                                    {item.tags.map((tag, idx) => <span key={idx} className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-md border ${theme === 'dark' ? 'bg-slate-800 text-slate-400 border-slate-700' : 'bg-slate-200/60 text-slate-600 border-slate-300'}`}>#{tag}</span>)}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between gap-2">
+                                                            <div className={`text-[10px] sm:text-[11px] flex items-center space-x-2 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                                                                <span className="flex items-center space-x-1" title="Views"><i className="fa-solid fa-eye text-teal-600 text-xs"></i><span>{item.views || 0}</span></span>
+                                                                <span>•</span><span>{item.updatedAt || 'Recent'}</span>
+                                                            </div>
+                                                            <div className="flex items-center space-x-1.5 sm:space-x-2">
+                                                                {item.category === 'Quiz' ? (
+                                                                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" onClick={() => handleViewMaterial(item)} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition-all flex items-center space-x-1.5 shadow-sm hover:scale-105">
+                                                                        <i className="fa-solid fa-bolt"></i><span>Take Quiz</span>
+                                                                    </a>
+                                                                ) : (
+                                                                    <>
+                                                                        <button onClick={() => handleViewMaterial(item)} className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs font-semibold bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 transition-all flex items-center space-x-1 shadow-sm"><i className="fa-solid fa-eye text-teal-600"></i><span>Preview</span></button>
+                                                                        <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" onClick={() => handleViewMaterial(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                                                                    </>
+                                                                )}
+                                                                {isAdmin && (
+                                                                    <>
+                                                                        <button onClick={() => openEditor(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-pen" aria-hidden="true"></i></button>
+                                                                        <button onClick={() => setItemToDelete(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </section>
                     </main>
 
-                    {/* Integrated AI Tutor Widget */}
-                    <AIChatWidget theme={theme} />
+                    {/* Footer */}
+                    <footer className={`border-t py-6 sm:py-8 mt-10 text-center text-xs transition-all ${theme === 'dark' ? 'bg-slate-900 border-slate-800 text-slate-400' : theme === 'eyecare' ? 'bg-[#e2e8f0]/90 border-slate-300 text-slate-600' : 'bg-white/90 border-slate-200 text-slate-500'}`}>
+                        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                            <div className="flex items-center space-x-2"><i className="fa-solid fa-flask text-teal-600"></i><span className={`font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>ChemTitra</span><span>• Ikmal Hafiz Educational Hub</span></div>
+                            <div><span>Bachelor of Science Education (Hons.) Chemistry • UiTM Puncak Alam</span></div>
+                            <div className="flex items-center space-x-2 text-slate-400">
+                                <span>© 2026 ChemTitra. All rights reserved.</span>
+                                {!isAdmin && <button onClick={() => { setAuthError(''); setShowOwnerModal(true); }} className="text-slate-400 hover:text-teal-600 transition-colors ml-2" title="Owner Access Sign In"><i className="fa-solid fa-lock text-[10px]"></i></button>}
+                            </div>
+                        </div>
+                    </footer>
 
-                    {/* FILLED_IN_PHASE_4 */}
+                    {/* MODALS SECTION */}
+                    
+                    {/* PDF / Document Reader Modal */}
+                    {activePdfItem && (
+                        <div className="fixed inset-0 z-[60] flex items-center justify-center p-2 sm:p-6 bg-slate-900/70 backdrop-blur-md">
+                            <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-5xl h-[90vh] sm:h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+                                <div className="p-3 sm:p-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
+                                    <div className="flex items-center space-x-2.5 sm:space-x-3 overflow-hidden">
+                                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-teal-100 border border-teal-200 flex items-center justify-center text-teal-700 flex-shrink-0">
+                                            <i className="fa-solid fa-file-pdf text-red-600"></i>
+                                        </div>
+                                        <div className="truncate">
+                                            <h3 className="text-xs sm:text-sm font-bold text-slate-900 truncate">{activePdfItem.title}</h3>
+                                            <p className="text-[10px] sm:text-[11px] text-slate-600 truncate">{activePdfItem.form} • {activePdfItem.subject} — {activePdfItem.category} ({activePdfItem.language || 'DLP'})</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center space-x-1.5 sm:space-x-2">
+                                        <a href={activePdfItem.fileUrl} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center space-x-1.5 transition-all shadow-sm"><i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i><span className="hidden sm:inline">Open in New Tab</span></a>
+                                        <button onClick={() => setActivePdfItem(null)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center text-sm transition-all"><i className="fa-solid fa-xmark" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                                <div className="flex-1 bg-slate-800 w-full h-full overflow-hidden relative">
+                                    {activePdfItem.fileUrl ? (
+                                        <iframe src={activePdfItem.fileUrl} className="w-full h-full border-0 bg-white" title={activePdfItem.title} allow="autoplay" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" referrerPolicy="no-referrer" loading="lazy"></iframe>
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center h-full text-slate-400 p-6 text-center"><i className="fa-solid fa-file-circle-exclamation text-4xl mb-2 text-slate-500"></i><p className="text-sm font-medium">Document preview unavailable.</p></div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Universal Material Add / Edit Modal */}
+                    {showMaterialModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/75 backdrop-blur-md overflow-y-auto">
+                            <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-xl shadow-2xl text-slate-900 border border-slate-200 space-y-4 my-6">
+                                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                                    <div className="flex items-center space-x-2.5">
+                                        <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-lg font-bold ${formData.category === 'Quiz' ? 'bg-amber-100 text-amber-700' : 'bg-teal-100 text-teal-700'}`}>
+                                            <i className={`fa-solid ${editingItem ? 'fa-pen-to-square' : formData.category === 'Quiz' ? 'fa-bolt' : 'fa-plus'}`}></i>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                                                {editingItem 
+                                                    ? `Edit ${formData.category} Title & Details` 
+                                                    : formData.category === 'Quiz' ? 'Publish External Quiz Link' : 'Add New Learning Material'
+                                                }
+                                            </h3>
+                                            <p className="text-[10px] sm:text-[11px] text-slate-500">Targeting {formData.form} • {getSubjectForForm(formData.form)}</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" onClick={() => setShowMaterialModal(false)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm"><i className="fa-solid fa-xmark"></i></button>
+                                </div>
+
+                                <form onSubmit={handleSaveMaterial} className="space-y-3 sm:space-y-4">
+                                    <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Target Form</label>
+                                            <select value={formData.form} onChange={(e) => setFormData(prev => ({ ...prev, form: e.target.value, subject: getSubjectForForm(e.target.value) }))} className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-slate-50 focus:outline-none focus:border-teal-600">
+                                                <option value="Form 1">Form 1 (Science)</option>
+                                                <option value="Form 2">Form 2 (Science)</option>
+                                                <option value="Form 3">Form 3 (Science)</option>
+                                                <option value="Form 4">Form 4 (Chemistry)</option>
+                                                <option value="Form 5">Form 5 (Chemistry)</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Category</label>
+                                            <select value={formData.category} onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))} className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-slate-50 focus:outline-none focus:border-teal-600">
+                                                <option value="Notes">Notes</option>
+                                                <option value="Exercises">Exercises</option>
+                                                <option value="Quiz">Quiz</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Language Track</label>
+                                            <select value={formData.language} onChange={(e) => setFormData(prev => ({ ...prev, language: e.target.value }))} className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-slate-50 focus:outline-none focus:border-teal-600">
+                                                <option value="DLP">DLP (English)</option>
+                                                <option value="BM">Bahasa Melayu</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2 sm:space-y-3">
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Chapter / Topic Title *</label>
+                                            <input type="text" required value={formData.chapter} onChange={(e) => setFormData(prev => ({ ...prev, chapter: e.target.value }))} placeholder="e.g., Chapter 1: Redox Equilibrium" className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:outline-none focus:border-teal-600" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">
+                                                {formData.category === 'Quiz' ? 'Quiz Title *' : 'Material Title *'}
+                                            </label>
+                                            <input type="text" required value={formData.title} onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} placeholder={formData.category === 'Quiz' ? "e.g., Redox Objective Test Module 1" : "e.g., SPM Formula Sheet & Summary Notes"} className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:outline-none focus:border-teal-600 font-semibold text-slate-900" />
+                                        </div>
+                                    </div>
+
+                                    <div className={`p-3 rounded-xl border space-y-2 ${formData.category === 'Quiz' ? 'bg-amber-50/50 border-amber-200' : 'bg-slate-50 border-slate-200'}`}>
+                                        <div className="flex items-center justify-between">
+                                            <label className="block text-xs font-bold text-slate-800">
+                                                {formData.category === 'Quiz' ? 'External Quiz Link URL *' : 'Google Drive Document Link *'}
+                                            </label>
+                                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${formData.category === 'Quiz' ? 'text-amber-800 bg-amber-100 border-amber-300' : 'text-teal-700 bg-teal-50 border-teal-200'}`}>
+                                                {formData.category === 'Quiz' ? 'Quizizz, Google Forms, etc.' : 'Auto-converts to /preview'}
+                                            </span>
+                                        </div>
+                                        <input type="url" required value={formData.fileUrl} onChange={(e) => setFormData(prev => ({ ...prev, fileUrl: e.target.value }))} placeholder={formData.category === 'Quiz' ? "https://quizizz.com/..." : "https://drive.google.com/file/d/..."} className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:outline-none focus:border-teal-600" />
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Short Description</label>
+                                            <textarea rows="2" value={formData.description} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} placeholder="Brief instructions or summary..." className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:outline-none focus:border-teal-600"></textarea>
+                                        </div>
+                                        <div>
+                                            <label className="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Tags (Comma separated)</label>
+                                            <input type="text" value={formData.tags} onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))} placeholder="e.g., SPM, PastYear, Trial" className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 text-xs bg-slate-50 focus:outline-none focus:border-teal-600" />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-end space-x-2 pt-2 border-t border-slate-200">
+                                        <button type="button" onClick={() => setShowMaterialModal(false)} className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">Cancel</button>
+                                        <button type="submit" className={`px-5 py-2 rounded-xl text-xs font-extrabold text-white shadow-md transition-all ${formData.category === 'Quiz' ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-amber-600/20' : 'bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-teal-600/20'}`}>
+                                            {editingItem ? 'Save Changes' : (formData.category === 'Quiz' ? 'Publish Quiz Link' : 'Publish Material')}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Delete Confirmation Modal */}
+                    {itemToDelete && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md">
+                            <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl text-slate-900 border border-slate-200 space-y-4 text-center">
+                                <div className="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mx-auto text-xl shadow-inner"><i className="fa-solid fa-trash-can"></i></div>
+                                <div>
+                                    <h3 className="text-base font-bold text-slate-900">Remove Material?</h3>
+                                    <p className="text-xs text-slate-600 mt-1">Are you sure you want to remove <strong>"{itemToDelete.title}"</strong> from the portal?</p>
+                                </div>
+                                <div className="flex space-x-2 pt-2">
+                                    <button onClick={() => setItemToDelete(null)} className="w-1/2 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">Cancel</button>
+                                    <button onClick={confirmDeleteMaterial} className="w-1/2 py-2 rounded-xl text-xs font-bold bg-red-600 text-white hover:bg-red-700 shadow-md">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* PERIODIC TABLE DRAWER / MODAL (FULL 118 ELEMENTS) */}
+                    {showPeriodicTable && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-2 sm:p-6 animate-fade-in">
+                            <div className={`w-full max-w-6xl h-[90vh] sm:h-[85vh] rounded-3xl flex flex-col shadow-2xl border ${theme === 'dark' ? 'bg-[#0b1320] border-[#1a2638]' : 'bg-[#f8fafc] border-slate-300'}`}>
+                                <div className="p-4 border-b flex justify-between items-center border-slate-200 dark:border-slate-800">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center"><i className="fa-solid fa-table text-lg"></i></div>
+                                        <div>
+                                            <h2 className={`font-bold text-lg ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>Dynamic Periodic Table (118 Elements)</h2>
+                                            <p className="text-xs text-slate-500">Interactive Chemistry Reference Tool</p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => { setShowPeriodicTable(false); setSelectedElement(null); }} className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-110 transition-transform"><i className="fa-solid fa-xmark"></i></button>
+                                </div>
+
+                                <div className="flex-1 overflow-auto pt-scroll p-4 relative">
+                                    {/* Desktop Grid Layout */}
+                                    <div className="hidden md:grid gap-1 min-w-[1000px] mx-auto" style={{ gridTemplateColumns: 'repeat(18, minmax(0, 1fr))', gridAutoRows: 'minmax(50px, auto)' }}>
+                                        {ELEMENTS.map(el => (
+                                            <button 
+                                                key={el.n} 
+                                                onClick={() => setSelectedElement(el)}
+                                                className={`relative rounded-lg border-2 p-1 text-left flex flex-col justify-between hover:scale-[1.15] hover:z-[10] transition-transform shadow-sm cursor-pointer ${CATEGORY_STYLES[el.cat] || 'bg-slate-700 text-white border-slate-600'}`}
+                                                style={{ gridColumn: el.c, gridRow: el.r }}
+                                            >
+                                                <span className="text-[9px] font-bold absolute top-1 left-1 opacity-80">{el.n}</span>
+                                                <span className="text-base font-black self-center mt-2.5 tracking-tight">{el.sym}</span>
+                                                <span className="text-[8px] text-center uppercase tracking-wider opacity-90 truncate w-full leading-tight mt-1">{el.name}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                    
+                                    {/* Mobile Wrap Layout */}
+                                    <div className="flex md:hidden flex-wrap justify-center gap-1.5 pb-20">
+                                        {ELEMENTS.map(el => (
+                                            <button key={el.n} onClick={() => setSelectedElement(el)} className={`w-[4.2rem] h-[4.2rem] rounded-lg border-2 p-1 text-center flex flex-col items-center justify-center shadow-sm ${CATEGORY_STYLES[el.cat] || 'bg-slate-700 text-white'}`}>
+                                                <span className="text-[8px] font-bold w-full text-left opacity-80 leading-none">{el.n}</span>
+                                                <span className="text-lg font-black leading-none my-0.5">{el.sym}</span>
+                                                <span className="text-[7px] uppercase tracking-wider opacity-90 truncate w-full">{el.name}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Rich Element Detail Slide-Up Drawer */}
+                                {selectedElement && (
+                                    <div className={`absolute bottom-0 left-0 w-full p-6 sm:p-8 rounded-t-[2.5rem] border-t shadow-[0_-15px_50px_rgba(0,0,0,0.25)] animate-slide-up transition-all z-[100] ${
+                                        theme === 'dark' ? 'bg-slate-900 border-slate-700' : 
+                                        theme === 'eyecare' ? 'bg-[#fcf8f2] border-[#e8dccb]' : 
+                                        'bg-white border-slate-200'
+                                    }`}>
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex gap-4 sm:gap-5 items-center">
+                                                <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-3xl font-black border-4 shadow-lg ${CATEGORY_STYLES[selectedElement.cat]}`}>{selectedElement.sym}</div>
+                                                <div>
+                                                    <h3 className={`text-2xl sm:text-3xl font-black tracking-tight ${
+                                                        theme === 'dark' ? 'text-white' : 
+                                                        theme === 'eyecare' ? 'text-[#4a3525]' : 
+                                                        'text-slate-900'
+                                                    }`}>{selectedElement.name}</h3>
+                                                    <span className={`text-xs sm:text-sm font-bold uppercase tracking-widest ${
+                                                        theme === 'dark' ? 'text-slate-400' : 
+                                                        theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                        'text-slate-500'
+                                                    }`}>{selectedElement.cat.replace('-', ' ')}</span>
+                                                </div>
+                                            </div>
+                                            <button onClick={() => setSelectedElement(null)} className={`transition-transform hover:scale-110 ${
+                                                theme === 'dark' ? 'text-slate-500 hover:text-cyan-400' : 
+                                                theme === 'eyecare' ? 'text-[#c2a788] hover:text-[#8b6b4a]' : 
+                                                'text-slate-400 hover:text-teal-600'
+                                            }`}><i className="fa-solid fa-circle-chevron-down text-3xl sm:text-4xl"></i></button>
+                                        </div>
+                                        
+                                        <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 sm:gap-4 mt-6 sm:mt-8">
+                                            {/* Atomic Number */}
+                                            <div className={`col-span-1 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
+                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
+                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
+                                                'bg-slate-50 border-slate-200 shadow-sm'
+                                            }`}>
+                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
+                                                    theme === 'dark' ? 'text-slate-400' : 
+                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                    'text-slate-500'
+                                                }`}>Atomic Number</p>
+                                                <p className={`text-xl sm:text-2xl font-black ${
+                                                    theme === 'dark' ? 'text-white' : 
+                                                    theme === 'eyecare' ? 'text-[#4a3525]' : 
+                                                    'text-slate-900'
+                                                }`}>{selectedElement.n}</p>
+                                            </div>
+                                            
+                                            {/* Atomic Mass */}
+                                            <div className={`col-span-1 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
+                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
+                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
+                                                'bg-slate-50 border-slate-200 shadow-sm'
+                                            }`}>
+                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
+                                                    theme === 'dark' ? 'text-slate-400' : 
+                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                    'text-slate-500'
+                                                }`}>Atomic Mass</p>
+                                                <p className={`text-xl sm:text-2xl font-black ${
+                                                    theme === 'dark' ? 'text-white' : 
+                                                    theme === 'eyecare' ? 'text-[#4a3525]' : 
+                                                    'text-slate-900'
+                                                }`}>{selectedElement.m}</p>
+                                            </div>
+
+                                            {/* NEW: Physical State (STP) */}
+                                            <div className={`col-span-2 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors flex flex-col justify-center ${
+                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
+                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
+                                                'bg-slate-50 border-slate-200 shadow-sm'
+                                            }`}>
+                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
+                                                    theme === 'dark' ? 'text-slate-400' : 
+                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                    'text-slate-500'
+                                                }`}>Physical State (STP)</p>
+                                                <p className={`text-xl sm:text-2xl font-black flex items-center space-x-2.5 ${
+                                                    theme === 'dark' ? 'text-white' : 
+                                                    theme === 'eyecare' ? 'text-[#4a3525]' : 
+                                                    'text-slate-900'
+                                                }`}>
+                                                    {selectedElement.state === 'Gas' && <i className="fa-solid fa-cloud text-sky-400 text-lg sm:text-xl"></i>}
+                                                    {selectedElement.state === 'Liquid' && <i className="fa-solid fa-droplet text-blue-500 text-lg sm:text-xl"></i>}
+                                                    {selectedElement.state === 'Solid' && <i className="fa-solid fa-cube text-slate-500 text-lg sm:text-xl"></i>}
+                                                    <span>{selectedElement.state}</span>
+                                                </p>
+                                            </div>
+                                            
+                                            {/* Electron Configuration */}
+                                            <div className={`col-span-2 sm:col-span-6 p-3 sm:p-4 rounded-2xl border transition-colors ${
+                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
+                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
+                                                'bg-slate-50 border-slate-200 shadow-sm'
+                                            }`}>
+                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
+                                                    theme === 'dark' ? 'text-slate-400' : 
+                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
+                                                    'text-slate-500'
+                                                }`}>Electron Configuration</p>
+                                                <p className={`text-xl sm:text-2xl font-mono font-black ${
+                                                    theme === 'dark' ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]' : 
+                                                    theme === 'eyecare' ? 'text-[#7d4b26]' : 
+                                                    'text-teal-700'
+                                                }`}>{selectedElement.e}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className={`mt-4 sm:mt-5 p-4 sm:p-5 rounded-2xl border flex items-start sm:items-center transition-all ${
+                                            theme === 'dark' ? 'bg-indigo-950/50 border-indigo-500/30 shadow-[0_4px_20px_-5px_rgba(99,102,241,0.2)]' : 
+                                            theme === 'eyecare' ? 'bg-[#f0e1c5] border-[#d4b996]' : 
+                                            'bg-indigo-50 border-indigo-200'
+                                        }`}>
+                                            <i className={`fa-solid fa-lightbulb text-xl sm:text-2xl mr-3 sm:mr-4 mt-0.5 sm:mt-0 flex-shrink-0 ${
+                                                theme === 'dark' ? 'text-yellow-300 drop-shadow-[0_0_10px_rgba(253,224,71,0.6)]' : 
+                                                theme === 'eyecare' ? 'text-[#b87333]' : 
+                                                'text-amber-500'
+                                            }`}></i>
+                                            <p className={`text-sm sm:text-base font-semibold leading-relaxed ${
+                                                theme === 'dark' ? 'text-indigo-50' : 
+                                                theme === 'eyecare' ? 'text-[#5a3e26]' : 
+                                                'text-indigo-950'
+                                            }`}>
+                                                <strong className={`font-black mr-1.5 uppercase tracking-wide ${
+                                                    theme === 'dark' ? 'text-cyan-300' : 
+                                                    theme === 'eyecare' ? 'text-[#7d4b26]' : 
+                                                    'text-indigo-700'
+                                                }`}>Fun Fact:</strong> 
+                                                {selectedElement.f}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* OWNER ACCESS MODAL (Google Only) */}
+                    {showOwnerModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
+                            <div className="bg-[#0b1320] border border-[#1a2638] rounded-2xl p-6 w-full max-w-md shadow-2xl text-slate-100 space-y-4 relative">
+                                <div className="flex items-start justify-between">
+                                    <div>
+                                        <h3 className="text-xl font-bold text-white tracking-tight">Owner access</h3>
+                                        <p className="text-xs text-slate-400 mt-0.5">Sign in to manage ChemTitra. Students do not need an account.</p>
+                                    </div>
+                                    <button onClick={() => { setShowOwnerModal(false); setAuthError(''); }} className="text-slate-400 hover:text-white transition-colors p-1"><i className="fa-solid fa-xmark text-base"></i></button>
+                                </div>
+
+                                <div className="space-y-3 pt-2">
+                                    <div className="p-3.5 rounded-xl bg-[#08101d] border border-[#19273c] space-y-2 text-xs">
+                                        <div className="flex items-center space-x-2 text-teal-400 font-bold"><i className="fa-solid fa-shield-halved"></i><span>Protected Educator Workspace</span></div>
+                                        <p className="text-slate-400 leading-relaxed text-[11px]">Authentication is restricted exclusively to the registered owner:</p>
+                                        <p className="font-mono text-[#00cba0] bg-[#00cba0]/10 px-2.5 py-1.5 rounded-lg text-center font-bold border border-[#00cba0]/30 truncate">{AUTHORIZED_OWNER_EMAIL}</p>
+                                    </div>
+
+                                    {/* Google Sign-In Button */}
+                                    <button type="button" disabled={authLoading} onClick={handleGoogleSignIn} className="w-full py-3 px-4 rounded-xl bg-[#00cba0] hover:bg-[#00b58e] active:scale-95 text-slate-950 font-extrabold text-xs flex items-center justify-center space-x-2 transition-all shadow-lg disabled:opacity-50">
+                                        {authLoading ? (<><i className="fa-solid fa-circle-notch fa-spin"></i><span>Connecting to Google...</span></>) : (
+                                            <><svg className="w-4 h-4" viewBox="0 0 24 24"><path fill="#08101d" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#08101d" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#08101d" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#08101d" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg><span>Continue with Google</span></>
+                                        )}
+                                    </button>
+
+                                    {authError && (
+                                        <div className="p-3 bg-red-950/50 border border-red-800/80 rounded-xl text-[11px] text-red-300 leading-snug">
+                                            <p className="font-bold flex items-center space-x-1.5 mb-1 text-red-200"><i className="fa-solid fa-triangle-exclamation"></i><span>Sign-in Notice</span></p>
+                                            <p>{authError}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Profile Photo URL Modal */}
+                    {showAvatarUrlModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
+                            <div className="bg-[#0b1320] border border-[#1a2638] rounded-2xl p-6 w-full max-w-md shadow-2xl text-slate-100 space-y-4 relative">
+                                <div className="flex items-start justify-between">
+                                    <div>
+                                        <h3 className="text-xl font-bold text-white tracking-tight">Change profile photo</h3>
+                                        <p className="text-xs text-slate-400 mt-0.5">Paste a link to an image already hosted online.</p>
+                                    </div>
+                                    <button type="button" onClick={() => { setShowAvatarUrlModal(false); setAvatarUrlInput(''); }} className="text-slate-400 hover:text-white transition-colors p-1"><i className="fa-solid fa-xmark text-base" aria-hidden="true"></i></button>
+                                </div>
+
+                                <div className="space-y-3 pt-1">
+                                    <div className="w-20 h-20 mx-auto rounded-full border-2 border-[#1a2638] bg-[#08101d] overflow-hidden flex items-center justify-center">
+                                        {avatarUrlInput.trim() && isLikelyImageUrl(avatarUrlInput.trim()) ? (
+                                            <img src={avatarUrlInput.trim()} alt="Preview" referrerPolicy="no-referrer" className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_AVATAR; }}/>
+                                        ) : ( <i className="fa-solid fa-image text-slate-600 text-xl"></i> )}
+                                    </div>
+
+                                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wide">Image URL</label>
+                                    <input type="url" value={avatarUrlInput} onChange={(e) => setAvatarUrlInput(e.target.value)} placeholder="Paste Profile Image URL" className="w-full bg-[#08101d] border border-[#1a2638] rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-teal-500 transition-all" />
+                                    <p className="text-[10px] text-slate-500 leading-relaxed">Works with Imgur, Discord, postimages.org, or any public direct image link.</p>
+
+                                    <div className="flex space-x-2 pt-1">
+                                        <button type="button" onClick={() => { setShowAvatarUrlModal(false); setAvatarUrlInput(''); }} className="w-1/2 py-2.5 rounded-xl text-xs font-bold bg-[#08101d] border border-[#1a2638] text-slate-300 hover:bg-[#111c2e] transition-all">Cancel</button>
+                                        <button type="button" disabled={avatarSaving} onClick={handleSaveAvatarUrl} className="w-1/2 py-2.5 rounded-xl text-xs font-bold bg-[#00cba0] hover:bg-[#00b58e] active:scale-95 text-slate-950 flex items-center justify-center space-x-1.5 transition-all shadow-lg disabled:opacity-50">
+                                            {avatarSaving ? (<><i className="fa-solid fa-circle-notch fa-spin"></i><span>Saving...</span></>) : (<span>Save Photo</span>)}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* FLOATING AI TUTOR CHATBOT */}
+                    <AIChatWidget theme={theme} />
                 </div>
             );
-        };
+        }
 
-        // Render Application
         const rootElement = document.getElementById('root');
         const root = ReactDOM.createRoot(rootElement);
         root.render(<App />);
