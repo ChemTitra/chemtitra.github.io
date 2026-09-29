@@ -603,16 +603,60 @@
             const [isOpen, setIsOpen] = useState(false);
             const [inputText, setInputText] = useState('');
             const [isLoading, setIsLoading] = useState(false);
+            const [isDiscovering, setIsDiscovering] = useState(false);
+            const [liveModels, setLiveModels] = useState([]);
             const [messages, setMessages] = useState([
                 { id: 'init', role: 'model', text: "Hi! I'm your ChemTitra AI Tutor. Ask me any question about Form 1–3 Science or Form 4–5 Chemistry!" }
             ]);
             const messagesEndRef = useRef(null);
 
+            // Dynamic Live Model Discovery
+            useEffect(() => {
+                const discoverActiveModel = async () => {
+                    if (!geminiApiKey) return;
+                    setIsDiscovering(true);
+                    try {
+                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`);
+                        if (!res.ok) throw new Error("Failed to fetch models");
+                        const data = await res.json();
+                        
+                        let validModels = data.models
+                            .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent"))
+                            .map(m => m.name.replace('models/', ''));
+
+                        // Sort: Prioritize "flash" models
+                        validModels.sort((a, b) => {
+                            const aFlash = a.toLowerCase().includes('flash');
+                            const bFlash = b.toLowerCase().includes('flash');
+                            if (aFlash && !bFlash) return -1;
+                            if (!aFlash && bFlash) return 1;
+                            return 0;
+                        });
+
+                        if (geminiModel && !validModels.includes(geminiModel)) {
+                            validModels.unshift(geminiModel);
+                        } else if (geminiModel) {
+                            validModels = [geminiModel, ...validModels.filter(m => m !== geminiModel)];
+                        }
+
+                        setLiveModels(validModels.length > 0 ? validModels : ['gemini-1.5-flash']);
+                    } catch (err) {
+                        console.warn("Model discovery failed, using fallbacks:", err);
+                        let fallbacks = ['gemini-1.5-flash', 'gemini-1.5-pro'];
+                        if (geminiModel) fallbacks.unshift(geminiModel);
+                        setLiveModels(fallbacks);
+                    } finally {
+                        setIsDiscovering(false);
+                    }
+                };
+                discoverActiveModel();
+            }, [geminiApiKey, geminiModel]);
+
             useEffect(() => {
                 if (isOpen) {
                     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
                 }
-            }, [messages, isOpen, isLoading]);
+            }, [messages, isOpen, isLoading, isDiscovering]);
 
             const fetchWithRetry = async (url, options, maxRetries = 2) => {
                 let attempt = 0;
@@ -620,8 +664,8 @@
                     const res = await fetch(url, options);
                     if (res.status === 503 || res.status === 429) {
                         if (attempt < maxRetries) {
-                            console.warn(`API load limit (${res.status}). Retrying in ~1.8s (Attempt ${attempt + 1}/${maxRetries})...`);
-                            await new Promise(r => setTimeout(r, 1800 + Math.random() * 400));
+                            console.warn(`API load limit (${res.status}). Retrying in 2s (Attempt ${attempt + 1}/${maxRetries})...`);
+                            await new Promise(r => setTimeout(r, 2000));
                             attempt++;
                             continue;
                         }
@@ -655,18 +699,11 @@
                         contents: history
                     };
 
-                    const CANDIDATE_MODELS = ['gemini-3.8-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
-                    let modelsToTry = [];
-                    
-                    if (geminiModel) modelsToTry.push(geminiModel);
-                    
-                    CANDIDATE_MODELS.forEach(m => {
-                        if (!modelsToTry.includes(m)) modelsToTry.push(m);
-                    });
-
                     let success = false;
                     let lastError = null;
                     let botText = "";
+
+                    const modelsToTry = liveModels.length > 0 ? liveModels : ['gemini-1.5-flash'];
 
                     for (const model of modelsToTry) {
                         let response;
@@ -698,7 +735,7 @@
                             }
                         }
 
-                        botText = data.candidates[0].content.parts[0].text;
+                        botText = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response.";
                         success = true;
                         break; 
                     }
@@ -798,6 +835,11 @@
                                         <i className="fa-solid fa-circle-notch fa-spin text-3xl text-teal-500/50"></i>
                                         <p className="font-semibold text-xs animate-pulse">Connecting to tutor service...</p>
                                     </div>
+                                ) : isDiscovering ? (
+                                    <div className="flex flex-col items-center justify-center h-full text-slate-500 space-y-3">
+                                        <i className="fa-solid fa-satellite-dish fa-bounce text-3xl text-teal-500/50"></i>
+                                        <p className="font-semibold text-xs animate-pulse">Discovering live AI models...</p>
+                                    </div>
                                 ) : (
                                     <>
                                         {messages.map((msg) => (
@@ -843,19 +885,19 @@
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') handleSend();
                                         }}
-                                        disabled={isLoading || !geminiApiKey}
-                                        placeholder={geminiApiKey ? "Ask your ChemTitra tutor..." : "Connecting to tutor service..."} 
+                                        disabled={isLoading || !geminiApiKey || isDiscovering}
+                                        placeholder={!geminiApiKey ? "Connecting to tutor service..." : isDiscovering ? "Discovering models..." : "Ask your ChemTitra tutor..."} 
                                         className={`w-full pr-10 pl-4 py-2.5 rounded-xl text-xs focus:outline-none transition-all ${
                                             theme === 'dark' ? 'bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:border-teal-500' : 
                                             theme === 'eyecare' ? 'bg-[#fcf8f2] border border-[#e8dccb] text-[#4a3525] placeholder-slate-400 focus:border-teal-600' : 
                                             'bg-slate-50 border border-slate-300 text-slate-900 placeholder-slate-400 focus:border-teal-500'
-                                        } ${isLoading || !geminiApiKey ? 'opacity-60 cursor-not-allowed' : ''}`}
+                                        } ${isLoading || !geminiApiKey || isDiscovering ? 'opacity-60 cursor-not-allowed' : ''}`}
                                     />
                                     <button 
                                         onClick={handleSend}
-                                        disabled={isLoading || !inputText.trim() || !geminiApiKey}
+                                        disabled={isLoading || !inputText.trim() || !geminiApiKey || isDiscovering}
                                         className={`absolute right-1.5 w-8 h-8 rounded-lg text-white flex items-center justify-center text-xs shadow transition-all ${
-                                            isLoading || !inputText.trim() || !geminiApiKey ? 'bg-slate-400 cursor-not-allowed opacity-50' : 'bg-teal-600 hover:bg-teal-700 cursor-pointer'
+                                            isLoading || !inputText.trim() || !geminiApiKey || isDiscovering ? 'bg-slate-400 cursor-not-allowed opacity-50' : 'bg-teal-600 hover:bg-teal-700 cursor-pointer'
                                         }`}
                                     >
                                         <i className="fa-solid fa-paper-plane"></i>
