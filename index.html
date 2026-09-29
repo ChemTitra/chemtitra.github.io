@@ -15,7 +15,7 @@
 
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://www.gstatic.com https://apis.google.com https://accounts.google.com https://cdnjs.cloudflare.com https://generativelanguage.googleapis.com;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://www.gstatic.com https://apis.google.com https://accounts.google.com https://cdnjs.cloudflare.com;
       style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://cdn.tailwindcss.com;
       font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;
       img-src 'self' data: https:;
@@ -33,6 +33,7 @@
 
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Futuristic Fonts for Quiz Map -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <noscript>
@@ -40,10 +41,10 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
     </noscript>
 
-    <!-- React, ReactDOM, and Babel for in-browser compilation -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- React and Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin defer></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin defer></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" defer></script>
 
     <script>
         tailwind.config = {
@@ -64,7 +65,7 @@
     
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', 'sans-serif';
+            font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
             min-height: 100vh;
             transition: background 0.4s ease, color 0.4s ease;
@@ -91,7 +92,11 @@
         .pt-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
         .pt-scroll::-webkit-scrollbar-thumb { background: rgba(13,148,136,0.5); border-radius: 4px; }
 
-        .neon-green-glow { box-shadow: 0 0 15px rgba(34, 197, 94, 0.4), inset 0 0 8px rgba(34, 197, 94, 0.2); border-color: #22c55e !important; }
+        /* Neural Progress Map CSS Integrations */
+        .neon-green-glow {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4), inset 0 0 8px rgba(34, 197, 94, 0.2);
+            border-color: #22c55e !important;
+        }
         
         .neon-blue-glow {
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), inset 0 0 8px rgba(56, 189, 248, 0.2);
@@ -106,7 +111,9 @@
         }
 
         @media (max-width: 767px) {
-            .neon-blue-glow { animation: neon-pulse-mobile 2s infinite ease-in-out; }
+            .neon-blue-glow {
+                animation: neon-pulse-mobile 2s infinite ease-in-out;
+            }
             @keyframes neon-pulse-mobile {
                 0% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1); }
                 50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.7), inset 0 0 15px rgba(56, 189, 248, 0.4); transform: scale(1.05); }
@@ -122,9 +129,9 @@
     </style>
 </head>
 <body class="selection:bg-teal-500 selection:text-white">
-
     <canvas id="bg-canvas"></canvas>
     
+    <!-- Branded Instant Preloader -->
     <div id="root">
         <div class="min-h-screen flex flex-col items-center justify-center p-4 bg-[#e5e9f0] text-slate-800 font-sans">
             <div class="relative flex items-center justify-center mb-4">
@@ -142,10 +149,11 @@
         </div>
     </div>
 
+    <!-- Firebase SDK Modular Import -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, doc, onSnapshot, setDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, onSnapshot, setDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         window.FirebaseModule = { initializeApp, getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, getFirestore, collection, doc, onSnapshot, setDoc, addDoc, deleteDoc };
     </script>
@@ -167,7 +175,7 @@
             apiKey: "AIzaSyC6BD_YpR5E7V11poCYxYeDBrUofOb6dfY",
             authDomain: "chemtitra.firebaseapp.com",
             projectId: "chemtitra",
-            storageBucket: "chemtitra.appspot.com",
+            storageBucket: "chemtitra.firebasestorage.app",
             messagingSenderId: "814020603631",
             appId: "1:814020603631:web:f9f482e498204c5eafb51a"
         };
@@ -238,7 +246,7 @@
             const topic = curriculumData.find(t => t.id === topicId);
             if (topic && topic.status === "available") {
                 const url = topic.quizUrl;
-                if (url && (url.startsWith("http") || url.startsWith("https"))) {
+                if (url && url.startsWith("http")) {
                     window.open(url, '_blank');
                 } else {
                     alert(`Data stream active for ${topic.title}. The quiz link for this chapter will be uploaded soon!`);
@@ -371,12 +379,12 @@
             { n: 28, sym: 'Ni', name: 'Nickel', m: 58.693, cat: 'transition-metal', c: 10, r: 4, e: '[Ar] 3d8 4s2', f: 'Widely used in plating to resist corrosion.' },
             { n: 29, sym: 'Cu', name: 'Copper', m: 63.546, cat: 'transition-metal', c: 11, r: 4, e: '[Ar] 3d10 4s1', f: 'An excellent conductor of electricity, second only to silver.' },
             { n: 30, sym: 'Zn', name: 'Zinc', m: 65.38, cat: 'transition-metal', c: 12, r: 4, e: '[Ar] 3d10 4s2', f: 'Used to galvanize iron to prevent it from rusting.' },
-            { n: 31, sym: 'Ga', name: 'Gallium', m: 69.723, cat: 'post-transition', c: 13, r: 4, e: '[Ar] 3d10 4s2 4p1', f: 'Melts just above room temperature; it will literally melt in your hand.' },
-            { n: 32, sym: 'Ge', name: 'Germanium', m: 72.630, cat: 'metalloid', c: 14, r: 4, e: '[Ar] 3d10 4s2 4p2', f: 'An important semiconductor used in fiber optics and solar panels.' },
-            { n: 33, sym: 'As', name: 'Arsenic', m: 74.922, cat: 'metalloid', c: 15, r: 4, e: '[Ar] 3d10 4s2 4p3', f: 'Historically infamous as a poison, but used in semiconductors.' },
-            { n: 34, sym: 'Se', name: 'Selenium', m: 78.971, cat: 'nonmetal', c: 16, r: 4, e: '[Ar] 3d10 4s2 4p4', f: 'Its electrical conductivity increases dramatically when exposed to light.' },
-            { n: 35, sym: 'Br', name: 'Bromine', m: 79.904, cat: 'halogen', c: 17, r: 4, e: '[Ar] 3d10 4s2 4p5', f: 'One of only two elements that are liquid at standard room temperature.' },
-            { n: 36, sym: 'Kr', name: 'Krypton', m: 83.798, cat: 'noble-gas', c: 18, r: 4, e: '[Ar] 3d10 4s2 4p6', f: 'Used in high-speed photography flashes and fluorescent bulbs.' },
+            { n: 31, sym: 'Ga', name: 'Gallium', m: 69.723, cat: 'post-transition', c: 13, r: 4, e: '[Ar] 3d10 4s2 3p1', f: 'Melts just above room temperature; it will literally melt in your hand.' },
+            { n: 32, sym: 'Ge', name: 'Germanium', m: 72.630, cat: 'metalloid', c: 14, r: 4, e: '[Ar] 3d10 4s2 3p2', f: 'An important semiconductor used in fiber optics and solar panels.' },
+            { n: 33, sym: 'As', name: 'Arsenic', m: 74.922, cat: 'metalloid', c: 15, r: 4, e: '[Ar] 3d10 4s2 3p3', f: 'Historically infamous as a poison, but used in semiconductors.' },
+            { n: 34, sym: 'Se', name: 'Selenium', m: 78.971, cat: 'nonmetal', c: 16, r: 4, e: '[Ar] 3d10 4s2 3p4', f: 'Its electrical conductivity increases dramatically when exposed to light.' },
+            { n: 35, sym: 'Br', name: 'Bromine', m: 79.904, cat: 'halogen', c: 17, r: 4, e: '[Ar] 3d10 4s2 3p5', f: 'One of only two elements that are liquid at standard room temperature.' },
+            { n: 36, sym: 'Kr', name: 'Krypton', m: 83.798, cat: 'noble-gas', c: 18, r: 4, e: '[Ar] 3d10 4s2 3p6', f: 'Used in high-speed photography flashes and fluorescent bulbs.' },
             // Row 5
             { n: 37, sym: 'Rb', name: 'Rubidium', m: 85.468, cat: 'alkali-metal', c: 1, r: 5, e: '[Kr] 5s1', f: 'Ignites spontaneously in air and reacts violently with water.' },
             { n: 38, sym: 'Sr', name: 'Strontium', m: 87.62, cat: 'alkaline-earth', c: 2, r: 5, e: '[Kr] 5s2', f: 'Gives a brilliant red color to fireworks and flares.' },
@@ -590,6 +598,7 @@
             return null;
         };
 
+        // --- SUBCOMPONENT: Floating AI Chat Tutor ---
         const AIChatWidget = ({ theme, geminiApiKey }) => {
             const [isOpen, setIsOpen] = useState(false);
             const [inputText, setInputText] = useState('');
@@ -629,8 +638,8 @@
                         },
                         contents: history
                     };
-                    
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`, {
+
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${geminiApiKey}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(payload)
@@ -662,18 +671,27 @@
 
             const formatText = (text) => {
                 let cleanText = text
-                    .replace(/\$\$/g, '').replace(/\$/g, '')
-                    .replace(/\\\[/g, '').replace(/\\\]/g, '')
-                    .replace(/\\\(/g, '').replace(/\\\)/g, '')
+                    // Strip raw LaTeX formatting
+                    .replace(/\$\$/g, '')
+                    .replace(/\$/g, '')
+                    .replace(/\\\[/g, '')
+                    .replace(/\\\]/g, '')
+                    .replace(/\\\(/g, '')
+                    .replace(/\\\)/g, '')
                     .replace(/\\text\{([^}]+)\}/g, '$1')
                     .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '$1 / $2')
+                    // Convert markdown headers to bold
                     .replace(/^#{1,6}\s+(.*)$/gm, '**$1**')
+                    // Convert list items to bullet points
                     .replace(/^[-*]\s+/gm, '• ');
 
                 return cleanText.split('\n').map((line, lineIdx) => {
                     if (line.trim() === '') return <div key={lineIdx} className="h-2"></div>;
+
+                    // Regex matches **, <sub>, and <sup> tags for formatting
                     const regex = /(\*\*.*?\*\*|<sub>.*?<\/sub>|<sup>.*?<\/sup>)/g;
                     const parts = line.split(regex);
+                    
                     return (
                         <div key={lineIdx} className="mb-1 leading-relaxed break-words">
                             {parts.map((part, i) => {
@@ -692,15 +710,14 @@
             };
 
             return (
-                <React.Fragment>
-                    <button 
+                <>
+                    <div 
                         onClick={() => setIsOpen(!isOpen)}
                         className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-tr from-teal-500 to-indigo-600 shadow-[0_0_20px_rgba(20,184,166,0.6)] text-white flex items-center justify-center text-2xl z-[70] hover:scale-110 active:scale-95 transition-all cursor-pointer"
                         title="ChemTitra AI Tutor"
-                        aria-label={isOpen ? 'Close AI Tutor' : 'Open AI Tutor'}
                     >
                         <i className={`fa-solid ${isOpen ? 'fa-xmark' : 'fa-robot'}`}></i>
-                    </button>
+                    </div>
 
                     {isOpen && (
                         <div className={`fixed bottom-24 right-6 w-80 sm:w-[26rem] max-w-[calc(100vw-3rem)] h-[500px] max-h-[75vh] z-[70] rounded-3xl flex flex-col overflow-hidden shadow-2xl glass-card transition-all ${theme === 'dark' ? 'bg-slate-900/95 border-slate-700' : 'bg-white/95 border-slate-200'}`}>
@@ -715,7 +732,7 @@
                                         <p className="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">Powered by Gemini</p>
                                     </div>
                                 </div>
-                                <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-teal-600 transition-colors p-1" aria-label="Close chat">
+                                <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-teal-600 transition-colors p-1">
                                     <i className="fa-solid fa-xmark text-sm"></i>
                                 </button>
                             </div>
@@ -727,7 +744,7 @@
                                         <p className="font-semibold text-xs animate-pulse">Connecting to tutor service...</p>
                                     </div>
                                 ) : (
-                                    <React.Fragment>
+                                    <>
                                         {messages.map((msg) => (
                                             <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                                 <div className={`max-w-[85%] rounded-2xl p-3 shadow-sm whitespace-pre-wrap leading-relaxed ${
@@ -758,7 +775,7 @@
                                             </div>
                                         )}
                                         <div ref={messagesEndRef} />
-                                    </React.Fragment>
+                                    </>
                                 )}
                             </div>
 
@@ -785,7 +802,6 @@
                                         className={`absolute right-1.5 w-8 h-8 rounded-lg text-white flex items-center justify-center text-xs shadow transition-all ${
                                             isLoading || !inputText.trim() || !geminiApiKey ? 'bg-slate-400 cursor-not-allowed opacity-50' : 'bg-teal-600 hover:bg-teal-700 cursor-pointer'
                                         }`}
-                                        aria-label="Send message"
                                     >
                                         <i className="fa-solid fa-paper-plane"></i>
                                     </button>
@@ -793,7 +809,7 @@
                             </div>
                         </div>
                     )}
-                </React.Fragment>
+                </>
             );
         };
 
@@ -880,7 +896,9 @@
             const getSubjectForForm = (formName) => {
                 return (formName === 'Form 1' || formName === 'Form 2' || formName === 'Form 3') ? 'Science' : 'Chemistry';
             };
-            
+
+            // Execute the Neural Progress Map Render exclusively when the Quiz tab is active
+            // Map now watches `selectedForm` to trigger instant redraws!
             useEffect(() => {
                 if (selectedCategory === 'Quiz') {
                     renderProgressMap(theme, selectedForm, getSubjectForForm(selectedForm));
@@ -889,7 +907,15 @@
 
             useEffect(() => {
                 if (!window.FirebaseModule) return;
-                const { initializeApp, getAuth, onAuthStateChanged, getFirestore, collection, doc, onSnapshot, signOut } = window.FirebaseModule;
+                const { 
+                    initializeApp, 
+                    getAuth, 
+                    onAuthStateChanged, 
+                    getFirestore, 
+                    collection, 
+                    doc,
+                    onSnapshot 
+                } = window.FirebaseModule;
 
                 let unsubscribeAuth = () => {};
                 let unsubscribeFirestore = () => {};
@@ -911,7 +937,7 @@
                             } else {
                                 setCurrentUser(null);
                                 setAuthError(`Access Denied: ${user.email} is not authorized.`);
-                                signOut(authInst);
+                                window.FirebaseModule.signOut(authInst);
                             }
                         } else {
                             setCurrentUser(null);
@@ -1080,7 +1106,7 @@
 
             const handleSaveMaterial = async (e) => {
                 e.preventDefault();
-                if (!formData.title.trim() || !formData.fileUrl.trim()) return showToast('Please enter both the title and document URL.', 'error');
+                if (!formData.title || !formData.fileUrl) return showToast('Please enter both the title and document URL.', 'error');
 
                 const formattedUrl = formData.category === 'Quiz' ? formData.fileUrl.trim() : formatEmbedUrl(formData.fileUrl);
                 const tagsArray = formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : ['KSSM'];
@@ -1110,34 +1136,77 @@
                             const colRef = collection(db, 'chemtitra_materials');
                             await addDoc(colRef, newItemData);
                         }
-                        showToast(editingItem ? '🎉 Success! Material updated successfully!' : '🎉 Success! Material published successfully!', 'success');
-                    } else { // Offline fallback
+                    } else {
                         if (editingItem) {
                             setMaterials(prev => prev.map(m => m.id === editingItem.id ? { ...m, ...newItemData } : m));
                         } else {
                             const id = 'mat-' + Date.now();
                             setMaterials(prev => [{ id, ...newItemData }, ...prev]);
                         }
-                        showToast('🎉 Success! Saved to local storage.', 'success');
                     }
-                    
+
+                    window.alert(editingItem ? "🎉 Success! Material has been updated successfully!" : "🎉 Success! Material has been published successfully!");
+
+                    showToast(editingItem ? '🎉 Success! Material updated successfully!' : '🎉 Success! Material published successfully!', 'success');
                     setShowMaterialModal(false);
-                    setFormData({ ...formData, chapter: '', title: '', description: '', fileUrl: '', tags: '' });
+                    
+                    setFormData({
+                        form: formData.form,
+                        subject: getSubjectForForm(formData.form),
+                        category: formData.category,
+                        chapter: '',
+                        title: '',
+                        description: '',
+                        fileUrl: '',
+                        language: formData.language,
+                        tags: ''
+                    });
+
                 } catch (err) {
-                    showToast('Error saving material: ' + err.message, 'error');
+                    if (editingItem) {
+                        setMaterials(prev => prev.map(m => m.id === editingItem.id ? { ...m, ...newItemData } : m));
+                    } else {
+                        const id = 'mat-' + Date.now();
+                        setMaterials(prev => [{ id, ...newItemData }, ...prev]);
+                    }
+
+                    window.alert(editingItem ? "🎉 Success! Material has been updated successfully (Saved Offline)!" : "🎉 Success! Material has been published successfully (Saved Offline)!");
+
+                    showToast('🎉 Success! Saved to local storage.', 'success');
+                    setShowMaterialModal(false);
+                    
+                    setFormData({
+                        form: formData.form,
+                        subject: getSubjectForForm(formData.form),
+                        category: formData.category,
+                        chapter: '',
+                        title: '',
+                        description: '',
+                        fileUrl: '',
+                        language: formData.language,
+                        tags: ''
+                    });
                 }
             };
 
             const confirmDeleteMaterial = async () => {
                 if (!itemToDelete) return;
-                const materialId = itemToDelete.id;
                 
-                setMaterials(prev => prev.filter(m => m.id !== materialId));
+                const material = itemToDelete;
+                
+                if (!material.id) { 
+                    console.error("Missing document ID"); 
+                    setMaterials(prev => prev.filter(m => m !== material));
+                    setItemToDelete(null);
+                    return; 
+                }
+                
+                setMaterials(prev => prev.filter(m => m.id !== material.id));
 
                 try {
                     if (db && window.FirebaseModule) {
                         const { doc, deleteDoc } = window.FirebaseModule;
-                        await deleteDoc(doc(db, "chemtitra_materials", materialId));
+                        await deleteDoc(doc(db, "chemtitra_materials", material.id));
                     }
                     showToast('🗑️ Material deleted successfully.', 'info');
                 } catch (err) {
@@ -1183,6 +1252,7 @@
                 <div className="min-h-screen relative z-10 flex flex-col">
                     <MolecularCanvas theme={theme} />
 
+                    {/* Toast Notification */}
                     {toast.show && (
                         <div className="fixed top-5 right-5 z-50 animate-bounce transition-all">
                             <div className={`px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm font-semibold border ${
@@ -1200,6 +1270,7 @@
                         </div>
                     )}
 
+                    {/* Top Navigation Header */}
                     <header className={`border-b sticky top-0 z-40 backdrop-blur-md shadow-sm transition-all ${
                         theme === 'dark' ? 'bg-slate-900/90 border-slate-800' :
                         theme === 'eyecare' ? 'bg-[#f0f3f8]/95 border-slate-300/80' :
@@ -1207,10 +1278,9 @@
                     }`}>
                         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
                             <div className="flex items-center space-x-2.5 sm:space-x-3">
-                                <button
+                                <div 
                                     onClick={() => !isAdmin && setShowOwnerModal(true)}
                                     className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-teal-600 to-indigo-600 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-md shadow-teal-600/20 cursor-pointer transition-transform hover:scale-105 active:scale-95 relative flex-shrink-0"
-                                    aria-label="Open Owner Access Modal"
                                 >
                                     <i className="fa-solid fa-flask-vial" aria-hidden="true"></i>
                                     {!isAdmin && (
@@ -1218,7 +1288,7 @@
                                             <i className="fa-solid fa-lock" aria-hidden="true"></i>
                                         </span>
                                     )}
-                                </button>
+                                </div>
                                 <div>
                                     <h1 className="text-lg sm:text-xl font-black tracking-tight flex items-center space-x-1.5 sm:space-x-2">
                                         <span className="bg-gradient-to-r from-teal-600 via-cyan-600 to-indigo-600 bg-clip-text text-transparent">ChemTitra</span>
@@ -1229,6 +1299,8 @@
                             </div>
 
                             <div className="flex items-center space-x-1.5 sm:space-x-3">
+                                
+                                {/* Dynamic Periodic Table Button */}
                                 <button
                                     onClick={() => setShowPeriodicTable(true)}
                                     className={`px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border text-xs font-bold transition-all flex items-center space-x-1.5 shadow-sm ${
@@ -1240,6 +1312,7 @@
                                     <span className="hidden md:inline text-[11px]">Periodic Table</span>
                                 </button>
 
+                                {/* Theme & Controls */}
                                 <div className={`flex items-center p-0.5 sm:p-1 rounded-xl border text-xs font-bold transition-all ${
                                     theme === 'dark' ? 'bg-slate-800 border-slate-700 text-slate-300' :
                                     theme === 'eyecare' ? 'bg-slate-200/90 border-slate-300 text-slate-700' :
@@ -1274,6 +1347,7 @@
                         </div>
                     </header>
 
+                    {/* Announcement Banner */}
                     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4 w-full">
                         <div className={`p-2.5 sm:p-3.5 rounded-2xl border flex items-center justify-between gap-3 shadow-sm ${
                             theme === 'dark' ? 'bg-indigo-950/40 border-indigo-900/60 text-indigo-200' :
@@ -1301,8 +1375,10 @@
                         </div>
                     </div>
 
+                    {/* Main Content Area */}
                     <main className="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5 space-y-4 sm:space-y-6">
 
+                        {/* DESKTOP PROFILE VIEW */}
                         <section className={`hidden md:block glass-card rounded-3xl py-5 px-8 relative overflow-hidden transition-all ${
                             theme === 'dark' ? 'bg-slate-900/80 border-slate-800 text-slate-100' :
                             theme === 'eyecare' ? 'bg-[#f4f7fb] border-slate-300/80 text-slate-900' :
@@ -1316,7 +1392,7 @@
                                     <img 
                                         src={avatarUrl} 
                                         alt="Ikmal Hafiz" 
-                                        width="176" height="208"
+                                        width="176" height="208" fetchpriority="high" referrerPolicy="no-referrer"
                                         className="frameless-portrait w-40 lg:w-44 h-auto max-h-52 object-contain object-bottom select-none"
                                         onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_AVATAR; }}
                                     />
@@ -1359,6 +1435,7 @@
                             </div>
                         </section>
 
+                        {/* MOBILE PROFILE VIEW */}
                         <section className={`block md:hidden glass-card rounded-2xl p-2.5 transition-all ${
                             theme === 'dark' ? 'bg-slate-900/90 border-slate-800 text-slate-100' :
                             theme === 'eyecare' ? 'bg-[#f4f7fb] border-slate-300/80 text-slate-900' :
@@ -1368,7 +1445,7 @@
                                 <div className="flex items-center space-x-2.5 overflow-hidden">
                                     <div className="relative flex-shrink-0">
                                         <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-teal-500/20 to-indigo-500/20 p-0.5 border border-teal-500/30 flex items-center justify-center overflow-hidden">
-                                            <img src={avatarUrl} alt="Ikmal Hafiz" width="48" height="48" className="w-full h-full object-contain object-top" onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_AVATAR; }} />
+                                            <img src={avatarUrl} alt="Ikmal Hafiz" width="48" height="48" fetchpriority="high" referrerPolicy="no-referrer" className="w-full h-full object-contain object-top" onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_AVATAR; }} />
                                         </div>
                                         {isAdmin && (
                                             <button type="button" onClick={() => { setAvatarUrlInput(avatarUrl && avatarUrl !== PERMANENT_AVATAR_URL ? avatarUrl : ''); setShowAvatarUrlModal(true); }} className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center shadow border border-white">
@@ -1403,7 +1480,10 @@
                             )}
                         </section>
 
+                        {/* VERTICAL CONTROL HIERARCHY */}
                         <section className="space-y-4 sm:space-y-5">
+                            
+                            {/* 1. ACADEMIC SCOPE SELECTION */}
                             <div className="space-y-2.5">
                                 <div className="border-b border-slate-300/80 pb-2">
                                     <h3 className={`text-base sm:text-xl font-bold flex items-center space-x-2 ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}>
@@ -1416,6 +1496,7 @@
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                                    {/* Lower Secondary Science */}
                                     <div className={`p-3 rounded-2xl border space-y-2 shadow-sm ${theme === 'dark' ? 'bg-slate-900/90 border-slate-800' : theme === 'eyecare' ? 'bg-[#e2e8f0]/80 border-slate-300' : 'bg-teal-50/70 border-teal-200/80'}`}>
                                         <div className="flex items-center justify-between px-1">
                                             <span className="text-[11px] font-bold text-teal-800 tracking-wider flex items-center space-x-1.5 uppercase">
@@ -1434,6 +1515,7 @@
                                         </div>
                                     </div>
 
+                                    {/* Upper Secondary Chemistry */}
                                     <div className={`p-3 rounded-2xl border space-y-2 shadow-sm ${theme === 'dark' ? 'bg-slate-900/90 border-slate-800' : theme === 'eyecare' ? 'bg-[#e2e8f0]/80 border-slate-300' : 'bg-indigo-50/70 border-indigo-200/80'}`}>
                                         <div className="flex items-center justify-between px-1">
                                             <span className="text-[11px] font-bold text-indigo-800 tracking-wider flex items-center space-x-1.5 uppercase">
@@ -1454,6 +1536,7 @@
                                 </div>
                             </div>
 
+                            {/* 2. DIRECT RESOURCE CATEGORY TABS */}
                             <div className={`flex flex-col sm:flex-row items-center justify-between p-1.5 sm:p-2 rounded-2xl border gap-2.5 ${theme === 'dark' ? 'bg-slate-900 border-slate-800' : theme === 'eyecare' ? 'bg-slate-300/70 border-slate-300' : 'bg-slate-200/70 border-slate-300'}`}>
                                 <div className="grid grid-cols-3 w-full sm:w-[32rem] gap-1.5 sm:gap-2">
                                     {['Notes', 'Exercises', 'Quiz'].map(cat => (
@@ -1490,6 +1573,7 @@
                                 </div>
                             </div>
 
+                            {/* Main Display List OR Progress Map Integration */}
                             {selectedCategory === 'Quiz' ? (
                                 <div className="w-full animation-fade-in py-4">
                                     <header className="text-center mb-10 relative">
@@ -1502,10 +1586,12 @@
                                         <p className={`text-sm font-bold tracking-widest uppercase ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Neural Syllabus Uplink</p>
                                     </header>
                                     <div id="progress-map" className="relative w-full pb-8 pt-4">
+                                        {/* React useEffect will mount vanilla JS UI Here */}
                                     </div>
                                 </div>
                             ) : (
-                                <React.Fragment>
+                                <>
+                                    {/* 3. REFINEMENT & DISCOVERY TOOLBAR */}
                                     <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 pt-1">
                                         <div className="relative flex-grow sm:max-w-md w-full">
                                             <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" aria-hidden="true"></i>
@@ -1532,11 +1618,13 @@
                                         </div>
                                     </div>
 
+                                    {/* Student Action Tip */}
                                     <div className={`p-2 sm:p-2.5 rounded-xl border flex items-center space-x-2 text-[11px] font-medium ${theme === 'dark' ? 'bg-teal-950/30 border-teal-900/50 text-teal-300' : theme === 'eyecare' ? 'bg-teal-50/80 border-teal-200 text-teal-900' : 'bg-teal-50 border-teal-200 text-teal-800'}`}>
                                         <i className="fa-solid fa-lightbulb text-teal-600 flex-shrink-0"></i>
                                         <span><strong>Student Tip:</strong> {selectedCategory === 'Quiz' ? "Tap Take Quiz to launch your assigned external test modules!" : "Tap Preview to inspect materials directly on your device, or open full screen in a new tab for offline revision!"}</span>
                                     </div>
 
+                                    {/* 4. MATERIALS CARD GRID */}
                                     {filteredMaterials.length === 0 ? (
                                         <div className={`glass-card rounded-2xl p-8 sm:p-10 text-center space-y-3 sm:space-y-4 border-2 border-dashed transition-colors ${theme === 'dark' ? 'border-slate-700 bg-slate-900/60' : 'border-slate-300 bg-[#f8fafc]'}`}>
                                             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-teal-50 flex items-center justify-center mx-auto text-teal-600 text-xl sm:text-2xl shadow-inner border border-teal-100"><i className={`fa-solid ${alternateLanguageCount > 0 ? 'fa-language' : 'fa-folder-open'}`}></i></div>
@@ -1605,16 +1693,16 @@
                                                                         <i className="fa-solid fa-bolt"></i><span>Take Quiz</span>
                                                                     </a>
                                                                 ) : (
-                                                                    <React.Fragment>
+                                                                    <>
                                                                         <button onClick={() => handleViewMaterial(item)} className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs font-semibold bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 transition-all flex items-center space-x-1 shadow-sm"><i className="fa-solid fa-eye text-teal-600"></i><span>Preview</span></button>
                                                                         <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" onClick={() => handleViewMaterial(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
-                                                                    </React.Fragment>
+                                                                    </>
                                                                 )}
                                                                 {isAdmin && (
-                                                                    <React.Fragment>
+                                                                    <>
                                                                         <button onClick={() => openEditor(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-pen" aria-hidden="true"></i></button>
                                                                         <button onClick={() => setItemToDelete(item)} className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 flex items-center justify-center text-xs transition-all shadow-sm"><i className="fa-solid fa-trash-can" aria-hidden="true"></i></button>
-                                                                    </React.Fragment>
+                                                                    </>
                                                                 )}
                                                             </div>
                                                         </div>
@@ -1623,11 +1711,12 @@
                                             })}
                                         </div>
                                     )}
-                                </React.Fragment>
+                                </>
                             )}
                         </section>
                     </main>
 
+                    {/* Footer */}
                     <footer className={`border-t py-6 sm:py-8 mt-10 text-center text-xs transition-all ${theme === 'dark' ? 'bg-slate-900 border-slate-800 text-slate-400' : theme === 'eyecare' ? 'bg-[#e2e8f0]/90 border-slate-300 text-slate-600' : 'bg-white/90 border-slate-200 text-slate-500'}`}>
                         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
                             <div className="flex items-center space-x-2"><i className="fa-solid fa-flask text-teal-600"></i><span className={`font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>ChemTitra</span><span>• Ikmal Hafiz Educational Hub</span></div>
@@ -1639,6 +1728,9 @@
                         </div>
                     </footer>
 
+                    {/* MODALS SECTION */}
+                    
+                    {/* PDF / Document Reader Modal */}
                     {activePdfItem && (
                         <div className="fixed inset-0 z-[60] flex items-center justify-center p-2 sm:p-6 bg-slate-900/70 backdrop-blur-md">
                             <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-5xl h-[90vh] sm:h-[85vh] flex flex-col shadow-2xl overflow-hidden">
@@ -1668,6 +1760,7 @@
                         </div>
                     )}
 
+                    {/* Universal Material Add / Edit Modal */}
                     {showMaterialModal && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/75 backdrop-blur-md overflow-y-auto">
                             <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-xl shadow-2xl text-slate-900 border border-slate-200 space-y-4 my-6">
@@ -1765,6 +1858,7 @@
                         </div>
                     )}
 
+                    {/* Delete Confirmation Modal */}
                     {itemToDelete && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md">
                             <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl text-slate-900 border border-slate-200 space-y-4 text-center">
@@ -1781,6 +1875,7 @@
                         </div>
                     )}
 
+                    {/* PERIODIC TABLE DRAWER / MODAL (FULL 118 ELEMENTS) */}
                     {showPeriodicTable && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-2 sm:p-6 animate-fade-in">
                             <div className={`w-full max-w-6xl h-[90vh] sm:h-[85vh] rounded-3xl flex flex-col shadow-2xl border ${theme === 'dark' ? 'bg-[#0b1320] border-[#1a2638]' : 'bg-[#f8fafc] border-slate-300'}`}>
@@ -1796,6 +1891,7 @@
                                 </div>
 
                                 <div className="flex-1 overflow-auto pt-scroll p-4 relative">
+                                    {/* Desktop Grid Layout */}
                                     <div className="hidden md:grid gap-1 min-w-[1000px] mx-auto" style={{ gridTemplateColumns: 'repeat(18, minmax(0, 1fr))', gridAutoRows: 'minmax(50px, auto)' }}>
                                         {ELEMENTS.map(el => (
                                             <button 
@@ -1811,6 +1907,7 @@
                                         ))}
                                     </div>
                                     
+                                    {/* Mobile Wrap Layout */}
                                     <div className="flex md:hidden flex-wrap justify-center gap-2.5 pb-20 px-1">
                                         {ELEMENTS.map(el => (
                                             <button 
@@ -1827,6 +1924,7 @@
                                     </div>
                                 </div>
 
+                                {/* Rich Element Detail Slide-Up Drawer */}
                                 {selectedElement && (
                                     <div className={`absolute bottom-0 left-0 w-full p-6 sm:p-8 rounded-t-[2.5rem] border-t shadow-[0_-15px_50px_rgba(0,0,0,0.25)] animate-slide-up transition-all z-[100] ${
                                         theme === 'dark' ? 'bg-slate-900 border-slate-700' : 
@@ -1857,6 +1955,7 @@
                                         </div>
                                         
                                         <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 sm:gap-4 mt-6 sm:mt-8">
+                                            {/* Atomic Number */}
                                             <div className={`col-span-1 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
                                                 theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
                                                 theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
@@ -1874,6 +1973,7 @@
                                                 }`}>{selectedElement.n}</p>
                                             </div>
                                             
+                                            {/* Atomic Mass */}
                                             <div className={`col-span-1 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
                                                 theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
                                                 theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
@@ -1891,6 +1991,7 @@
                                                 }`}>{selectedElement.m}</p>
                                             </div>
 
+                                            {/* NEW: Physical State (STP) */}
                                             <div className={`col-span-2 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors flex flex-col justify-center ${
                                                 theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
                                                 theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
@@ -1913,6 +2014,7 @@
                                                 </p>
                                             </div>
                                             
+                                            {/* Electron Configuration */}
                                             <div className={`col-span-2 sm:col-span-6 p-3 sm:p-4 rounded-2xl border transition-colors ${
                                                 theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
                                                 theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
@@ -1960,6 +2062,7 @@
                         </div>
                     )}
 
+                    {/* OWNER ACCESS MODAL (Google Only) */}
                     {showOwnerModal && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
                             <div className="bg-[#0b1320] border border-[#1a2638] rounded-2xl p-6 w-full max-w-md shadow-2xl text-slate-100 space-y-4 relative">
@@ -1978,6 +2081,7 @@
                                         <p className="font-mono text-[#00cba0] bg-[#00cba0]/10 px-2.5 py-1.5 rounded-lg text-center font-bold border border-[#00cba0]/30 truncate">{AUTHORIZED_OWNER_EMAIL}</p>
                                     </div>
 
+                                    {/* Google Sign-In Button */}
                                     <button type="button" disabled={authLoading} onClick={handleGoogleSignIn} className="w-full py-3 px-4 rounded-xl bg-[#00cba0] hover:bg-[#00b58e] active:scale-95 text-slate-950 font-extrabold text-xs flex items-center justify-center space-x-2 transition-all shadow-lg disabled:opacity-50">
                                         {authLoading ? (<><i className="fa-solid fa-circle-notch fa-spin"></i><span>Connecting to Google...</span></>) : (
                                             <><svg className="w-4 h-4" viewBox="0 0 24 24"><path fill="#08101d" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#08101d" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#08101d" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#08101d" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg><span>Continue with Google</span></>
@@ -1995,6 +2099,7 @@
                         </div>
                     )}
 
+                    {/* Profile Photo URL Modal */}
                     {showAvatarUrlModal && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
                             <div className="bg-[#0b1320] border border-[#1a2638] rounded-2xl p-6 w-full max-w-md shadow-2xl text-slate-100 space-y-4 relative">
@@ -2028,6 +2133,7 @@
                         </div>
                     )}
                     
+                    {/* FLOATING AI TUTOR CHATBOT */}
                     <AIChatWidget theme={theme} geminiApiKey={geminiApiKey} />
                 </div>
             );
