@@ -29,6 +29,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
@@ -1239,7 +1240,7 @@
 
                             {mobileBioExpanded && (
                                 <div className="pt-2.5 mt-2 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs">
-                                    <p className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-200">
+                                    <p className="text-[11px] leading-relaxed text-slate-800 dark:text-slate-300">
                                         Graduated from <strong>UiTM Puncak Alam</strong> with a <strong>Bachelor of Science Education (Hons.) Chemistry</strong>. Passionate in teaching chemistry & science with applied AI & digital learning tools.
                                     </p>
                                     <div className="flex flex-wrap gap-1.5 pt-1">
@@ -1449,6 +1450,7 @@
                                                                 </div>
                                                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${item.category === 'Notes' ? 'bg-teal-100 text-teal-800 border border-teal-200' : item.category === 'Exercises' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}><i className={`fa-solid ${item.category === 'Notes' ? 'fa-file-lines' : item.category === 'Exercises' ? 'fa-clipboard-question' : 'fa-bolt'} mr-1`}></i>{item.category}</span>
                                                             </div>
+
                                                             <div>
                                                                 <h4 className={`text-sm sm:text-base font-bold group-hover:text-teal-600 transition-colors line-clamp-2 ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}>{item.title}</h4>
                                                                 {item.description && <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.description}</p>}
@@ -1496,8 +1498,13 @@
                     {/* Footer */}
                     <footer className={`border-t py-6 sm:py-8 mt-10 text-center text-xs transition-all ${theme === 'dark' ? 'bg-slate-900 border-slate-800 text-slate-400' : theme === 'eyecare' ? 'bg-[#e2e8f0]/90 border-slate-300 text-slate-600' : 'bg-white/90 border-slate-200 text-slate-500'}`}>
                         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-                            <div className="flex items-center space-x-2"><i className="fa-solid fa-flask text-teal-600"></i><span className={`font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>ChemTitra</span><span>• Ikmal Hafiz Educational Hub</span></div>
-                            <div><span>Bachelor of Science Education (Hons.) Chemistry • UiTM Puncak Alam</span></div>
+                            <div>
+                                <span>Ikmal Hafiz Educational Hub</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <i className="fa-solid fa-flask text-teal-600"></i>
+                                <span className={`font-bold ${theme === 'dark' ? 'text-slate-100' : 'text-slate-800'}`}>ChemTitra</span>
+                            </div>
                             <div className="flex items-center space-x-2 text-slate-400">
                                 <span>© 2026 ChemTitra. All rights reserved.</span>
                                 {!isAdmin && <button onClick={() => { setAuthError(''); setShowOwnerModal(true); }} className="text-slate-400 hover:text-teal-600 transition-colors ml-2" title="Owner Access Sign In"><i className="fa-solid fa-lock text-[10px]"></i></button>}
@@ -1768,7 +1775,7 @@
                                                 }`}>{selectedElement.m}</p>
                                             </div>
 
-                                            {/* NEW: Physical State (STP) */}
+                                            {/* Physical State (STP) */}
                                             <div className={`col-span-2 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors flex flex-col justify-center ${
                                                 theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
                                                 theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
