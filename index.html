@@ -1239,7 +1239,10 @@
 
                             {mobileBioExpanded && (
                                 <div className="pt-2.5 mt-2 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs">
-                                    <p className="text-[11px] leading-relaxed text-slate-900 dark:text-slate-300">
+                                    <p 
+                                        className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-300"
+                                        style={{ color: theme === 'dark' ? '' : '#1e293b' }}
+                                    >
                                         Graduated from <strong>UiTM Puncak Alam</strong> with a <strong>Bachelor of Science Education (Hons.) Chemistry</strong>. Passionate in teaching chemistry & science with applied AI & digital learning tools.
                                     </p>
                                     <div className="flex flex-wrap gap-1.5 pt-1">
