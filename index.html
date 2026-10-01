@@ -565,7 +565,6 @@
                             if (dist < 120) {
                                 ctx.beginPath();
                                 ctx.moveTo(particles[i].x, particles[i].y);
-                                ctx.lineTo(canvas.width, canvas.height); // placeholder/safety bound check, let's keep original precise logic
                                 ctx.lineTo(particles[j].x, particles[j].y);
                                 ctx.strokeStyle = theme === 'dark'
                                     ? `rgba(100, 116, 139, ${strokeAlpha * (1 - dist / 120)})`
@@ -1711,7 +1710,7 @@
                     {/* PERIODIC TABLE DRAWER / MODAL (FULL 118 ELEMENTS) */}
                     {showPeriodicTable && (
                         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-2 sm:p-6 animate-fade-in">
-                            <div className={`w-full max-w-6xl h-[90vh] sm:h-[85vh] rounded-3xl flex flex-col shadow-2xl border ${theme === 'dark' ? 'bg-[#0b1320] border-[#1a2638]' : 'bg-[#f8fafc] border-slate-300'}`}>
+                            <div className={`w-full max-w-6xl h-[90vh] sm:h-[85vh] rounded-3xl flex flex-col shadow-2xl border ${theme === 'dark' ? 'bg-gradient-to-br from-[#0b1320] to-[#111827] border-[#1a2638]' : 'bg-gradient-to-br from-[#f8fafc] to-[#eef2ff] border-slate-200'}`}>
                                 <div className="p-4 border-b flex justify-between items-center border-slate-200 dark:border-slate-800">
                                     <div className="flex items-center space-x-3">
                                         <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center"><i className="fa-solid fa-table text-lg"></i></div>
@@ -1730,7 +1729,20 @@
                                             <button 
                                                 key={el.n} 
                                                 onClick={() => setSelectedElement(el)}
-                                                className={`relative rounded-lg border-2 p-1 text-left flex flex-col justify-between hover:scale-[1.15] hover:z-[10] transition-transform shadow-sm cursor-pointer ${CATEGORY_STYLES[el.cat] || 'bg-slate-700 text-white border-slate-600'}`}
+                                                className={`relative rounded-lg p-1 text-left flex flex-col justify-between transition-all duration-200 ease-in-out hover:-translate-y-1 hover:z-10 hover:shadow-lg cursor-pointer text-white/90 ${
+                                                    {
+                                                        'alkali-metal': 'bg-gradient-to-br from-rose-500 to-rose-700 hover:shadow-rose-500/30',
+                                                        'alkaline-earth': 'bg-gradient-to-br from-orange-500 to-orange-700 hover:shadow-orange-500/30',
+                                                        'transition-metal': 'bg-gradient-to-br from-indigo-500 to-indigo-700 hover:shadow-indigo-500/30',
+                                                        'post-transition': 'bg-gradient-to-br from-sky-500 to-sky-700 hover:shadow-sky-500/30',
+                                                        'metalloid': 'bg-gradient-to-br from-teal-500 to-teal-700 hover:shadow-teal-500/30',
+                                                        'nonmetal': 'bg-gradient-to-br from-emerald-500 to-emerald-700 hover:shadow-emerald-500/30',
+                                                        'halogen': 'bg-gradient-to-br from-lime-500 to-lime-700 hover:shadow-lime-500/30',
+                                                        'noble-gas': 'bg-gradient-to-br from-purple-500 to-purple-700 hover:shadow-purple-500/30',
+                                                        'lanthanide': 'bg-gradient-to-br from-pink-500 to-pink-700 hover:shadow-pink-500/30',
+                                                        'actinide': 'bg-gradient-to-br from-fuchsia-500 to-fuchsia-700 hover:shadow-fuchsia-500/30',
+                                                    }[el.cat] || 'bg-slate-700'
+                                                }`}
                                                 style={{ gridColumn: el.c, gridRow: el.r }}
                                             >
                                                 <span className="text-[9px] font-bold absolute top-1 left-1 opacity-80">{el.n}</span>
@@ -1746,7 +1758,20 @@
                                             <button 
                                                 key={el.n} 
                                                 onClick={() => setSelectedElement(el)} 
-                                                className={`w-[4.75rem] h-[4.75rem] rounded-xl border-2 p-1.5 text-center flex flex-col items-center justify-between shadow-sm active:scale-95 transition-transform ${CATEGORY_STYLES[el.cat] || 'bg-slate-700 text-white'}`}
+                                                className={`w-[4.75rem] h-[4.75rem] rounded-xl p-1.5 text-center flex flex-col items-center justify-between shadow-sm active:scale-95 transition-transform text-white/90 ${
+                                                    {
+                                                        'alkali-metal': 'bg-gradient-to-br from-rose-500 to-rose-700',
+                                                        'alkaline-earth': 'bg-gradient-to-br from-orange-500 to-orange-700',
+                                                        'transition-metal': 'bg-gradient-to-br from-indigo-500 to-indigo-700',
+                                                        'post-transition': 'bg-gradient-to-br from-sky-500 to-sky-700',
+                                                        'metalloid': 'bg-gradient-to-br from-teal-500 to-teal-700',
+                                                        'nonmetal': 'bg-gradient-to-br from-emerald-500 to-emerald-700',
+                                                        'halogen': 'bg-gradient-to-br from-lime-500 to-lime-700',
+                                                        'noble-gas': 'bg-gradient-to-br from-purple-500 to-purple-700',
+                                                        'lanthanide': 'bg-gradient-to-br from-pink-500 to-pink-700',
+                                                        'actinide': 'bg-gradient-to-br from-fuchsia-500 to-fuchsia-700',
+                                                    }[el.cat] || 'bg-slate-700'
+                                                }`}
                                                 aria-label={`${el.name}, Element ${el.n}`}
                                             >
                                                 <span className="text-[9px] font-bold w-full text-left opacity-80 leading-none">{el.n}</span>
@@ -1759,133 +1784,55 @@
 
                                 {/* Rich Element Detail Slide-Up Drawer */}
                                 {selectedElement && (
-                                    <div className={`absolute bottom-0 left-0 w-full p-6 sm:p-8 rounded-t-[2.5rem] border-t shadow-[0_-15px_50px_rgba(0,0,0,0.25)] animate-slide-up transition-all z-[100] ${
-                                        theme === 'dark' ? 'bg-slate-900 border-slate-700' : 
-                                        theme === 'eyecare' ? 'bg-[#fcf8f2] border-[#e8dccb]' : 
-                                        'bg-white border-slate-200'
+                                    <div className={`absolute bottom-0 left-0 w-full p-6 sm:p-8 rounded-t-3xl border-t shadow-[0_-20px_50px_-15px_rgba(0,0,0,0.25)] animate-slide-up transition-all z-100 ${
+                                        theme === 'dark' ? 'bg-slate-900/90 backdrop-blur-sm border-slate-700' :
+                                        'bg-white/90 backdrop-blur-sm border-slate-200'
                                     }`}>
+                                        {/* New Drawer Header */}
                                         <div className="flex justify-between items-start">
                                             <div className="flex gap-4 sm:gap-5 items-center">
-                                                <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-3xl font-black border-4 shadow-lg ${CATEGORY_STYLES[selectedElement.cat]}`}>{selectedElement.sym}</div>
+                                                <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-3xl font-black text-white shadow-lg ${
+                                                    {
+                                                        'alkali-metal': 'bg-gradient-to-br from-rose-500 to-rose-700',
+                                                        'alkaline-earth': 'bg-gradient-to-br from-orange-500 to-orange-700',
+                                                        'transition-metal': 'bg-gradient-to-br from-indigo-500 to-indigo-700',
+                                                        'post-transition': 'bg-gradient-to-br from-sky-500 to-sky-700',
+                                                        'metalloid': 'bg-gradient-to-br from-teal-500 to-teal-700',
+                                                        'nonmetal': 'bg-gradient-to-br from-emerald-500 to-emerald-700',
+                                                        'halogen': 'bg-gradient-to-br from-lime-500 to-lime-700',
+                                                        'noble-gas': 'bg-gradient-to-br from-purple-500 to-purple-700',
+                                                        'lanthanide': 'bg-gradient-to-br from-pink-500 to-pink-700',
+                                                        'actinide': 'bg-gradient-to-br from-fuchsia-500 to-fuchsia-700',
+                                                    }[selectedElement.cat]
+                                                }`}>{selectedElement.sym}</div>
                                                 <div>
-                                                    <h3 className={`text-2xl sm:text-3xl font-black tracking-tight ${
-                                                        theme === 'dark' ? 'text-white' : 
-                                                        theme === 'eyecare' ? 'text-[#4a3525]' : 
-                                                        'text-slate-900'
-                                                    }`}>{selectedElement.name}</h3>
-                                                    <span className={`text-xs sm:text-sm font-bold uppercase tracking-widest ${
-                                                        theme === 'dark' ? 'text-slate-400' : 
-                                                        theme === 'eyecare' ? 'text-[#8b6b4a]' : 
-                                                        'text-slate-500'
-                                                    }`}>{selectedElement.cat.replace('-', ' ')}</span>
+                                                    <h3 className={`text-2xl sm:text-3xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{selectedElement.name}</h3>
+                                                    <span className={`text-xs sm:text-sm font-bold uppercase tracking-widest ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{selectedElement.cat.replace('-', ' ')}</span>
                                                 </div>
                                             </div>
-                                            <button onClick={() => setSelectedElement(null)} className={`transition-transform hover:scale-110 ${
-                                                theme === 'dark' ? 'text-slate-500 hover:text-cyan-400' : 
-                                                theme === 'eyecare' ? 'text-[#c2a788] hover:text-[#8b6b4a]' : 
-                                                'text-slate-400 hover:text-teal-600'
-                                            }`}><i className="fa-solid fa-circle-chevron-down text-3xl sm:text-4xl"></i></button>
+                                            <button onClick={() => setSelectedElement(null)} className={`transition-transform hover:scale-110 ${theme === 'dark' ? 'text-slate-500 hover:text-cyan-400' : 'text-slate-400 hover:text-teal-600'}`}><i className="fa-solid fa-circle-chevron-down text-3xl sm:text-4xl"></i></button>
                                         </div>
                                         
-                                        <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 sm:gap-4 mt-6 sm:mt-8">
-                                            {/* Atomic Number */}
-                                            <div className={`col-span-1 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
-                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
-                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
-                                                'bg-slate-50 border-slate-200 shadow-sm'
-                                            }`}>
-                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
-                                                    theme === 'dark' ? 'text-slate-400' : 
-                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
-                                                    'text-slate-500'
-                                                }`}>Atomic Number</p>
-                                                <p className={`text-xl sm:text-2xl font-black ${
-                                                    theme === 'dark' ? 'text-white' : 
-                                                    theme === 'eyecare' ? 'text-[#4a3525]' : 
-                                                    'text-slate-900'
-                                                }`}>{selectedElement.n}</p>
-                                            </div>
-                                            
-                                            {/* Atomic Mass */}
-                                            <div className={`col-span-1 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors ${
-                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
-                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
-                                                'bg-slate-50 border-slate-200 shadow-sm'
-                                            }`}>
-                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
-                                                    theme === 'dark' ? 'text-slate-400' : 
-                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
-                                                    'text-slate-500'
-                                                }`}>Atomic Mass</p>
-                                                <p className={`text-xl sm:text-2xl font-black ${
-                                                    theme === 'dark' ? 'text-white' : 
-                                                    theme === 'eyecare' ? 'text-[#4a3525]' : 
-                                                    'text-slate-900'
-                                                }`}>{selectedElement.m}</p>
-                                            </div>
-
-                                            {/* Physical State (STP) */}
-                                            <div className={`col-span-2 sm:col-span-2 p-3 sm:p-4 rounded-2xl border transition-colors flex flex-col justify-center ${
-                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
-                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
-                                                'bg-slate-50 border-slate-200 shadow-sm'
-                                            }`}>
-                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
-                                                    theme === 'dark' ? 'text-slate-400' : 
-                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
-                                                    'text-slate-500'
-                                                }`}>Physical State (STP)</p>
-                                                <p className={`text-xl sm:text-2xl font-black flex items-center space-x-2.5 ${
-                                                    theme === 'dark' ? 'text-white' : 
-                                                    theme === 'eyecare' ? 'text-[#4a3525]' : 
-                                                    'text-slate-900'
-                                                }`}>
-                                                    {selectedElement.state === 'Gas' && <i className="fa-solid fa-cloud text-sky-400 text-lg sm:text-xl"></i>}
-                                                    {selectedElement.state === 'Liquid' && <i className="fa-solid fa-droplet text-blue-500 text-lg sm:text-xl"></i>}
-                                                    {selectedElement.state === 'Solid' && <i className="fa-solid fa-cube text-slate-500 text-lg sm:text-xl"></i>}
-                                                    <span>{selectedElement.state}</span>
-                                                </p>
-                                            </div>
-                                            
-                                            {/* Electron Configuration */}
-                                            <div className={`col-span-2 sm:col-span-6 p-3 sm:p-4 rounded-2xl border transition-colors ${
-                                                theme === 'dark' ? 'bg-slate-800 border-slate-700 shadow-inner' : 
-                                                theme === 'eyecare' ? 'bg-[#f5ebd9] border-[#e8dccb] shadow-sm' : 
-                                                'bg-slate-50 border-slate-200 shadow-sm'
-                                            }`}>
-                                                <p className={`text-[11px] sm:text-xs font-extrabold uppercase tracking-wider mb-1 ${
-                                                    theme === 'dark' ? 'text-slate-400' : 
-                                                    theme === 'eyecare' ? 'text-[#8b6b4a]' : 
-                                                    'text-slate-500'
-                                                }`}>Electron Configuration</p>
-                                                <p className={`text-xl sm:text-2xl font-mono font-black ${
-                                                    theme === 'dark' ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]' : 
-                                                    theme === 'eyecare' ? 'text-[#7d4b26]' : 
-                                                    'text-teal-700'
-                                                }`}>{selectedElement.e}</p>
-                                            </div>
+                                        {/* New Info Grid */}
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6 sm:mt-8">
+                                            {[
+                                                { label: 'Atomic Number', value: selectedElement.n, icon: 'fa-hashtag' },
+                                                { label: 'Atomic Mass', value: selectedElement.m, icon: 'fa-weight-hanging' },
+                                                { label: 'Physical State (STP)', value: selectedElement.state, icon: selectedElement.state === 'Gas' ? 'fa-cloud' : selectedElement.state === 'Liquid' ? 'fa-droplet' : 'fa-cube' },
+                                                { label: 'Electron Config', value: selectedElement.e, icon: 'fa-atom', span: 'sm:col-span-4' }
+                                            ].map(item => (
+                                                <div key={item.label} className={`p-3 sm:p-4 rounded-2xl border transition-colors ${theme === 'dark' ? 'bg-slate-800/70 border-slate-700' : 'bg-slate-50 border-slate-200/80'} ${item.span || ''}\`}`}>
+                                                    <p className={`text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1 flex items-center gap-2 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}><i className={`fa-solid ${item.icon}`}></i>{item.label}</p>
+                                                    <p className={`text-lg sm:text-xl font-black truncate ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{item.value}</p>
+                                                </div>
+                                            ))}
                                         </div>
                                         
-                                        <div className={`mt-4 sm:mt-5 p-4 sm:p-5 rounded-2xl border flex items-start sm:items-center transition-all ${
-                                            theme === 'dark' ? 'bg-indigo-950/50 border-indigo-500/30 shadow-[0_4px_20px_-5px_rgba(99,102,241,0.2)]' : 
-                                            theme === 'eyecare' ? 'bg-[#f0e1c5] border-[#d4b996]' : 
-                                            'bg-indigo-50 border-indigo-200'
-                                        }`}>
-                                            <i className={`fa-solid fa-lightbulb text-xl sm:text-2xl mr-3 sm:mr-4 mt-0.5 sm:mt-0 flex-shrink-0 ${
-                                                theme === 'dark' ? 'text-yellow-300 drop-shadow-[0_0_10px_rgba(253,224,71,0.6)]' : 
-                                                theme === 'eyecare' ? 'text-[#b87333]' : 
-                                                'text-amber-500'
-                                            }`}></i>
-                                            <p className={`text-sm sm:text-base font-semibold leading-relaxed ${
-                                                theme === 'dark' ? 'text-indigo-50' : 
-                                                theme === 'eyecare' ? 'text-[#5a3e26]' : 
-                                                'text-indigo-950'
-                                            }`}>
-                                                <strong className={`font-black mr-1.5 uppercase tracking-wide ${
-                                                    theme === 'dark' ? 'text-cyan-300' : 
-                                                    theme === 'eyecare' ? 'text-[#7d4b26]' : 
-                                                    'text-indigo-700'
-                                                }`}>Fun Fact:</strong> 
+                                        {/* New Fun Fact Section */}
+                                        <div className={`mt-4 sm:mt-5 p-4 sm:p-5 rounded-2xl border flex items-start sm:items-center transition-all ${theme === 'dark' ? 'bg-indigo-950/50 border-indigo-500/30' : 'bg-indigo-50/70 border-indigo-200'}`}>
+                                            <i className={`fa-solid fa-lightbulb text-xl sm:text-2xl mr-3 sm:mr-4 mt-0.5 sm:mt-0 flex-shrink-0 ${theme === 'dark' ? 'text-yellow-300' : 'text-amber-500'}`}></i>
+                                            <p className={`text-sm sm:text-base font-semibold leading-relaxed ${theme === 'dark' ? 'text-indigo-200' : 'text-indigo-950'}`}>
+                                                <strong className={`font-bold mr-1.5 ${theme === 'dark' ? 'text-cyan-300' : 'text-indigo-700'}`}>FUN FACT:</strong>
                                                 {selectedElement.f}
                                             </p>
                                         </div>
