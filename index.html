@@ -274,7 +274,7 @@
                 container.innerHTML = `
                     <div class="text-center p-12 text-sm font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}">
                         <i class="fa-solid fa-satellite-dish text-4xl mb-4 opacity-50"></i>
-                        <p>No syllabus nodes mapped for ${currentFormStr} ${currentSubjectStr} yet.</p>
+                        <p>No syllabus nodes mapped for \${currentFormStr} \${currentSubjectStr} yet.</p>
                     </div>
                 `;
                 return;
@@ -319,14 +319,14 @@
                     </div>
                     
                     <div class="w-full pl-24 md:pl-0 md:w-1/2 flex ${isEven ? 'md:pr-16 md:justify-end' : 'md:pl-16 md:justify-start'}">
-                        <div class="w-full max-w-md p-6 rounded-2xl glass-card transition-all duration-300 ${borderClasses} ${cursorClasses}" 
+                        <div class="w-full max-w-md p-6 rounded-2xl glass-card transition-all duration-300 \${borderClasses} \${cursorClasses}" 
                              onclick="window.handleNodeClick('${node.id}')">
                             <div class="flex justify-between items-start mb-2">
-                                <span class="font-display text-[11px] uppercase tracking-[0.2em] ${textClasses}">Chapter ${node.chapter}</span>
+                                <span class="font-display text-[11px] uppercase tracking-[0.2em] \${textClasses}">Chapter \${node.chapter}</span>
                                 ${badgeActive}
                             </div>
-                            <h2 class="text-xl md:text-2xl font-bold ${titleColor} mb-2 leading-tight">${node.title}</h2>
-                            <p class="text-sm ${descColor}">${node.description}</p>
+                            <h2 class="text-xl md:text-2xl font-bold \${titleColor} mb-2 leading-tight">\${node.title}</h2>
+                            <p class="text-sm \${descColor}">\${node.description}</p>
                             <div class="mt-4 pt-4 border-t border-sky-500/30 flex items-center justify-between">
                                 <span class="text-xs ${textClasses}">
                                     Initialize Quiz Sequence
@@ -1821,7 +1821,7 @@
                                                 { label: 'Physical State (STP)', value: selectedElement.state, icon: selectedElement.state === 'Gas' ? 'fa-cloud' : selectedElement.state === 'Liquid' ? 'fa-droplet' : 'fa-cube' },
                                                 { label: 'Electron Config', value: selectedElement.e, icon: 'fa-atom', span: 'sm:col-span-4' }
                                             ].map(item => (
-                                                <div key={item.label} className={`p-3 sm:p-4 rounded-2xl border transition-colors ${theme === 'dark' ? 'bg-slate-800/70 border-slate-700' : 'bg-slate-50 border-slate-200/80'} ${item.span || ''}`}>
+                                                <div key={item.label} className={`p-3 sm:p-4 rounded-2xl border transition-colors ${theme === 'dark' ? 'bg-slate-800/70 border-slate-700' : 'bg-slate-50 border-slate-200/80'} ${item.span || ''}\`}`}>
                                                     <p className={`text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1 flex items-center gap-2 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}><i className={`fa-solid ${item.icon}`}></i>{item.label}</p>
                                                     <p className={`text-lg sm:text-xl font-black truncate ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{item.value}</p>
                                                 </div>
