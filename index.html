@@ -274,7 +274,7 @@
                 container.innerHTML = `
                     <div class="text-center p-12 text-sm font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}">
                         <i class="fa-solid fa-satellite-dish text-4xl mb-4 opacity-50"></i>
-                        <p>No syllabus nodes mapped for ${currentFormStr} ${currentSubjectStr} yet.</p>
+                        <p>No syllabus nodes mapped for \${currentFormStr} \${currentSubjectStr} yet.</p>
                     </div>
                 `;
                 return;
@@ -319,14 +319,14 @@
                     </div>
                     
                     <div class="w-full pl-24 md:pl-0 md:w-1/2 flex ${isEven ? 'md:pr-16 md:justify-end' : 'md:pl-16 md:justify-start'}">
-                        <div class="w-full max-w-md p-6 rounded-2xl glass-card transition-all duration-300 ${borderClasses} ${cursorClasses}" 
+                        <div class="w-full max-w-md p-6 rounded-2xl glass-card transition-all duration-300 \${borderClasses} \${cursorClasses}" 
                              onclick="window.handleNodeClick('${node.id}')">
                             <div class="flex justify-between items-start mb-2">
-                                <span class="font-display text-[11px] uppercase tracking-[0.2em] ${textClasses}">Chapter ${node.chapter}</span>
+                                <span class="font-display text-[11px] uppercase tracking-[0.2em] \${textClasses}">Chapter \${node.chapter}</span>
                                 ${badgeActive}
                             </div>
-                            <h2 class="text-xl md:text-2xl font-bold ${titleColor} mb-2 leading-tight">${node.title}</h2>
-                            <p class="text-sm ${descColor}">${node.description}</p>
+                            <h2 class="text-xl md:text-2xl font-bold \${titleColor} mb-2 leading-tight">\${node.title}</h2>
+                            <p class="text-sm \${descColor}">\${node.description}</p>
                             <div class="mt-4 pt-4 border-t border-sky-500/30 flex items-center justify-between">
                                 <span class="text-xs ${textClasses}">
                                     Initialize Quiz Sequence
@@ -565,6 +565,7 @@
                             if (dist < 120) {
                                 ctx.beginPath();
                                 ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(canvas.width, canvas.height); // placeholder/safety bound check, let's keep original precise logic
                                 ctx.lineTo(particles[j].x, particles[j].y);
                                 ctx.strokeStyle = theme === 'dark'
                                     ? `rgba(100, 116, 139, ${strokeAlpha * (1 - dist / 120)})`
@@ -1083,72 +1084,67 @@
                                     <span className="hidden md:inline text-[11px]">Periodic Table</span>
                                 </button>
 
-                                {/* Icon-Only Precision Sliding Pill Theme Switcher */}
+                                {/* FINAL Pixel-Perfect Sliding Pill Theme Switcher */}
                                 <div 
-                                  className={`relative flex items-center p-1 rounded-full border transition-all duration-300 w-28 sm:w-32 h-9 shadow-inner ${
-                                    theme === 'eyecare' 
-                                      ? 'bg-amber-100/80 border-amber-300/80' 
-                                      : theme === 'dark' 
-                                        ? 'bg-slate-900 border-slate-700' 
-                                        : 'bg-slate-200 border-slate-300'
-                                  }`}
-                                >
-                                  {/* Sliding Pill Indicator */}
-                                  <div 
-                                    className={`absolute top-1 bottom-1 w-[calc(33.333%-2px)] rounded-full shadow-md transition-all duration-300 ease-out pointer-events-none ${
-                                      theme === 'eyecare'
-                                        ? 'bg-amber-50 shadow-amber-900/10 border border-amber-200'
-                                        : theme === 'dark'
-                                          ? 'bg-indigo-600 shadow-indigo-950/50'
-                                          : 'bg-white shadow-slate-400/30'
+                                    className={`relative flex items-center p-1 rounded-full border transition-all duration-300 w-28 sm:w-32 h-9 shadow-inner ${
+                                        theme === 'eyecare' 
+                                            ? 'bg-slate-200/70 border-slate-300' 
+                                            : theme === 'dark' 
+                                                ? 'bg-slate-900 border-slate-700' 
+                                                : 'bg-slate-200 border-slate-300'
                                     }`}
-                                    style={{
-                                      transform: `translateX(${
-                                        theme === 'eyecare' ? '0px' :
-                                        theme === 'dark' ? 'calc(100% + 2px)' :
-                                        'calc(200% + 4px)'
-                                      })`
-                                    }}
-                                  />
+                                >
+                                    {/* Sliding Pill Indicator */}
+                                    <div 
+                                        className={`absolute top-1 bottom-1 w-1/3 rounded-full shadow-md transition-all duration-300 ease-out ${
+                                            theme === 'dark' 
+                                                ? 'bg-indigo-600' 
+                                                : 'bg-white'
+                                        }`}
+                                        style={{
+                                            left: theme === 'eyecare' ? '3.33%' : theme === 'dark' ? '33.33%' : '63.33%',
+                                            width: '30%'
+                                        }}
+                                    />
 
-                                  {/* 1. Eye-Care Button */}
-                                  <button 
-                                    type="button"
-                                    onClick={() => setTheme('eyecare')} 
-                                    className="relative z-10 flex-1 h-full rounded-full flex items-center justify-center transition-colors duration-200" 
-                                    title="Eye-Care Warm Theme"
-                                    aria-label="Eye-Care Mode"
-                                  >
-                                    <i className={`fa-solid fa-eye text-xs transition-transform duration-200 ${
-                                      theme === 'eyecare' ? 'text-amber-700 scale-110 font-bold' : 'text-slate-500 hover:text-slate-700'
-                                    }`} />
-                                  </button>
+                                    {/* 1. Eye-Care Button */}
+                                    <button 
+                                        type="button"
+                                        onClick={() => setTheme('eyecare')} 
+                                        className="relative z-10 flex-1 h-full rounded-full flex items-center justify-center transition-colors duration-200" 
+                                        title="Eye-Care Theme"
+                                        aria-label="Eye-Care Mode"
+                                    >
+                                        <i className={`fa-solid fa-eye text-sm transition-transform duration-200 ${
+                                            theme === 'eyecare' ? 'text-teal-700 scale-110' : 'text-slate-500 hover:text-slate-800'
+                                        }`} />
+                                    </button>
 
-                                  {/* 2. Dark Mode Button */}
-                                  <button 
-                                    type="button"
-                                    onClick={() => setTheme('dark')} 
-                                    className="relative z-10 flex-1 h-full rounded-full flex items-center justify-center transition-colors duration-200" 
-                                    title="Dark Theme"
-                                    aria-label="Dark Mode"
-                                  >
-                                    <i className={`fa-solid fa-moon text-xs transition-transform duration-200 ${
-                                      theme === 'dark' ? 'text-white scale-110' : 'text-slate-500 hover:text-slate-700'
-                                    }`} />
-                                  </button>
+                                    {/* 2. Dark Mode Button */}
+                                    <button 
+                                        type="button"
+                                        onClick={() => setTheme('dark')} 
+                                        className="relative z-10 flex-1 h-full rounded-full flex items-center justify-center transition-colors duration-200" 
+                                        title="Dark Theme"
+                                        aria-label="Dark Mode"
+                                    >
+                                        <i className={`fa-solid fa-moon text-sm transition-transform duration-200 ${
+                                            theme === 'dark' ? 'text-white scale-110' : 'text-slate-500 hover:text-slate-800'
+                                        }`} />
+                                    </button>
 
-                                  {/* 3. Light Mode Button */}
-                                  <button 
-                                    type="button"
-                                    onClick={() => setTheme('light')} 
-                                    className="relative z-10 flex-1 h-full rounded-full flex items-center justify-center transition-colors duration-200" 
-                                    title="Light Theme"
-                                    aria-label="Light Mode"
-                                  >
-                                    <i className={`fa-solid fa-sun text-xs transition-transform duration-200 ${
-                                      theme === 'light' ? 'text-amber-500 scale-110 font-bold' : 'text-slate-500 hover:text-slate-700'
-                                    }`} />
-                                  </button>
+                                    {/* 3. Light Mode Button */}
+                                    <button 
+                                        type="button"
+                                        onClick={() => setTheme('light')} 
+                                        className="relative z-10 flex-1 h-full rounded-full flex items-center justify-center transition-colors duration-200" 
+                                        title="Light Theme"
+                                        aria-label="Light Mode"
+                                    >
+                                        <i className={`fa-solid fa-sun text-sm transition-transform duration-200 ${
+                                            theme === 'light' ? 'text-teal-700 scale-110' : 'text-slate-500 hover:text-slate-800'
+                                        }`} />
+                                    </button>
                                 </div>
 
                                 {isAdmin ? (
@@ -1291,7 +1287,7 @@
                             {mobileBioExpanded && (
                                 <div className="pt-2.5 mt-2 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs">
                                     <p 
-                                        className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-300"
+                                        className="text-[11px] leading-relaxed text-slate-900 dark:text-slate-300"
                                         style={{ color: theme === 'dark' ? '' : '#1e293b' }}
                                     >
                                         Graduated from <strong>UiTM Puncak Alam</strong> with a <strong>Bachelor of Science Education (Hons.) Chemistry</strong>. Passionate in teaching chemistry & science with applied AI & digital learning tools.
@@ -1503,6 +1499,7 @@
                                                                 </div>
                                                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${item.category === 'Notes' ? 'bg-teal-100 text-teal-800 border border-teal-200' : item.category === 'Exercises' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}><i className={`fa-solid ${item.category === 'Notes' ? 'fa-file-lines' : item.category === 'Exercises' ? 'fa-clipboard-question' : 'fa-bolt'} mr-1`}></i>{item.category}</span>
                                                             </div>
+
                                                             <div>
                                                                 <h4 className={`text-sm sm:text-base font-bold group-hover:text-teal-600 transition-colors line-clamp-2 ${theme === 'dark' ? 'text-slate-100' : 'text-slate-900'}`}>{item.title}</h4>
                                                                 {item.description && <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.description}</p>}
