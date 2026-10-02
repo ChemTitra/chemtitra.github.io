@@ -1003,7 +1003,7 @@
                         const { doc, deleteDoc } = window.FirebaseModule;
                         await deleteDoc(doc(db, "chemtitra_materials", material.id));
                     }
-                    showToast('🗑️ Material deleted successfully.', 'info');
+                    showToast('🗑️️ Material deleted successfully.', 'info');
                 } catch (err) {
                     console.error("Delete error:", err);
                     showToast('Removed from screen (DB error: ' + err.message + ')', 'error');
@@ -1103,7 +1103,7 @@
                                     title="Open Interactive Periodic Table"
                                 >
                                     <i className="fa-solid fa-table-cells text-[10px] sm:text-xs"></i>
-                                    <span className="hidden md:inline text-[11px]">Periodic Table</span>
+                                    <span className="hidden sm:inline text-[11px]">Periodic Table</span>
                                 </button>
 
                                 {/* FINAL Pixel-Perfect Sliding Pill Theme Switcher */}
