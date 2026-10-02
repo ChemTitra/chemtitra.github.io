@@ -1272,7 +1272,7 @@
                                         )}
                                     </div>
                                     <div className="truncate">
-                                        <h2 className="text-sm font-black truncate leading-tight">Teacher Ikmal Hafiz</h2>
+                                        <h2 className="text-sm font-black truncate leading-tight">Ikmal Hafiz</h2>
                                         <p className="text-[10px] text-teal-700 dark:text-teal-400 font-bold truncate">B.Sc. Ed (Hons) Chemistry • UiTM</p>
                                         <p className="text-[9px] text-slate-500 truncate">Science & Chemistry Educator</p>
                                     </div>
@@ -1498,7 +1498,6 @@
                                             {filteredMaterials.map((mat) => {
                                                 const isNew = isRecentlyUploaded(mat.updatedAt);
                                                 return (
-                                                    {/* MODERN INTERACTIVE CARD */}
                                                     <div 
                                                         key={mat.id}
                                                         onClick={() => { handleViewMaterial(mat); if(mat.category === 'Quiz') window.open(mat.fileUrl, '_blank'); }}
