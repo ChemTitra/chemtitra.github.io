@@ -10086,8 +10086,6 @@ window.ELEMENTS_DATA = [
                 if (paused) return;
                 const canvas = document.getElementById('bg-canvas');
                 if (!canvas) return;
-                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                if (prefersReducedMotion) return;
 
                 const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true }) || canvas.getContext('2d');
                 let animationFrameId;
@@ -13764,8 +13762,7 @@ window.ELEMENTS_DATA = [
                 } catch (e) {}
             };
 
-            const prefersReduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (typeof document === 'undefined' || !document.startViewTransition || prefersReduced) {
+            if (typeof document === 'undefined' || !document.startViewTransition) {
                 applyTheme();
                 return;
             }
@@ -13817,9 +13814,6 @@ window.ELEMENTS_DATA = [
         // 3D PERSPECTIVE TILT & SPECULAR GLARE HELPERS (60FPS HARDWARE ACCELERATED)
         // =========================================================================
         const handleCard3DMove = (e, maxTilt = 4.5) => {
-            if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                return;
-            }
             const card = e.currentTarget;
             if (!card) return;
             const rect = card.getBoundingClientRect();
@@ -17087,10 +17081,41 @@ window.ELEMENTS_DATA = [
                 if (!showMolecule3D) return;
                 const canvas = canvasRef.current;
                 if (!canvas) return;
-                const ctx = canvas.getContext('2d');
+                const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true }) || canvas.getContext('2d');
                 let animId;
 
-                const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                // Always allow interactive 3D lab animations & auto-spin when the user has Spinning (autoRotate) enabled
+                const prefersReducedMotion = false;
+
+                let cachedW = canvas.clientWidth || 560;
+                let cachedH = canvas.clientHeight || 290;
+                let cachedDpr = Math.min(window.devicePixelRatio || 1, 2);
+
+                const syncCanvasSize = () => {
+                    const cw = canvas.clientWidth || 560;
+                    const ch = canvas.clientHeight || 290;
+                    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    cachedW = cw;
+                    cachedH = ch;
+                    cachedDpr = dpr;
+                    const targetW = Math.round(cw * dpr);
+                    const targetH = Math.round(ch * dpr);
+                    if (canvas.width !== targetW || canvas.height !== targetH) {
+                        canvas.width = targetW;
+                        canvas.height = targetH;
+                    }
+                };
+                syncCanvasSize();
+
+                let resizeObs = null;
+                if (typeof ResizeObserver !== 'undefined') {
+                    resizeObs = new ResizeObserver(() => {
+                        syncCanvasSize();
+                    });
+                    resizeObs.observe(canvas);
+                } else {
+                    window.addEventListener('resize', syncCanvasSize, { passive: true });
+                }
 
                 const projectPoint = (pt, rx, ry, width, height, scale) => {
                     const cosY = Math.cos(ry);
@@ -17124,30 +17149,33 @@ window.ELEMENTS_DATA = [
                     return { x: x2, y: y2, z: z1 };
                 };
 
+                let lastFrameMs = performance.now();
+
                 const renderFrame = (nowMs) => {
                     const nowVal = nowMs || performance.now();
+                    const dtMs = Math.max(4, Math.min(48, nowVal - lastFrameMs));
+                    lastFrameMs = nowVal;
+                    const dtScale = dtMs / 16.667;
                     const tSec = nowVal * 0.001;
-                    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                    const rect = canvas.getBoundingClientRect();
-                    const w = rect.width || 560;
-                    const h = rect.height || 300;
-                    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
-                        canvas.width = Math.round(w * dpr);
-                        canvas.height = Math.round(h * dpr);
-                    }
+                    const w = cachedW;
+                    const h = cachedH;
+                    const dpr = cachedDpr;
+
                     ctx.save();
                     ctx.scale(dpr, dpr);
-                    ctx.clearRect(0, 0, w, h);
+                    ctx.fillStyle = theme === 'dark' ? '#070b14' : '#f4f7f4';
+                    ctx.fillRect(0, 0, w, h);
 
                     const st = rotRef.current;
                     if (!st.isDragging) {
-                        if (autoRotate && !prefersReducedMotion) {
-                            st.rotY += inspectedElement ? 0.0055 : 0.0075;
+                        if (autoRotate) {
+                            st.rotY += (inspectedElement ? 0.0058 : 0.0082) * dtScale;
                         }
-                        st.rotX += st.velX;
-                        st.rotY += st.velY;
-                        st.velX *= 0.92;
-                        st.velY *= 0.92;
+                        st.rotX += st.velX * dtScale;
+                        st.rotY += st.velY * dtScale;
+                        const friction = Math.pow(0.92, dtScale);
+                        st.velX *= friction;
+                        st.velY *= friction;
                         st.rotX = Math.max(-1.35, Math.min(1.35, st.rotX));
                     }
 
@@ -17163,7 +17191,7 @@ window.ELEMENTS_DATA = [
 
                     const enterElapsed = Math.max(0, nowVal - (st.modeEnterStart || 0));
                     const enterT = Math.min(1, enterElapsed / 260);
-                    const enterEase = prefersReducedMotion ? 1 : (0.90 + 0.10 * (1 - Math.pow(1 - enterT, 3)));
+                    const enterEase = 0.90 + 0.10 * (1 - Math.pow(1 - enterT, 3));
                     const molScaleFactor = activeSubatomic ? 1.0 : (activeMolecule.defaultScale || 1.0);
                     const baseScale = Math.min(w, h) * 0.27 * molScaleFactor * currentZoom * enterEase;
 
@@ -17658,8 +17686,13 @@ window.ELEMENTS_DATA = [
                             } else if (item.kind === 'qElectron') {
                                 const r = 4.6 * item.p * Math.sqrt(currentZoom);
                                 ctx.save();
-                                ctx.shadowColor = item.dotColor;
-                                ctx.shadowBlur = 9;
+                                // GPU-fast soft radial glow halo (replaces slow CPU shadowBlur)
+                                ctx.fillStyle = item.dotColor;
+                                ctx.globalAlpha = 0.26;
+                                ctx.beginPath();
+                                ctx.arc(item.sx, item.sy, r * 1.85, 0, Math.PI * 2);
+                                ctx.fill();
+                                ctx.globalAlpha = 1;
                                 ctx.fillStyle = '#ffffff';
                                 ctx.beginPath();
                                 ctx.arc(item.sx, item.sy, r, 0, Math.PI * 2);
@@ -17672,8 +17705,6 @@ window.ELEMENTS_DATA = [
                                 const r = baseNucR * item.p * Math.sqrt(currentZoom);
                                 const isProton = item.subType === 'p';
                                 ctx.save();
-                                ctx.shadowColor = theme === 'dark' ? 'rgba(0,0,0,0.55)' : 'rgba(15,23,42,0.25)';
-                                ctx.shadowBlur = 6;
                                 const g = ctx.createRadialGradient(item.sx - r * 0.3, item.sy - r * 0.3, r * 0.08, item.sx, item.sy, r);
                                 if (isProton) {
                                     g.addColorStop(0, '#fda4af');
@@ -17689,7 +17720,6 @@ window.ELEMENTS_DATA = [
                                 ctx.arc(item.sx, item.sy, r, 0, Math.PI * 2);
                                 ctx.fill();
 
-                                ctx.shadowColor = 'transparent';
                                 ctx.lineWidth = 0.9;
                                 ctx.strokeStyle = isProton ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.28)';
                                 ctx.stroke();
@@ -17724,8 +17754,12 @@ window.ELEMENTS_DATA = [
                                     ctx.stroke();
                                 }
 
-                                ctx.shadowColor = item.isValence ? 'rgba(20, 184, 166, 0.75)' : 'rgba(56, 189, 248, 0.65)';
-                                ctx.shadowBlur = 10;
+                                // GPU-fast soft radial glow halo (replaces slow CPU shadowBlur)
+                                ctx.fillStyle = item.isValence ? 'rgba(20, 184, 166, 0.28)' : 'rgba(56, 189, 248, 0.24)';
+                                ctx.beginPath();
+                                ctx.arc(item.sx, item.sy, r * 1.7, 0, Math.PI * 2);
+                                ctx.fill();
+
                                 const eg = ctx.createRadialGradient(item.sx - r * 0.28, item.sy - r * 0.28, r * 0.1, item.sx, item.sy, r);
                                 if (item.isValence) {
                                     eg.addColorStop(0, '#ccfbf1');
@@ -17742,7 +17776,6 @@ window.ELEMENTS_DATA = [
                                 ctx.fill();
 
                                 if (showLabels && r >= 5.2) {
-                                    ctx.shadowColor = 'transparent';
                                     ctx.fillStyle = '#ffffff';
                                     ctx.font = `900 ${Math.max(7, Math.round(r * 0.95))}px 'Nunito', system-ui, sans-serif`;
                                     ctx.textAlign = 'center';
@@ -18227,21 +18260,28 @@ window.ELEMENTS_DATA = [
 
                             ctx.save();
                             if (isHoveredAtom) {
-                                // Interactive selection / hover halo ring around matching element atoms
+                                // Interactive selection / hover halo ring around matching element atoms (GPU-fast, no CPU shadowBlur)
                                 ctx.save();
+                                ctx.beginPath();
+                                ctx.arc(atom.sx, atom.sy, r + 8.5, 0, Math.PI * 2);
+                                ctx.fillStyle = theme === 'dark' ? 'rgba(45, 212, 191, 0.18)' : 'rgba(13, 148, 136, 0.15)';
+                                ctx.fill();
                                 ctx.beginPath();
                                 ctx.arc(atom.sx, atom.sy, r + 5.5, 0, Math.PI * 2);
                                 ctx.strokeStyle = theme === 'dark' ? 'rgba(45, 212, 191, 0.92)' : 'rgba(13, 148, 136, 0.88)';
                                 ctx.lineWidth = 2.2;
-                                ctx.shadowColor = theme === 'dark' ? 'rgba(45, 212, 191, 0.75)' : 'rgba(13, 148, 136, 0.55)';
-                                ctx.shadowBlur = 10;
                                 ctx.stroke();
                                 ctx.restore();
                             }
 
-                            ctx.shadowColor = theme === 'dark' ? 'rgba(0, 0, 0, 0.55)' : 'rgba(15, 23, 42, 0.22)';
-                            ctx.shadowBlur = 12;
-                            ctx.shadowOffsetY = 4;
+                            // GPU-fast soft radial contact shadow under atom sphere (replaces slow CPU shadowBlur)
+                            const shGrad = ctx.createRadialGradient(atom.sx, atom.sy + 3.5, r * 0.25, atom.sx, atom.sy + 3.5, r * 1.24);
+                            shGrad.addColorStop(0, theme === 'dark' ? 'rgba(0, 0, 0, 0.48)' : 'rgba(15, 23, 42, 0.20)');
+                            shGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                            ctx.fillStyle = shGrad;
+                            ctx.beginPath();
+                            ctx.arc(atom.sx, atom.sy + 3.5, r * 1.24, 0, Math.PI * 2);
+                            ctx.fill();
 
                             const grad = ctx.createRadialGradient(
                                 atom.sx - r * 0.34,
@@ -18261,7 +18301,6 @@ window.ELEMENTS_DATA = [
                             ctx.fill();
 
                             // Crisp rim border for high contrast in both light & dark modes
-                            ctx.shadowColor = 'transparent';
                             ctx.lineWidth = isHoveredAtom ? 1.8 : 1.2;
                             ctx.strokeStyle = isHoveredAtom
                                 ? (theme === 'dark' ? '#5eead4' : '#0f766e')
@@ -18350,6 +18389,11 @@ window.ELEMENTS_DATA = [
                 animId = requestAnimationFrame(renderFrame);
                 return () => {
                     if (animId) cancelAnimationFrame(animId);
+                    if (resizeObs) {
+                        resizeObs.disconnect();
+                    } else {
+                        window.removeEventListener('resize', syncCanvasSize);
+                    }
                 };
             }, [showMolecule3D, activeMolecule, activeSubatomic, inspectedElement, autoRotate, showLabels, showLonePairs, subatomicModel, quantumFilter, theme]);
 
@@ -18443,9 +18487,17 @@ window.ELEMENTS_DATA = [
                 }
                 if (!rotRef.current.isDragging || rotRef.current.isPinching) {
                     if (!inspectedElement && !e.touches && canvasRef.current) {
-                        const rect = canvasRef.current.getBoundingClientRect();
-                        const hx = e.clientX - rect.left;
-                        const hy = e.clientY - rect.top;
+                        const nativeEvt = e.nativeEvent;
+                        let hx = 0;
+                        let hy = 0;
+                        if (nativeEvt && typeof nativeEvt.offsetX === 'number') {
+                            hx = nativeEvt.offsetX;
+                            hy = nativeEvt.offsetY;
+                        } else {
+                            const rect = canvasRef.current.getBoundingClientRect();
+                            hx = e.clientX - rect.left;
+                            hy = e.clientY - rect.top;
+                        }
                         const candidates = [...(lastProjectedAtomsRef.current || [])].sort((a, b) => a.z - b.z);
                         const hitAtom = candidates.find(pa => Math.hypot(hx - pa.sx, hy - pa.sy) <= Math.max(18, pa.screenR * 1.15));
                         const nextEl = hitAtom && ATOM_SUBATOMIC_DATA[hitAtom.el] ? hitAtom.el : null;
@@ -20534,9 +20586,6 @@ window.ELEMENTS_DATA = [
                 setShowAiChat(false);
             };
             const handleInstructorModal3DMove = (e) => {
-                if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    return;
-                }
                 const rect = e.currentTarget.getBoundingClientRect();
                 if (!rect.width || !rect.height) return;
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
